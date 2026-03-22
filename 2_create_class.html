@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Class</title>
+</head>
+<body>
+    <h2>CREA UNA NUOVA CLASSE</h2>
+
+    <form method="post" action="2_create_class.php" id="form_class">
+        <div>
+            <label for="name">Classe</label>
+            <input type="text" name="name" id="name" placeholder="Inserisci un nome" required>
+        </div><br>
+
+        <div>
+            <table border="1" id="schedule_table">
+                <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td><td>Domenica</td></tr>
+                <tr>
+                    <td><input type="text" name="subjects[subject1]" placeholder="Inserisci una materia" required></td>
+                    <td><input type="checkbox" name="schedule[subject1][1]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][2]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][3]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][4]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][5]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][6]"></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <button type="button" id="add_subject">+ Aggiungi materia</button>
+            <button type="button" id="remove_subject">- Rimuovi materia</button>
+        </div>
+
+        <div>
+            <p>Studenti</p>
+            <div id="students_container">
+                <input type="text" name="students[]" placeholder="Inserisci uno studente" required>
+            </div>
+            <button type="button" id="add_student">+ Aggiungi studente</button>
+            <button type="button" id="remove_student">- Rimuovi studente</button>
+        </div><br>
+
+        <input type="submit" value="Invia">
+    </form>
+
+    <script>
+        // Aggiungi Materia
+        let subjectNumber = 1; // contatore per id unici
+        const table = document.getElementById('schedule_table');
+
+        document.getElementById('add_subject').addEventListener('click', () => {
+            subjectNumber++;
+
+            // Creo la riga
+            const tr = document.createElement('tr');
+
+            // Prima cella
+            const tdInput = document.createElement('td');
+            const inputSubject = document.createElement('input');
+            inputSubject.type = 'text';
+            inputSubject.name = `subjects[subject${subjectNumber}]`
+            inputSubject.placeholder = 'Inserisci una materia';
+            inputSubject.required = true;
+            tdInput.appendChild(inputSubject);
+            tr.appendChild(tdInput);
+
+            // Altre 6 celle con checkbox
+            const days = [1, 2, 3, 4, 5, 6]; // conversione valori in php ex. Lun = 1
+            days.forEach(day => {
+                const tdCheckbox = document.createElement('td');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = `schedule[subject${subjectNumber}][${day}]`; // array multidimensionale
+                tdCheckbox.appendChild(checkbox);
+                tr.appendChild(tdCheckbox);
+            });
+
+            // Ultima cella
+            const tdEmpty = document.createElement('td');
+            tr.appendChild(tdEmpty);
+
+            // Aggiungo la riga alla table
+            table.appendChild(tr);
+        });
+
+        // Rimuovi Materia 
+        document.getElementById('remove_subject').addEventListener('click', () => {
+            if(table.rows.length > 2){ // mantieni almeno l'intestazione e prima riga
+                table.deleteRow(table.rows.length - 1);
+                subjectNumber--;  // Da togliere quando potrai eliminare materie specifiche e non solo ultima
+            }
+        });
+
+        // Aggiungi Studente
+        const containerStudents = document.getElementById('students_container');
+        document.getElementById('add_student').addEventListener('click', () => {
+            const inputStudent = document.createElement('input');
+            inputStudent.type = 'text';
+            inputStudent.name = 'students[]';
+            inputStudent.placeholder = 'Inserisci uno studente';
+            inputStudent.required = true;
+            containerStudents.appendChild(inputStudent);
+        });
+
+        // Rimuovi Studente
+        document.getElementById('remove_student').addEventListener('click', () => {
+            const inputsStudents = containerStudents.getElementsByTagName('input');
+            if (inputsStudents.length > 1) {
+                containerStudents.removeChild(inputsStudents[inputsStudents.length - 1]);
+            }
+        });
+
+        // Controllo div studenti e materie, checkbox
+        const form = document.getElementById('form_class');
+
+        form.addEventListener('submit', (e) => {
+            const rows = table.querySelectorAll('tr:not(:first-child)');
+            let error = false;
+
+            rows.forEach(row => {
+                const checkbox = row.querySelectorAll('input[type="checkbox"]');
+                const atleastOneSelected = Array.from(checkbox).some(cb => cb.checked);
+
+                if (!atleastOneSelected) {
+                    error = true;
+                }
+            });
+
+            if (error) {
+                e.preventDefault();
+                alert("Ogni materia deve avere almeno un giorno selezionato!");
+            }            
+        });
+    </script>
+</body>
+</html>

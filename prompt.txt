@@ -1,0 +1,31 @@
+In seguito a esperienza personale di organizzazione delle interrogazioni nella mia classe, avuto in mente un'idea: una web app che funga da 'calendario condiviso' tra gli studenti di una classe.
+Lo scopo è risolvere i seguenti problemi, nati dall'utilizzo di altre alternative:
+-creare il file e la tabella del calendario
+-ogni settimana riaggiornare il calendario (eliminare vecchie righe della settimana precedente, rifare i bordi della tabella, rimettere le materie in cui si è interrogati o meno quella settimana...)
+-pochissimo user-friendly da telefono
+-ogni volta cercare il link
+-caotico se voglio vedere solo i giorni in cui sono interrogato io
+-etc..
+
+Ho dato una struttura al progetto, è il minimo che serve per avere l'app funzionante a 360 gradi e giusto per l'inizio. Ho pensato a 5 'schermate' principali:
+1) Home(la prima pagina in cui si accede): Intestazione con il nome del progetto (avevo in mente 'Class Planner' per ora), sotto solamente due funzionalità. Una dove c'è un input per inserire il codice/link della classe e a fianco un submit per accedere, nel caso in cui la classe già esistesse. L'altra solamente un bottone per creare la classe.
+2)Crea classe: quest'ultimo bottone che citavo porta qui. In questa pagina viene chiesto il nome della classe, le materie studiate e di fianco ci saranno dei quadratini (uno per ogni giorno della settimana) che sono i giorni che l'utente dovrà spuntare dove la materia è presente nell'orario scolastico, studenti della classe (nome per nome). In fondo un submit per creare la classe, che darà poi il codice/link per accedervi.
+3) Classe: pagina a cui si accede una volta inserito il codice/link nella home. Qui troviamo innanzitutto un header dove a sinistra c'è il nome della classe e a destra le impostazioni. Sotto c'è un aside a sinistra dove vengono richieste tre cose: spuntare le materie in cui si è interrogati quella settimana, visuale che si vuole avere (es. CLASSE, oppure singolo studente. Con la visuale classe si può solo vedere il calendario e dove tutti vengono interrogati, se ci si sposta sul singolo studente invece vengono evidenziate le date nel calendario in cui lui è interrogato e cliccando su una data ci si può inserire nell'interrogazione) e infine un bottone aggiungi eventi per aggiungere un evento al calendario (es. verifica, gite scolastiche, vacanze...). 
+A centro-destra c'è il core della pagina ossia la sorta di calendario: non è un calendario in se ma più un calendario verticale che si può scorrere e sopra c'è la settimana in cui si è, con un bottone a sinistra per tornare alla settimana prima, uno a destra per passare alla successiva. 
+Il calendario è formato così:
+
+--------
+Lunedì
+Matematica (+) --> se si clicca il + ci si aggiunge a matematica il lunedi
+[Luca] [Marco]
+Inglese (+)
+[Mattia]
+--------
+Martedì
+...
+...
+--------
+
+4)Impostazioni: dove si può modificare il nome della classe, le materie, gli studenti oppure fare il logout
+5) Aggiungi eventi: che si raggiunge dopo aver cliccato il bottone nella pagina della classe. Non penso di fare una pagina a parte, cosi come per le impostazioni, ma potrebbe farsi un tipo di pop up che si apre quando clicchi il bottone.
+Viene chiesto: nome evento, descrizione, dal ... al ... e infine se richiede la presenza in classe o meno. Questa ultima funzionalità è peculiare ed è stata pensata nel modo seguente: se sono tipo verifiche scritte vorrà dire che richiede la presenza in classe e il giorno si colorerà di verde, se sono gite/vacanze ad esempio vuol dire che proprio non si va a scuola per cui il giorno si colorerà di grigio come per far intendere che sia spento. Per ora è solo una cosa base, in futuro si può pensare a più personalizzazione.
