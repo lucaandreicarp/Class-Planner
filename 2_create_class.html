@@ -16,7 +16,7 @@
 
         <div>
             <table border="1" id="schedule_table">
-                <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td><td>Domenica</td></tr>
+                <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td></tr>
                 <tr>
                     <td><input type="text" name="subjects[subject1]" placeholder="Inserisci una materia" required></td>
                     <td><input type="checkbox" name="schedule[subject1][1]"></td>
@@ -25,7 +25,6 @@
                     <td><input type="checkbox" name="schedule[subject1][4]"></td>
                     <td><input type="checkbox" name="schedule[subject1][5]"></td>
                     <td><input type="checkbox" name="schedule[subject1][6]"></td>
-                    <td></td>
                 </tr>
             </table>
 
@@ -76,10 +75,6 @@
                 tdCheckbox.appendChild(checkbox);
                 tr.appendChild(tdCheckbox);
             });
-
-            // Last td
-            const tdEmpty = document.createElement('td');
-            tr.appendChild(tdEmpty);
 
             // Add the tr to the table
             table.appendChild(tr);
