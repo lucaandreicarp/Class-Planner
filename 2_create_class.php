@@ -11,7 +11,7 @@
     $schedule = $_POST["schedule"];
     $students = $_POST["students"];
 
-    // Inserimento Classe in DB
+    // Insert Class in DB
     function generateCode($length = 6) {
         $characters = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
         $code = '';
@@ -22,7 +22,7 @@
     }
 
     do {
-        $code = generateCode(6); // genero un codice casuale
+        $code = generateCode(6); // generate random code
         $res = $conn->query("SELECT COUNT(*) as cnt FROM class WHERE code='$code'");
         $row = $res->fetch_assoc();
     } while($row['cnt'] > 0);
@@ -33,7 +33,7 @@
     }
     $idclass = $conn->insert_id;
 
-    // Inserimento Materie e Schedule in DB
+    // Insert Subjects and Schedule in DB
     foreach ($subjects as $subject_number => $subject_name){
         $subject_insert = $conn -> query("INSERT INTO subject VALUES ('', '$subject_name', $idclass)");
         if (!$subject_insert){
@@ -51,7 +51,7 @@
         }
     }
 
-    // Inserimento Studenti in DB
+    // Insert Students in DB
     foreach ($students as $student){
         $student_insert = $conn -> query("INSERT INTO student VALUES ('', '$student', $idclass)");
         if (!$student_insert){
@@ -62,6 +62,6 @@
     // Output
     echo "La classe $name è stata creata! Accedi ora con il seguente codice: $code";
 
-    // Chiusura connessione DB
+    // Close DB Connection
     $conn -> close();
 ?>

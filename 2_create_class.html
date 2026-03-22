@@ -46,17 +46,17 @@
     </form>
 
     <script>
-        // Aggiungi Materia
-        let subjectNumber = 1; // contatore per id unici
+        // Add Subject
+        let subjectNumber = 1; // subject counter 
         const table = document.getElementById('schedule_table');
 
         document.getElementById('add_subject').addEventListener('click', () => {
             subjectNumber++;
 
-            // Creo la riga
+            // Create the row
             const tr = document.createElement('tr');
 
-            // Prima cella
+            // First td
             const tdInput = document.createElement('td');
             const inputSubject = document.createElement('input');
             inputSubject.type = 'text';
@@ -66,34 +66,34 @@
             tdInput.appendChild(inputSubject);
             tr.appendChild(tdInput);
 
-            // Altre 6 celle con checkbox
-            const days = [1, 2, 3, 4, 5, 6]; // conversione valori in php ex. Lun = 1
+            // Other 6 td with checkbox's
+            const days = [1, 2, 3, 4, 5, 6];
             days.forEach(day => {
                 const tdCheckbox = document.createElement('td');
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
-                checkbox.name = `schedule[subject${subjectNumber}][${day}]`; // array multidimensionale
+                checkbox.name = `schedule[subject${subjectNumber}][${day}]`; // multidimensional array
                 tdCheckbox.appendChild(checkbox);
                 tr.appendChild(tdCheckbox);
             });
 
-            // Ultima cella
+            // Last td
             const tdEmpty = document.createElement('td');
             tr.appendChild(tdEmpty);
 
-            // Aggiungo la riga alla table
+            // Add the tr to the table
             table.appendChild(tr);
         });
 
-        // Rimuovi Materia 
+        // Remove Subject
         document.getElementById('remove_subject').addEventListener('click', () => {
-            if(table.rows.length > 2){ // mantieni almeno l'intestazione e prima riga
+            if(table.rows.length > 2){ // keep at least the header and the first row
                 table.deleteRow(table.rows.length - 1);
-                subjectNumber--;  // Da togliere quando potrai eliminare materie specifiche e non solo ultima
+                subjectNumber--;  // remove it when you will be able to remove a specific subject, not just the last one
             }
         });
 
-        // Aggiungi Studente
+        // Add Student
         const containerStudents = document.getElementById('students_container');
         document.getElementById('add_student').addEventListener('click', () => {
             const inputStudent = document.createElement('input');
@@ -104,7 +104,7 @@
             containerStudents.appendChild(inputStudent);
         });
 
-        // Rimuovi Studente
+        // Remove Student
         document.getElementById('remove_student').addEventListener('click', () => {
             const inputsStudents = containerStudents.getElementsByTagName('input');
             if (inputsStudents.length > 1) {
@@ -112,7 +112,7 @@
             }
         });
 
-        // Controllo div studenti e materie, checkbox
+        // Checkbox check
         const form = document.getElementById('form_class');
 
         form.addEventListener('submit', (e) => {
