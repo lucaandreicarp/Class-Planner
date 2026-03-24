@@ -343,15 +343,19 @@
         const typeSelect = document.getElementById("type");
         const oralDiv = document.querySelector(".oral");
         const otherDiv = document.querySelector(".other");
+        const nameInput = document.getElementById("name");
 
-        // Funzione per aggiornare la visualizzazione
         function toggleEventType() {
             if(typeSelect.value === "oral"){
-                oralDiv.style.display = "block";  // mostra oral
-                otherDiv.style.display = "none";  // nasconde other
+                oralDiv.style.display = "block";  // show oral
+                otherDiv.style.display = "none";  // hide other
+
+                nameInput.required = false;
             } else {
-                oralDiv.style.display = "none";   // nasconde oral
-                otherDiv.style.display = "block"; // mostra other
+                oralDiv.style.display = "none";   // hide oral
+                otherDiv.style.display = "block"; // show other
+
+                nameInput.required = true;
             }
         }
 
