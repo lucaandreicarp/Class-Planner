@@ -65,15 +65,15 @@
     <header>
         <h2><?php echo "$class_name" ?></h2>
         <span id="settings">Impostazioni</span>
-    </header>
+    </header><br>
     <aside>
         <div>   <!-- View -->
             <label for="view">Visuale</label>
-            <select id="view">
-                <option id="CLASS">CLASSE</option>
+            <select name="view" id="view">
+                <option value="CLASS">CLASSE</option>
                 <?php 
                     foreach($students as $id_student => $name){
-                        echo "<option id='$id_student'>$name</option>";
+                        echo "<option value='$id_student'>$name</option>";
                     }
                 ?>
             </select>
@@ -83,11 +83,12 @@
             <button id="add_event">+</button>
             <label for="add_event" id="label_button_event">Aggiungi evento</label>
         </div>
-    </aside>
+    </aside><br>
     <section>
         <div id="div_settings" style="display: none;">      <!-- Settings page -->
-            <form method="post" action="2_class_data.php" id="form_class">
-                <input type="hidden" name="code" value="<?php $code ?>">    <!-- Create hidden code -->
+            <span id="edit">[+] Modifica</span>
+            <form method="post" action="2_class_data.php" id="form_class" style="display: none;">
+                <input type="hidden" name="code" value="<?php echo $code?>">    <!-- Create hidden code -->
                 <div>
                     <label for="name">Classe</label>
                     <input type="text" name="name" id="name" value="<?php echo "$class_name"?>" required>
@@ -130,15 +131,44 @@
                 </div><br>
 
                 <input type="submit" value="Invia">
-            </form>
+            </form><br>
             <a href="1_home.html">Logout</a>
         </div>
-        <div id="div_events" style="display: none;">    <!-- Events page -->
-            <select>
-                <option>Interrogazioni</option>
-                <option>Altro</option>
+        <form method="post" action="4_events.php" id="form_events" style="display: none;">    <!-- Events page -->
+            <label for="type">Tipologia</label>
+            <select name="type" id="type">
+                <option value="oral">Interrogazioni</option>
+                <option value="other">Altro</option>
             </select>
-        </div>
+            
+            <div class="oral">
+                <label for="subject">Materia</label>
+                <select name="subject" id="subject">
+                    <?php 
+                        foreach($subjects as $idsubject => $subject){
+                            $name = $subject["name"];
+                            echo "<option value='$idsubject'>$name</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+
+            <div class="other">
+                <label for="name">Nome</label>
+                <input type="text" name="name" id="name" placeholder="Inserire il nome dell'evento" required>
+
+                <label for="description">Descrizione</label>
+                <textarea name="description" id="description" placeholder="Inserire una descrizione"></textarea>
+            </div>
+
+            <label for="start_date">Data Inizio</label>
+            <input type="date" name="start_date" id="start_date" required>
+
+            <label for="end_date">Data Fine</label>
+            <input type="date" name="end_date" id="end_date" required>
+
+            <input type="submit" value="Crea">
+        </form>
     </section>
     <main></main>
 
@@ -146,15 +176,24 @@
         // View set
         const view = document.getElementById("view");
         const div_event = document.getElementById("div_event");
+        
+        const form_events = document.getElementById("form_events")
+        let events_displayed = false;
+        let button_event = document.getElementById("add_event");
+        let label_button_event = document.getElementById("label_button_event");
 
         view.addEventListener('change', () => {
             const selected_view = view.options[view.selectedIndex];
-            const selected_id = selected_view.id;
+            const selected_value = selected_view.value;
 
-            if (selected_id == "CLASS"){
+            if (selected_value == "CLASS"){
                 div_event.style.display = "block";
             } else {
                 div_event.style.display = "none";
+                form_events.style.display = "none";
+                events_displayed = false;
+                button_event.textContent = "+";
+                label_button_event.textContent = "Aggiungi evento";
             }
         });
 
@@ -163,6 +202,7 @@
         const container_settings = document.getElementById("div_settings"); 
 
         let settings_displayed = false;
+        let edit_displayed = false;
 
         function toggleSettings() {
             if(!settings_displayed){
@@ -171,11 +211,32 @@
             } else {
                 settings_displayed = false;
                 container_settings.style.display = "none";
+                if (edit_displayed) toggleEdit();
             }
         }
 
         name_settings.addEventListener('click', () => {
             toggleSettings();
+        })
+
+        // Edit toggle
+        const edit = document.getElementById("edit");
+        const form_class = document.getElementById('form_class');
+
+        function toggleEdit(){
+            if(!edit_displayed){
+                edit_displayed = true;
+                form_class.style.display = "block";
+                edit.textContent = "[-] Modifica";
+            } else {
+                edit_displayed = false;
+                form_class.style.display = "none";
+                edit.textContent = "[+] Modifica";
+            }
+        }
+
+        edit.addEventListener('click', () => {
+            toggleEdit();
         })
 
         // Add Subject
@@ -240,9 +301,7 @@
         });
 
         // Checkbox check
-        const form = document.getElementById('form_class');
-
-        form.addEventListener('submit', (e) => {
+        form_class.addEventListener('submit', (e) => {
             const rows = table.querySelectorAll('tr:not(:first-child)');
             let error = false;
 
@@ -262,22 +321,15 @@
         });
 
         // Event toggle
-        let button_event = document.getElementById("add_event");
-        let label_button_event = document.getElementById("label_button_event");
-        const container_events = document.getElementById("div_events")
-        
-
-        let events_displayed = false;
-
         function toggleEvents(){
             if(!events_displayed){
                 events_displayed = true;
-                container_events.style.display = "block";
+                form_events.style.display = "block";
                 button_event.textContent = "-";
                 label_button_event.textContent = "Rimuovi evento";
             } else {
                 events_displayed = false;
-                container_events.style.display = "none";
+                form_events.style.display = "none";
                 button_event.textContent = "+";
                 label_button_event.textContent = "Aggiungi evento";
             }
@@ -286,6 +338,28 @@
         button_event.addEventListener('click', () => {
             toggleEvents();
         })
+
+        // Event form
+        const typeSelect = document.getElementById("type");
+        const oralDiv = document.querySelector(".oral");
+        const otherDiv = document.querySelector(".other");
+
+        // Funzione per aggiornare la visualizzazione
+        function toggleEventType() {
+            if(typeSelect.value === "oral"){
+                oralDiv.style.display = "block";  // mostra oral
+                otherDiv.style.display = "none";  // nasconde other
+            } else {
+                oralDiv.style.display = "none";   // nasconde oral
+                otherDiv.style.display = "block"; // mostra other
+            }
+        }
+
+        // If the select changes
+        typeSelect.addEventListener("change", toggleEventType);
+
+        // Refresh at starting page
+        toggleEventType();
     </script>
 </body>
 </html>

@@ -25,6 +25,8 @@
 
         // Update class name
         $conn->query("UPDATE class SET name='$name' WHERE idclass=$idclass");
+
+        echo "La classe $name è stata aggiornata!";
     } else {
         // Insert Class in DB
         function generateCode($length = 6) {
@@ -47,6 +49,8 @@
             die($conn->error);
         }
         $idclass = $conn->insert_id;
+
+        echo "La classe $name è stata creata! Accedi ora con il seguente codice: $code";
     }
 
     // Insert Subjects and Schedule in DB
@@ -74,9 +78,6 @@
             die($conn->error);
         }
     }
-
-    // Output
-    echo "La classe $name è stata creata! Accedi ora con il seguente codice: $code";
 
     // Close DB Connection
     $conn -> close();
