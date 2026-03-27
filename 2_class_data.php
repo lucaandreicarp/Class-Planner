@@ -50,7 +50,8 @@
         }
         $idclass = $conn->insert_id;
 
-        echo "La classe $name è stata creata! Accedi ora con il seguente codice: $code";
+        echo "La classe $name è stata creata! <a href='1_home.html'>Torna alla home</a> e accedi ora con il seguente codice: $code";
+        echo "";
     }
 
     // Insert Subjects and Schedule in DB
