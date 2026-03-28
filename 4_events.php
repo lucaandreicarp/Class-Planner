@@ -10,12 +10,11 @@
     $type = $_POST["type"];
     $subject = $_POST["subject"];
     $name = $_POST["name"];
-    $description = ["description"];
-    $start_date = ["start_date"];
-    $end_date = ["end_date"];
+    $description = $_POST["description"];
+    $start_date = new DateTime($_POST["start_date"]);
+    $end_date = new DateTime($_POST["end_date"]);
 
     if ($type == "oral"){       // Event: oral
-        $schedule_days = [];
         $subject_days = [];
 
         $schedule = $conn -> query("SELECT day_of_week FROM schedule WHERE idsubject = $subject");
@@ -26,6 +25,17 @@
         } else {
            die($conn->error); 
         }
+
+        $dates = [];
+
+        for($data = clone $start_date; $data <= $end_date; $data->modify('+1 day')){
+            $number_day = $data -> format("N");
+            if (in_array($number_day, $subject_days)){
+                $dates[] = $data->format("Y-m-d");
+            }
+        }
+
+        // Manca inserimento in db (Slot)
     } else {        // Event: other
         $event_insert = $conn -> query("INSERT INTO event VALUES ('', '$name', '$description', '$start_date', '$end_date', $id_class)");
         if (!$event_insert){
