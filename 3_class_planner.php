@@ -130,11 +130,12 @@
                     <button type="button" id="remove_student">- Rimuovi studente</button>
                 </div><br>
 
-                <input type="submit" value="Invia">
+                <input type="submit" value="Aggiorna">
             </form><br>
             <a href="1_home.html">Logout</a>
         </div>
         <form method="post" action="4_events.php" id="form_events" style="display: none;">    <!-- Events page -->
+            <input type="hidden" name="idclass" value="<?php echo $id_class?>">
             <label for="type">Tipologia</label>
             <select name="type" id="type">
                 <option value="oral">Interrogazioni</option>
