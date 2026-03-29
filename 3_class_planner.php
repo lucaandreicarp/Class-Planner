@@ -52,6 +52,8 @@
         $subjects[$id_subject]["days"][] = $row_subject["day_of_week"];
     }
 
+    // Close DB Connection
+    $conn -> close();
 ?>
 
 <!DOCTYPE html>
@@ -155,8 +157,8 @@
             </div>
 
             <div class="other">
-                <label for="name">Nome</label>
-                <input type="text" name="name" id="name" placeholder="Inserire il nome dell'evento" required>
+                <label for="event_name">Nome</label>
+                <input type="text" name="event_name" id="event_name" placeholder="Inserire il nome dell'evento" required>
 
                 <label for="description">Descrizione</label>
                 <textarea name="description" id="description" placeholder="Inserire una descrizione"></textarea>
@@ -344,7 +346,7 @@
         const typeSelect = document.getElementById("type");
         const oralDiv = document.querySelector(".oral");
         const otherDiv = document.querySelector(".other");
-        const nameInput = document.getElementById("name");
+        const nameInput = document.getElementById("event_name");
 
         function toggleEventType() {
             if(typeSelect.value === "oral"){

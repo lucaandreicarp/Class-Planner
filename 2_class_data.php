@@ -26,7 +26,7 @@
         // Update class name
         $conn->query("UPDATE class SET name='$name' WHERE idclass=$idclass");
 
-        echo "La classe $name è stata aggiornata!";
+        echo "La classe $name è stata aggiornata! <a href='1_home.html'>Accedi nuovamente</a> per vederla";
     } else {
         // Insert Class in DB
         function generateCode($length = 6) {
