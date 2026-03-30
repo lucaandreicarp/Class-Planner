@@ -52,6 +52,80 @@
         $subjects[$id_subject]["days"][] = $row_subject["day_of_week"];
     }
 
+    // Calculate current week
+    $week_offset = isset($_GET['week']) ? intval($_GET['week']) : 0;
+
+    $start_week = new DateTime();
+    $start_week->modify("monday this week");
+    if($week_offset != 0){
+        $start_week->modify("$week_offset week");
+    }
+
+    $end_week = clone $start_week;
+    $end_week->modify('+6 days');
+
+    $week_dates = [];
+    for($i = 0; $i < 6; $i++){
+        $d = clone $start_week;
+        $d->modify("+$i days");
+        $week_dates[$d->format('Y-m-d')] = [
+            'day_name' => $d->format('l'),
+            'slots' => [],
+            'events' => []
+        ];
+    }
+
+    // Extracting slots
+    $start_date = array_key_first($week_dates);
+    $end_date   = array_key_last($week_dates);
+
+    $result_slots = $conn->query("
+        SELECT s.date, sub.name AS subject, o.idstudent, st.name AS student_name, s.idslot
+        FROM slot s
+        JOIN subject sub ON s.idsubject = sub.idsubject
+        LEFT JOIN oral o ON s.idslot = o.idslot
+        LEFT JOIN student st ON o.idstudent = st.idstudent
+        WHERE s.idclass = $id_class
+        AND s.date BETWEEN '$start_date' AND '$end_date'
+        ORDER BY s.date, sub.name
+    ");
+
+    while($row = $result_slots->fetch_assoc()){
+        $date = $row['date'];
+        if(!isset($week_dates[$date]['slots'][$row['subject']])){
+            $week_dates[$date]['slots'][$row['subject']] = [
+                'idslot' => $row['idslot'],
+                'students' => []
+            ];
+        }
+        if($row['student_name']){
+            $week_dates[$date]['slots'][$row['subject']]['students'][] = $row['student_name'];
+        }
+    }
+
+    // Extracting events
+    $result_events = $conn->query("
+        SELECT name, description, start_date, end_date
+        FROM event
+        WHERE idclass = $id_class
+        AND start_date <= '$end_date'
+        AND end_date >= '$start_date'
+    ");
+
+    while($row = $result_events->fetch_assoc()){
+        $event_start = new DateTime($row['start_date']);
+        $event_end   = new DateTime($row['end_date']);
+        foreach($week_dates as $date => $day){
+            $d = new DateTime($date);
+            if($d >= $event_start && $d <= $event_end){
+                $week_dates[$date]['events'][] = [
+                    'name' => $row['name'],
+                    'description' => $row['description']
+                ];
+            }
+        }
+    }
+
     // Close DB Connection
     $conn -> close();
 ?>
@@ -173,8 +247,39 @@
             <input type="submit" value="Crea">
         </form>
     </section>
-    <main></main>
+    <main id="calendar">
+        <div style="margin-bottom:10px;">
+            <a href="?week=<?= $week_offset-1 ?>&idclass=<?= $id_class ?>"><button>&lt;&lt; Settimana prec</button></a>
+            <span style="margin:0 10px;"><strong>Settimana del <?= $start_week->format('d/m/Y')?> - <?= $end_week->format('d/m/Y')?></strong>  </span>
+            <a href="?week=<?= $week_offset+1 ?>&idclass=<?= $id_class ?>"><button>Settimana succ &gt;&gt;</button></a>
+        </div>
 
+        <div style="display:flex; gap:10px; overflow-x:auto;">
+        <?php foreach($week_dates as $date => $day): ?>
+            <div class="day" style="min-width:150px; border:1px solid #ccc; padding:5px;">
+                <h4><?= date('l d/m', strtotime($date)) ?></h4>
+
+                <?php foreach($day['slots'] as $subject => $slot): ?>
+                    <div class="slot" style="margin-bottom:5px;">
+                        <strong><?= $subject ?></strong>
+                        <button class="slot-add" data-slotid="<?= $slot['idslot'] ?>">+</button>
+                        <div class="students">
+                            <?php foreach($slot['students'] as $student): ?>
+                                [<?= $student ?>]
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+
+                <?php foreach($day['events'] as $event): ?>
+                    <div class="event" style="background:#f0f0f0; padding:2px 5px; margin-top:2px;">
+                        <strong><?= $event['name'] ?></strong> - <?= $event['description'] ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endforeach; ?>
+        </div>
+    </main>
     <script>
         // View set
         const view = document.getElementById("view");
@@ -185,19 +290,50 @@
         let button_event = document.getElementById("add_event");
         let label_button_event = document.getElementById("label_button_event");
 
-        view.addEventListener('change', () => {
-            const selected_view = view.options[view.selectedIndex];
-            const selected_value = selected_view.value;
+        let currentStudentId = null;
 
-            if (selected_value == "CLASS"){
+        view.addEventListener('change', () => {
+            const selectedValue = view.value;
+
+            if (selectedValue == "CLASS"){
                 div_event.style.display = "block";
+
+                currentStudentId = null;
             } else {
                 div_event.style.display = "none";
                 form_events.style.display = "none";
                 events_displayed = false;
                 button_event.textContent = "+";
                 label_button_event.textContent = "Aggiungi evento";
+
+                currentStudentId = selectedValue;
             }
+            toggleSlotButtons();
+        });
+
+        function toggleSlotButtons(){
+            document.querySelectorAll(".slot-add").forEach(btn => {
+                btn.style.display = currentStudentId ? "inline-block" : "none";
+            });
+        }
+
+        toggleSlotButtons();
+
+        document.querySelectorAll(".slot-add").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const slotId = btn.getAttribute("data-slotid");
+
+                fetch("5_oral.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `idslot=${slotId}&idstudent=${currentStudentId}`
+                })
+                .then(res => res.text())
+                .then(msg => {
+                    alert(msg);
+                    location.reload(); 
+                });
+            });
         });
 
         // Settings toggle
