@@ -90,17 +90,21 @@
         ORDER BY s.date, sub.name
     ");
 
-    while($row = $result_slots->fetch_assoc()){
-        $date = $row['date'];
-        if(!isset($week_dates[$date]['slots'][$row['subject']])){
-            $week_dates[$date]['slots'][$row['subject']] = [
-                'idslot' => $row['idslot'],
-                'students' => []
-            ];
+    if ($result_slots){
+        while($row = $result_slots->fetch_assoc()){
+            $date = $row['date'];
+            if(!isset($week_dates[$date]['slots'][$row['subject']])){
+                $week_dates[$date]['slots'][$row['subject']] = [
+                    'idslot' => $row['idslot'],
+                    'students' => []
+                ];
+            }
+            if($row['student_name']){
+                $week_dates[$date]['slots'][$row['subject']]['students'][] = $row['student_name'];
+            }
         }
-        if($row['student_name']){
-            $week_dates[$date]['slots'][$row['subject']]['students'][] = $row['student_name'];
-        }
+    } else {
+        die($conn->error);
     }
 
     // Extracting events
@@ -112,18 +116,22 @@
         AND end_date >= '$start_date'
     ");
 
-    while($row = $result_events->fetch_assoc()){
-        $event_start = new DateTime($row['start_date']);
-        $event_end   = new DateTime($row['end_date']);
-        foreach($week_dates as $date => $day){
-            $d = new DateTime($date);
-            if($d >= $event_start && $d <= $event_end){
-                $week_dates[$date]['events'][] = [
-                    'name' => $row['name'],
-                    'description' => $row['description']
-                ];
+    if ($result_events) {
+        while($row = $result_events->fetch_assoc()){
+            $event_start = new DateTime($row['start_date']);
+            $event_end   = new DateTime($row['end_date']);
+            foreach($week_dates as $date => $day){
+                $d = new DateTime($date);
+                if($d >= $event_start && $d <= $event_end){
+                    $week_dates[$date]['events'][] = [
+                        'name' => $row['name'],
+                        'description' => $row['description']
+                    ];
+                }
             }
         }
+    } else {
+        die($conn->error);
     }
 
     // Close DB Connection
