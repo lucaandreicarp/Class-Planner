@@ -6,7 +6,7 @@
         exit();
     }
 
-    $code = $_POST["code"];
+    $code = $_GET["code"];
 
     // Extracting class 
     $result_class = $conn -> query("SELECT idclass, name FROM class WHERE code = '$code'");
@@ -257,9 +257,9 @@
     </section>
     <main id="calendar">
         <div style="margin-bottom:10px;">
-            <a href="?week=<?= $week_offset-1 ?>&idclass=<?= $id_class ?>"><button>&lt;&lt; Settimana prec</button></a>
+            <a href="?week=<?= $week_offset-1 ?>&code=<?= urlencode($code) ?>"><button>&lt;&lt; Settimana prec</button></a>
             <span style="margin:0 10px;"><strong>Settimana del <?= $start_week->format('d/m/Y')?> - <?= $end_week->format('d/m/Y')?></strong>  </span>
-            <a href="?week=<?= $week_offset+1 ?>&idclass=<?= $id_class ?>"><button>Settimana succ &gt;&gt;</button></a>
+            <a href="?week=<?= $week_offset+1 ?>&code=<?= urlencode($code) ?>"><button>Settimana succ &gt;&gt;</button></a>
         </div>
 
         <div style="display:flex; gap:10px; overflow-x:auto;">
