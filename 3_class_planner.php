@@ -7,6 +7,7 @@
     }
 
     $code = $_GET["code"];
+    $currentStudentId = $_GET["student"] ?? null;
 
     // Extracting class 
     $result_class = $conn -> query("SELECT idclass, name FROM class WHERE code = '$code'");
@@ -154,10 +155,14 @@
         <div>   <!-- View -->
             <label for="view">Visuale</label>
             <select name="view" id="view">
-                <option value="CLASS">CLASSE</option>
+                <option value="CLASS" <?= $currentStudentId === null ? "selected" : "" ?>>
+                    CLASSE
+                </option>
+
                 <?php 
                     foreach($students as $id_student => $name){
-                        echo "<option value='$id_student'>$name</option>";
+                        $selected = ($currentStudentId == $id_student) ? "selected" : "";
+                        echo "<option value='$id_student' $selected>$name</option>";
                     }
                 ?>
             </select>
@@ -257,9 +262,10 @@
     </section>
     <main id="calendar">
         <div style="margin-bottom:10px;">
-            <a href="?week=<?= $week_offset-1 ?>&code=<?= urlencode($code) ?>"><button>&lt;&lt; Settimana prec</button></a>
+            <?php $studentParam = $currentStudentId ? "&student=" . urlencode($currentStudentId) : ""; ?>
+            <a href="?week=<?= $week_offset-1 ?>&code=<?= urlencode($code) ?><?= $studentParam ?>"><button>&lt;&lt; Settimana prec</button></a>
             <span style="margin:0 10px;"><strong>Settimana del <?= $start_week->format('d/m/Y')?> - <?= $end_week->format('d/m/Y')?></strong>  </span>
-            <a href="?week=<?= $week_offset+1 ?>&code=<?= urlencode($code) ?>"><button>Settimana succ &gt;&gt;</button></a>
+            <a href="?week=<?= $week_offset+1 ?>&code=<?= urlencode($code) ?><?= $studentParam ?>"><button>Settimana succ &gt;&gt;</button></a>
         </div>
 
         <div style="display:flex; gap:10px; overflow-x:auto;">
@@ -298,15 +304,19 @@
         let button_event = document.getElementById("add_event");
         let label_button_event = document.getElementById("label_button_event");
 
-        let currentStudentId = null;
+        let currentStudentId = (view.value === "CLASS") ? null : view.value;
 
         view.addEventListener('change', () => {
             const selectedValue = view.value;
+
+            const url = new URL(window.location);
 
             if (selectedValue == "CLASS"){
                 div_event.style.display = "block";
 
                 currentStudentId = null;
+
+                url.searchParams.delete("student");
             } else {
                 div_event.style.display = "none";
                 form_events.style.display = "none";
@@ -315,10 +325,12 @@
                 label_button_event.textContent = "Aggiungi evento";
 
                 currentStudentId = selectedValue;
-            }
-            toggleSlotButtons();
-        });
 
+                url.searchParams.set("student", selectedValue);
+            }
+            window.location.href = url.toString();
+        });
+            
         function toggleSlotButtons(){
             document.querySelectorAll(".slot-add").forEach(btn => {
                 btn.style.display = currentStudentId ? "inline-block" : "none";
