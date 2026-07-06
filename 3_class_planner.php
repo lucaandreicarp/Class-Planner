@@ -291,7 +291,7 @@
                             }
                         }
                         ?>
-                        <button class="slot-add" data-slotid="<?= $slot['idslot'] ?>"><?= $isInSlot ? '-' : '+' ?></button>
+                        <button class="slot-toggle" data-slotid="<?= $slot['idslot'] ?>"><?= $isInSlot ? '-' : '+' ?></button>
                         <div class="students">
                             <?php foreach($slot['students'] as $student): ?>
                                 [<?= $student['name'] ?>]
@@ -320,25 +320,18 @@
         let label_button_event = document.getElementById("label_button_event");
 
         let currentStudentId = (view.value === "CLASS") ? null : view.value;
+        div_event.style.display = currentStudentId ? "none" : "block";
+
 
         view.addEventListener('change', () => {
             const selectedValue = view.value;
-
             const url = new URL(window.location);
 
             if (selectedValue == "CLASS"){
-                div_event.style.display = "block";
-
                 currentStudentId = null;
 
                 url.searchParams.delete("student");
             } else {
-                div_event.style.display = "none";
-                form_events.style.display = "none";
-                events_displayed = false;
-                button_event.textContent = "+";
-                label_button_event.textContent = "Aggiungi evento";
-
                 currentStudentId = selectedValue;
 
                 url.searchParams.set("student", selectedValue);
@@ -347,14 +340,14 @@
         });
             
         function toggleSlotButtons(){
-            document.querySelectorAll(".slot-add").forEach(btn => {
+            document.querySelectorAll(".slot-toggle").forEach(btn => {
                 btn.style.display = currentStudentId ? "inline-block" : "none";
             });
         }
 
         toggleSlotButtons();
 
-        document.querySelectorAll(".slot-add").forEach(btn => {
+        document.querySelectorAll(".slot-toggle").forEach(btn => {
             btn.addEventListener("click", () => {
                 const slotId = btn.getAttribute("data-slotid");
 
