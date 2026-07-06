@@ -101,7 +101,10 @@
                 ];
             }
             if($row['student_name']){
-                $week_dates[$date]['slots'][$row['subject']]['students'][] = $row['student_name'];
+                $week_dates[$date]['slots'][$row['subject']]['students'][] = [
+                    'id' => $row['idstudent'],
+                    'name' => $row['student_name']
+                ];
             }
         }
     } else {
@@ -276,10 +279,22 @@
                 <?php foreach($day['slots'] as $subject => $slot): ?>
                     <div class="slot" style="margin-bottom:5px;">
                         <strong><?= $subject ?></strong>
-                        <button class="slot-add" data-slotid="<?= $slot['idslot'] ?>">+</button>
+                        <?php
+                        $isInSlot = false;
+
+                        if ($currentStudentId !== null) {
+                            foreach ($slot['students'] as $student) {
+                                if ($student['id'] == $currentStudentId) {
+                                    $isInSlot = true;
+                                    break;
+                                }
+                            }
+                        }
+                        ?>
+                        <button class="slot-add" data-slotid="<?= $slot['idslot'] ?>"><?= $isInSlot ? '-' : '+' ?></button>
                         <div class="students">
                             <?php foreach($slot['students'] as $student): ?>
-                                [<?= $student ?>]
+                                [<?= $student['name'] ?>]
                             <?php endforeach; ?>
                         </div>
                     </div>
