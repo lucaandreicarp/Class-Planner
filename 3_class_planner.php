@@ -113,7 +113,7 @@
 
     // Extracting events
     $result_events = $conn->query("
-        SELECT name, description, start_date, end_date
+        SELECT idevent, name, description, start_date, end_date
         FROM event
         WHERE idclass = $id_class
         AND start_date <= '$end_date'
@@ -128,8 +128,9 @@
                 $d = new DateTime($date);
                 if($d >= $event_start && $d <= $event_end){
                     $week_dates[$date]['events'][] = [
+                        'idevent' => $row['idevent'],
                         'name' => $row['name'],
-                        'description' => $row['description']
+                        'description' => $row['description'],
                     ];
                 }
             }
@@ -292,6 +293,7 @@
                         }
                         ?>
                         <button class="slot-toggle" data-slotid="<?= $slot['idslot'] ?>"><?= $isInSlot ? '-' : '+' ?></button>
+                        <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
                         <div class="students">
                             <?php foreach($slot['students'] as $student): ?>
                                 [<?= $student['name'] ?>]
@@ -303,6 +305,7 @@
                 <?php foreach($day['events'] as $event): ?>
                     <div class="event" style="background:#f0f0f0; padding:2px 5px; margin-top:2px;">
                         <strong><?= $event['name'] ?></strong> - <?= $event['description'] ?>
+                        <button class="event-elimination" data-eventid="<?= $event['idevent'] ?>">x</button>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -343,6 +346,9 @@
             document.querySelectorAll(".slot-toggle").forEach(btn => {
                 btn.style.display = currentStudentId ? "inline-block" : "none";
             });
+            document.querySelectorAll(".slot-elimination").forEach(btn => {
+                btn.style.display = currentStudentId ? "none" : "inline-block";
+            });
         }
 
         toggleSlotButtons();
@@ -355,6 +361,40 @@
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: `idslot=${slotId}&idstudent=${currentStudentId}`
+                })
+                .then(res => res.text())
+                .then(msg => {
+                    alert(msg);
+                    location.reload(); 
+                });
+            });
+        });
+
+        document.querySelectorAll(".slot-elimination").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const slotId = btn.getAttribute("data-slotid");
+
+                fetch("4_events.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `idslot=${slotId}&type=oral&idclass=<?= $id_class ?>`
+                })
+                .then(res => res.text())
+                .then(msg => {
+                    alert(msg);
+                    location.reload(); 
+                });
+            });
+        });
+
+        document.querySelectorAll(".event-elimination").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const eventId = btn.getAttribute("data-eventid");
+
+                fetch("4_events.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `idevent=${eventId}&type=other&idclass=<?= $id_class ?>`
                 })
                 .then(res => res.text())
                 .then(msg => {
