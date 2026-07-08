@@ -12,6 +12,7 @@
     $students = $_POST["students"];
 
     $code = $_POST['code'] ?? null;
+    $isNewClass = !$code;
 
     if ($code) {        // Edit Class
         $result_idclass = $conn -> query("SELECT idclass FROM class WHERE code ='$code'");
@@ -48,9 +49,7 @@
         if (!$class_insert){
             die($conn->error);
         }
-        $idclass = $conn->insert_id;
-
-        echo "La classe $name è stata creata! <a href='1_home.html'>Torna alla home</a> e accedi ora con il seguente codice: $code";
+        $idclass = $conn->insert_id; 
     }
 
     // Insert Subjects and Schedule in DB
@@ -77,6 +76,10 @@
         if (!$student_insert){
             die($conn->error);
         }
+    }
+
+    if ($isNewClass) {
+        echo "<script> alert('La classe $name è stata creata! Il codice della classe è: $code'); window.location.href='3_class_planner.php?code=$code'; </script>";
     }
 
     // Close DB Connection

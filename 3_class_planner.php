@@ -17,7 +17,7 @@
         $id_class = $row_class["idclass"];
         $class_name = $row_class["name"];
     } else {
-        echo "Classe non trovata";
+        echo "<script> alert('Codice classe non trovato!'); window.location.href='1_home.html'; </script>";
         die($conn->error);
     }
 
@@ -179,7 +179,8 @@
     </aside><br>
     <section>
         <div id="div_settings" style="display: none;">      <!-- Settings page -->
-            <span id="edit">[+] Modifica</span>
+            <p>Codice classe: <?= $code ?></p>    
+            <button id="edit">[+] Modifica</button>
             <form method="post" action="2_class_data.php" id="form_class" style="display: none;">
                 <input type="hidden" name="code" value="<?php echo $code?>">    <!-- Create hidden code -->
                 <div>
@@ -225,7 +226,11 @@
 
                 <input type="submit" value="Aggiorna">
             </form><br>
-            <a href="1_home.html">Logout</a>
+            <form method="post" action="6_delete_class.php">
+                <input type="hidden" name="code" value="<?php echo $code?>">
+                <input type="submit" value="Cancella classe">
+            </form>            
+            <a href="1_home.html"><button>Logout</button></a>
         </div>
         <form method="post" action="4_events.php" id="form_events" style="display: none;">    <!-- Events page -->
             <input type="hidden" name="idclass" value="<?php echo $id_class?>">
