@@ -65,12 +65,21 @@
     $end_week = clone $start_week;
     $end_week->modify('+6 days');
 
+    $days_italian = [
+        'Monday' => 'Lunedì',
+        'Tuesday' => 'Martedì',
+        'Wednesday' => 'Mercoledì',
+        'Thursday' => 'Giovedì',
+        'Friday' => 'Venerdì',
+        'Saturday' => 'Sabato',
+        'Sunday' => 'Domenica'
+    ];
     $week_dates = [];
     for($i = 0; $i < 7; $i++){
         $d = clone $start_week;
         $d->modify("+$i days");
         $week_dates[$d->format('Y-m-d')] = [
-            'day_name' => $d->format('l'),
+            'day_name' => $days_italian[$d->format('l')],
             'slots' => [],
             'events' => []
         ];
@@ -285,7 +294,7 @@
         <div style="display:flex; gap:10px; overflow-x:auto;">
         <?php foreach($week_dates as $date => $day): ?>
             <div class="day" style="min-width:150px; border:1px solid #ccc; padding:5px;">
-                <h4><?= date('l d/m', strtotime($date)) ?></h4>
+                <h4><?= $day['day_name'] . " " . date('d/m', strtotime($date)) ?></h4>
 
                 <?php foreach($day['slots'] as $subject => $slot): ?>
                     <div class="slot" style="margin-bottom:5px;">
