@@ -66,7 +66,7 @@
     $end_week->modify('+6 days');
 
     $week_dates = [];
-    for($i = 0; $i < 6; $i++){
+    for($i = 0; $i < 7; $i++){
         $d = clone $start_week;
         $d->modify("+$i days");
         $week_dates[$d->format('Y-m-d')] = [
@@ -190,7 +190,7 @@
 
                 <div>
                     <table border="1" id="schedule_table">
-                        <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td></tr>
+                        <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td><td>Domenica</td></tr>
                         <?php 
                             $iSubject = 0;
                             foreach ($subjects as $idsubject => $subject){
@@ -198,7 +198,7 @@
                                 $name = $subject["name"];
                                 echo "<tr>";
                                 echo "<td><input type='text' name='subjects[subject$iSubject]' value='$name' required></td>";
-                                for ($i = 1; $i <= 6; $i++){
+                                for ($i = 1; $i <= 7; $i++){
                                     $checked = in_array($i, $subject['days']) ? "checked" : "";
                                     echo "<td><input type='checkbox' name='schedule[subject$iSubject][$i]' $checked></td>";
                                 }
@@ -225,15 +225,20 @@
                 </div><br>
 
                 <input type="submit" value="Aggiorna">
+
+                <p>oppure</p>
+
+                <button type="button" onclick="location.reload();">Annulla</button>
             </form><br>
-            <form method="post" action="6_delete_class.php">
+            <form method="post" action="6_delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
                 <input type="hidden" name="code" value="<?php echo $code?>">
                 <input type="submit" value="Cancella classe">
             </form>            
             <a href="1_home.html"><button>Logout</button></a>
         </div>
         <form method="post" action="4_events.php" id="form_events" style="display: none;">    <!-- Events page -->
-            <input type="hidden" name="idclass" value="<?php echo $id_class?>">
+            <input type="hidden" name="code" value="<?= $code ?>">    
+            <input type="hidden" name="idclass" value="<?= $id_class ?>">
             <label for="type">Tipologia</label>
             <select name="type" id="type">
                 <option value="oral">Interrogazioni</option>
@@ -309,8 +314,9 @@
 
                 <?php foreach($day['events'] as $event): ?>
                     <div class="event" style="background:#f0f0f0; padding:2px 5px; margin-top:2px;">
-                        <strong><?= $event['name'] ?></strong> - <?= $event['description'] ?>
-                        <button class="event-elimination" data-eventid="<?= $event['idevent'] ?>">x</button>
+                        <strong><?= $event['name'] ?></strong>
+                        <button class="event-elimination" data-eventid="<?= $event['idevent'] ?>">x</button> 
+                        <p><?= $event['description'] ?></p>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -327,9 +333,10 @@
         let button_event = document.getElementById("add_event");
         let label_button_event = document.getElementById("label_button_event");
 
-        let currentStudentId = (view.value === "CLASS") ? null : view.value;
-        div_event.style.display = currentStudentId ? "none" : "block";
+        const edit = document.getElementById("edit");
+        const form_cancellation = document.getElementById("form_cancellation");
 
+        let currentStudentId = (view.value === "CLASS") ? null : view.value;
 
         view.addEventListener('change', () => {
             const selectedValue = view.value;
@@ -346,18 +353,45 @@
             }
             window.location.href = url.toString();
         });
+
+        // Toggle visibility
+        if (currentStudentId){
+            edit.style.display = "none";
+            form_cancellation.style.display = "none";
+
+            div_event.style.display = "none";
             
-        function toggleSlotButtons(){
             document.querySelectorAll(".slot-toggle").forEach(btn => {
-                btn.style.display = currentStudentId ? "inline-block" : "none";
+                btn.style.display = "inline-block";
             });
+            
             document.querySelectorAll(".slot-elimination").forEach(btn => {
-                btn.style.display = currentStudentId ? "none" : "inline-block";
+                btn.style.display = "none";
+            });
+            
+            document.querySelectorAll(".event-elimination").forEach(btn => {
+                btn.style.display = "none";
+            });
+        } else {
+            edit.style.display = "block";
+            form_cancellation.style.display = "block";
+
+            div_event.style.display = "block";
+
+            document.querySelectorAll(".slot-toggle").forEach(btn => {
+                btn.style.display = "none";
+            });
+            
+            document.querySelectorAll(".slot-elimination").forEach(btn => {
+                btn.style.display = "inline-block";
+            });
+            
+            document.querySelectorAll(".event-elimination").forEach(btn => {
+                btn.style.display = "inline-block";
             });
         }
-
-        toggleSlotButtons();
-
+        
+        // Oral's management
         document.querySelectorAll(".slot-toggle").forEach(btn => {
             btn.addEventListener("click", () => {
                 const slotId = btn.getAttribute("data-slotid");
@@ -375,9 +409,14 @@
             });
         });
 
+        // Slot elimination
         document.querySelectorAll(".slot-elimination").forEach(btn => {
             btn.addEventListener("click", () => {
                 const slotId = btn.getAttribute("data-slotid");
+
+                if (!confirm("Sei sicuro di voler eliminare questa interrogazione?")) {
+                    return;
+                }
 
                 fetch("4_events.php", {
                     method: "POST",
@@ -391,10 +430,15 @@
                 });
             });
         });
-
+        
+        // Event elimination
         document.querySelectorAll(".event-elimination").forEach(btn => {
             btn.addEventListener("click", () => {
                 const eventId = btn.getAttribute("data-eventid");
+
+                if (!confirm("Sei sicuro di voler eliminare questo evento?")) {
+                    return;
+                }
 
                 fetch("4_events.php", {
                     method: "POST",
@@ -432,7 +476,6 @@
         })
 
         // Edit toggle
-        const edit = document.getElementById("edit");
         const form_class = document.getElementById('form_class');
 
         function toggleEdit(){
@@ -470,8 +513,8 @@
             inputSubject.required = true;
             tdInput.appendChild(inputSubject);
             tr.appendChild(tdInput);
-            // Last 6 td with checkbox's
-            const days = [1, 2, 3, 4, 5, 6];
+            // Last 7 td with checkbox's
+            const days = [1, 2, 3, 4, 5, 6, 7];
             days.forEach(day => {
                 const tdCheckbox = document.createElement('td');
                 const checkbox = document.createElement('input');
@@ -571,11 +614,19 @@
             }
         }
 
-        // If the select changes
-        typeSelect.addEventListener("change", toggleEventType);
+        typeSelect.addEventListener("change", toggleEventType); // If the select changes
+        toggleEventType(); // Refresh at starting page
 
-        // Refresh at starting page
-        toggleEventType();
+        // Dates check
+        form_events.addEventListener("submit", (e) => {
+            const start = document.getElementById("start_date").value;
+            const end = document.getElementById("end_date").value;
+
+            if (start > end) {
+                e.preventDefault();
+                alert("La data di inizio non può essere successiva alla data di fine!");
+            }
+        });
     </script>
 </body>
 </html>

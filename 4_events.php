@@ -15,6 +15,7 @@
     if ($type == "oral"){       // Event: oral
         if ($idslot == null){
 
+            $code = $_POST["code"];
             $id_subject = $_POST["subject"];
             $start_date = $_POST["start_date"];
             $end_date = $_POST["end_date"];
@@ -42,14 +43,30 @@
                 }
             }
 
+            $inserted = 0;
+
             foreach ($dates as $date){
-                $slot_insert = $conn -> query("INSERT INTO slot VALUES ('', '$date', $id_class, $id_subject)");
+                $slot_insert = $conn -> query("INSERT INTO slot VALUES ('', '$date', $id_class, $id_subject) ON DUPLICATE KEY UPDATE idslot = idslot");
                 if (!$slot_insert){
-                    die($conn->error);                
+                    die($conn->error);               
+                }
+                    
+                if($conn -> affected_rows > 0){
+                    $inserted++;
                 }
             }
 
-            echo "Interrogazione inserita con successo! <a href='1_home.html'>Accedi nuovamente</a> per vederla";
+            $skipped = count($dates) - $inserted;
+
+            if ($inserted > 0) {
+                if ($skipped > 0){
+                    echo "<script> alert('$inserted interrogazioni inserite. $skipped erano già presenti.'); window.location.href='3_class_planner.php?code=$code'; </script>";
+                } else {
+                    echo "<script> alert('$inserted interrogazioni inserite!'); window.location.href='3_class_planner.php?code=$code'; </script>";
+                }
+            } else {
+                echo "<script> alert('Nessuna nuova interrogazione inserita: erano già presenti.'); window.location.href='3_class_planner.php?code=$code'; </script>";
+            }
         } else {
             $slot_remove = $conn -> query("DELETE FROM slot WHERE idslot = $idslot");
 
@@ -58,6 +75,7 @@
 
     } else {        // Event: other
         if ($idevent == null){
+            $code = $_POST["code"];
             $name = $_POST["event_name"];
             $description = $_POST["description"];
             $start_date = $_POST["start_date"];
@@ -67,7 +85,7 @@
             if (!$event_insert){
                 die($conn->error);
             } else {
-                echo "Evento inserito con successo! <a href='1_home.html'>Accedi nuovamente</a> per vederlo";
+                echo "<script> alert('Evento inserito con successo!'); window.location.href='3_class_planner.php?code=$code'; </script>";
             }
         } else {
             $event_remove = $conn -> query("DELETE FROM event WHERE idevent = $idevent");

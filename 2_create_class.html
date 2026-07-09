@@ -16,7 +16,7 @@
 
         <div>
             <table border="1" id="schedule_table">
-                <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td></tr>
+                <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td><td>Domenica</td></tr>
                 <tr>
                     <td><input type="text" name="subjects[subject1]" placeholder="Inserisci una materia" required></td>
                     <td><input type="checkbox" name="schedule[subject1][1]"></td>
@@ -25,6 +25,7 @@
                     <td><input type="checkbox" name="schedule[subject1][4]"></td>
                     <td><input type="checkbox" name="schedule[subject1][5]"></td>
                     <td><input type="checkbox" name="schedule[subject1][6]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][7]"></td>
                 </tr>
             </table>
 
@@ -70,7 +71,7 @@
             tr.appendChild(tdInput);
 
             // Last 6 td with checkbox's
-            const days = [1, 2, 3, 4, 5, 6];
+            const days = [1, 2, 3, 4, 5, 6, 7];
             days.forEach(day => {
                 const tdCheckbox = document.createElement('td');
                 const checkbox = document.createElement('input');
