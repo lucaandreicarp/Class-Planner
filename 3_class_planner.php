@@ -65,6 +65,7 @@
     $end_week = clone $start_week;
     $end_week->modify('+6 days');
 
+    // Translation to italian names
     $days_italian = [
         'Monday' => 'Lunedì',
         'Tuesday' => 'Martedì',
@@ -74,12 +75,14 @@
         'Saturday' => 'Sabato',
         'Sunday' => 'Domenica'
     ];
+
+    // Week structure
     $week_dates = [];
     for($i = 0; $i < 7; $i++){
         $d = clone $start_week;
         $d->modify("+$i days");
         $week_dates[$d->format('Y-m-d')] = [
-            'day_name' => $days_italian[$d->format('l')],
+            'day_name' => $days_italian[$d->format('l')],   // Extracting week's day
             'slots' => [],
             'events' => []
         ];
@@ -105,11 +108,11 @@
             $date = $row['date'];
             if(!isset($week_dates[$date]['slots'][$row['subject']])){
                 $week_dates[$date]['slots'][$row['subject']] = [
-                    'idslot' => $row['idslot'],
+                    'idslot' => $row['idslot'],     // Extracting id slot
                     'students' => []
                 ];
             }
-            if($row['student_name']){
+            if($row['student_name']){       // Extracting student
                 $week_dates[$date]['slots'][$row['subject']]['students'][] = [
                     'id' => $row['idstudent'],
                     'name' => $row['student_name']
@@ -283,8 +286,8 @@
             <input type="submit" value="Crea">
         </form>
     </section>
-    <main id="calendar">
-        <div style="margin-bottom:10px;">
+    <main id="calendar">        <!-- Calendar page -->
+        <div style="margin-bottom:10px;">   <!-- Calendar's header -->
             <?php $studentParam = $currentStudentId ? "&student=" . urlencode($currentStudentId) : ""; ?>
             <a href="?week=<?= $week_offset-1 ?>&code=<?= urlencode($code) ?><?= $studentParam ?>"><button>&lt;&lt; Settimana prec</button></a>
             <span style="margin:0 10px;"><strong>Settimana del <?= $start_week->format('d/m/Y')?> - <?= $end_week->format('d/m/Y')?></strong>  </span>
@@ -294,17 +297,17 @@
         <div style="display:flex; gap:10px; overflow-x:auto;">
         <?php foreach($week_dates as $date => $day): ?>
             <div class="day" style="min-width:150px; border:1px solid #ccc; padding:5px;">
-                <h4><?= $day['day_name'] . " " . date('d/m', strtotime($date)) ?></h4>
+                <h4><?= $day['day_name'] . " " . date('d/m', strtotime($date)) ?></h4>      <!-- Day name and date -->
 
-                <?php foreach($day['slots'] as $subject => $slot): ?>
+                <?php foreach($day['slots'] as $subject => $slot): ?>       <!-- Slot -->
                     <div class="slot" style="margin-bottom:5px;">
                         <strong><?= $subject ?></strong>
-                        <?php
+                        <?php       // To determine button's text
                         $isInSlot = false;
 
                         if ($currentStudentId !== null) {
                             foreach ($slot['students'] as $student) {
-                                if ($student['id'] == $currentStudentId) {
+                                if ($student['id'] == $currentStudentId) {      // If student's already in slot
                                     $isInSlot = true;
                                     break;
                                 }
@@ -321,7 +324,7 @@
                     </div>
                 <?php endforeach; ?>
 
-                <?php foreach($day['events'] as $event): ?>
+                <?php foreach($day['events'] as $event): ?>     <!-- Event -->
                     <div class="event" style="background:#f0f0f0; padding:2px 5px; margin-top:2px;">
                         <strong><?= $event['name'] ?></strong>
                         <button class="event-elimination" data-eventid="<?= $event['idevent'] ?>">x</button> 

@@ -12,8 +12,7 @@
     // Check if oral already exists
     $result_id_oral = $conn -> query("SELECT idoral FROM oral WHERE idstudent = $id_student AND idslot = $id_slot");
 
-    // Oral insert
-    if ($result_id_oral -> num_rows > 0) {
+    if ($result_id_oral -> num_rows > 0) {      // Oral remove
         $row = $result_id_oral -> fetch_object();
         $remove_oral = $conn -> query("DELETE FROM oral WHERE idoral = $row->idoral"); 
         if ($remove_oral){
@@ -21,7 +20,7 @@
         } else {
             die($conn->error); 
         }    
-    } else {
+    } else {        // Oral insert
         $insert_oral = $conn -> query("INSERT INTO oral VALUES ('', $id_student, $id_slot)");
         if ($insert_oral){
             echo "Inserimento avvenuto con successo!";

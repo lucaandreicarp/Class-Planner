@@ -12,7 +12,7 @@
     $students = $_POST["students"];
 
     $code = $_POST['code'] ?? null;
-    $isNewClass = !$code;
+    $isNewClass = !$code;       // Even if code it's null, it won't be because it will be created
 
     if ($code) {        // Edit Class
         $result_idclass = $conn -> query("SELECT idclass FROM class WHERE code ='$code'");
@@ -27,6 +27,7 @@
         // Update class name
         $conn->query("UPDATE class SET name='$name' WHERE idclass=$idclass");
 
+        // Output
         echo "<script> alert('La classe $name è stata aggiornata!'); window.location.href='3_class_planner.php?code=$code'; </script>";
     } else {
         // Insert Class in DB
@@ -78,6 +79,7 @@
         }
     }
 
+    // Output
     if ($isNewClass) {
         echo "<script> alert('La classe $name è stata creata! Il codice della classe è: $code'); window.location.href='3_class_planner.php?code=$code'; </script>";
     }
