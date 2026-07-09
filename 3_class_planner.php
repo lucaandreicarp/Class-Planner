@@ -7,7 +7,7 @@
     }
 
     $code = $_GET["code"];
-    $currentStudentId = $_GET["student"] ?? null;
+    $currentStudentId = $_GET["student"] ?? null;   // If student's o class' view
 
     // Extracting class 
     $result_class = $conn -> query("SELECT idclass, name FROM class WHERE code = '$code'");
