@@ -9,8 +9,8 @@
     $id_class = $_POST["idclass"];
     $type = $_POST["type"];
 
-    $idslot = $_POST["idslot"] ?? null;
-    $idevent = $_POST["idevent"] ?? null;
+    $idslot = $_POST["idslot"] ?? null;     // Check if slot already created
+    $idevent = $_POST["idevent"] ?? null;   // Check if event already created
 
     if ($type == "oral"){       // Event: oral
         if ($idslot == null){   // Create event
@@ -73,8 +73,11 @@
             }
         } else {    // Remove event
             $slot_remove = $conn -> query("DELETE FROM slot WHERE idslot = $idslot");
-
-            echo "Interrogazione rimossa con successo!";
+            if ($slot_remove) {
+                echo "Interrogazione rimossa con successo!";
+            } else {
+                die($conn->error);
+            }
         }
     } else {        // Event: other
         if ($idevent == null){      // Create event
@@ -92,8 +95,11 @@
             }
         } else {    // Remove event
             $event_remove = $conn -> query("DELETE FROM event WHERE idevent = $idevent");
-        
-            echo "Evento rimosso con successo!";
+            if ($event_remove){
+                echo "Evento rimosso con successo!";
+            } else {
+                die($conn->error);
+            }
         }
     }
 

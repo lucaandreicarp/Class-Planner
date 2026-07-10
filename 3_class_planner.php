@@ -7,7 +7,7 @@
     }
 
     $code = $_GET["code"];
-    $currentStudentId = $_GET["student"] ?? null;   // If student's o class' view
+    $currentStudentId = $_GET["student"] ?? null;   // If student's or class' view
 
     // Extracting class 
     $result_class = $conn -> query("SELECT idclass, name FROM class WHERE code = '$code'");
@@ -24,9 +24,12 @@
     // Extracting student
     $result_student = $conn -> query ("SELECT idstudent, name FROM student WHERE idclass = '$id_class'");
     $students = [];
-    
-    while ($row_student = $result_student->fetch_assoc()) {
-        $students[$row_student["idstudent"]] = $row_student["name"];
+    if ($result_student){
+        while ($row_student = $result_student->fetch_assoc()) {
+            $students[$row_student["idstudent"]] = $row_student["name"];
+        }
+    } else {
+        die($conn->error);
     }
 
     // Extracting subjects (and schedule)
@@ -38,19 +41,23 @@
     ");
     $subjects = [];
 
-    while ($row_subject = $result_subject->fetch_assoc()) {
-        $id_subject = $row_subject["idsubject"];
+    if($result_subject){
+        while ($row_subject = $result_subject->fetch_assoc()) {
+            $id_subject = $row_subject["idsubject"];
 
-        // If the subject doesn't exist yet, create it
-        if (!isset($subjects[$id_subject])) {
-            $subjects[$id_subject] = [
-                "name" => $row_subject["name"],
-                "days" => []
-            ];
+            // If the subject doesn't exist yet, create it
+            if (!isset($subjects[$id_subject])) {
+                $subjects[$id_subject] = [
+                    "name" => $row_subject["name"],
+                    "days" => []
+                ];
+            }
+
+            // Add the day
+            $subjects[$id_subject]["days"][] = $row_subject["day_of_week"];
         }
-
-        // Add the day
-        $subjects[$id_subject]["days"][] = $row_subject["day_of_week"];
+    } else {
+        die($conn->error);
     }
 
     // Calculate current week

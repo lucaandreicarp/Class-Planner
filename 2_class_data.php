@@ -16,19 +16,36 @@
 
     if ($code) {        // Edit Class
         $result_idclass = $conn -> query("SELECT idclass FROM class WHERE code ='$code'");
-        $row_idclass = $result_idclass -> fetch_assoc();
-        $idclass = $row_idclass["idclass"];
+        if ($result_idclass) {
+            $row_idclass = $result_idclass -> fetch_assoc();
+            $idclass = $row_idclass["idclass"];
 
-        // Remove existing data
-        $conn->query("DELETE FROM schedule WHERE idsubject IN (SELECT idsubject FROM subject WHERE idclass=$idclass)");
-        $conn->query("DELETE FROM subject WHERE idclass=$idclass");
-        $conn->query("DELETE FROM student WHERE idclass=$idclass");
+            // Remove existing data
+            $delete_schedule = $conn->query("DELETE FROM schedule WHERE idsubject IN (SELECT idsubject FROM subject WHERE idclass=$idclass)");
+            if (!$delete_schedule){
+                die($conn->error);
+            }
 
-        // Update class name
-        $conn->query("UPDATE class SET name='$name' WHERE idclass=$idclass");
+            $delete_subject = $conn->query("DELETE FROM subject WHERE idclass=$idclass");
+            if (!$delete_subject){
+                die($conn->error);
+            }
 
-        // Output
-        echo "<script> alert('La classe $name è stata aggiornata!'); window.location.href='3_class_planner.php?code=$code'; </script>";
+            $delete_student = $conn->query("DELETE FROM student WHERE idclass=$idclass");
+            if (!$delete_student){
+                die($conn->error);
+            }
+
+            // Update class name
+            $update_class = $conn->query("UPDATE class SET name='$name' WHERE idclass=$idclass");
+            if ($update_class){
+                echo "<script> alert('La classe $name è stata aggiornata!'); window.location.href='3_class_planner.php?code=$code'; </script>";
+            } else {
+                die($conn->error);
+            }
+        } else {
+            die($conn->error);
+        }
     } else {
         // Insert Class in DB
         function generateCode($length = 6) {
@@ -43,8 +60,13 @@
         do {
             $code = generateCode(6); // generate random code
             $res = $conn->query("SELECT COUNT(*) as cnt FROM class WHERE code='$code'");
-            $row = $res->fetch_assoc();
-        } while($row['cnt'] > 0);
+            if ($res){
+                $row = $res->fetch_assoc();
+            } else {
+                die($conn->error);
+            }
+
+        } while($row['cnt'] > 0);       // continue if there is already a class with that code
 
         $class_insert = $conn -> query("INSERT INTO class VALUES ('', '$name', '$code')");
         if (!$class_insert){
