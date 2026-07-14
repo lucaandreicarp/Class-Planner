@@ -15,31 +15,74 @@
     $isNewClass = !$code;       // Even if code it's null, it won't be because it will be created
 
     if ($code) {        // Edit Class
-        $result_idclass = $conn -> query("SELECT idclass FROM class WHERE code ='$code'");
+        $stmt = $conn->prepare(
+            "SELECT idclass FROM class WHERE code=?"
+        );
+        $stmt->bind_param("s", $code);
+        $stmt->execute();
+
+        $result_idclass = $stmt->get_result();
         if ($result_idclass) {
             $row_idclass = $result_idclass -> fetch_assoc();
+
+            if(!$row_idclass){
+                die("Classe non trovata");
+            }
+
             $idclass = $row_idclass["idclass"];
 
             // Remove existing data
-            $delete_schedule = $conn->query("DELETE FROM schedule WHERE idsubject IN (SELECT idsubject FROM subject WHERE idclass=$idclass)");
+            $stmt = $conn->prepare(
+                "DELETE FROM schedule
+                WHERE idsubject IN (
+                    SELECT idsubject
+                    FROM subject
+                    WHERE idclass=?
+                )"
+            );
+
+            $stmt->bind_param("i", $idclass);
+
+            $delete_schedule = $stmt->execute();
             if (!$delete_schedule){
                 die($conn->error);
             }
 
-            $delete_subject = $conn->query("DELETE FROM subject WHERE idclass=$idclass");
+            $stmt = $conn->prepare(
+                "DELETE FROM subject WHERE idclass=?"
+            );
+
+            $stmt->bind_param("i", $idclass);
+
+            $delete_subject = $stmt->execute();
             if (!$delete_subject){
                 die($conn->error);
             }
 
-            $delete_student = $conn->query("DELETE FROM student WHERE idclass=$idclass");
+            $stmt = $conn->prepare(
+                "DELETE FROM student WHERE idclass=?"
+            );
+
+            $stmt->bind_param("i", $idclass);
+
+            $delete_student = $stmt->execute();
             if (!$delete_student){
                 die($conn->error);
             }
 
             // Update class name
-            $update_class = $conn->query("UPDATE class SET name='$name' WHERE idclass=$idclass");
+            $stmt = $conn->prepare(
+                "UPDATE class SET name=? WHERE idclass=?"
+            );
+            $stmt->bind_param("si", $name, $idclass);
+            
+            $update_class = $stmt->execute();
+            
             if ($update_class){
-                echo "<script> alert(" . json_encode("La classe $name è stata aggiornata!") . "); window.location.href='3_class_planner.php?code=$code'; </script>";
+                echo "<script>
+                alert(" . json_encode("La classe $name è stata aggiornata!") . ");
+                window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                </script>";
             } else {
                 die($conn->error);
             }
@@ -59,7 +102,15 @@
 
         do {
             $code = generateCode(6); // generate random code
-            $res = $conn->query("SELECT COUNT(*) as cnt FROM class WHERE code='$code'");
+            $stmt = $conn->prepare(
+                "SELECT COUNT(*) AS cnt FROM class WHERE code=?"
+            );
+
+            $stmt->bind_param("s", $code);
+
+            $stmt->execute();
+
+            $res = $stmt->get_result();
             if ($res){
                 $row = $res->fetch_assoc();
             } else {
@@ -68,7 +119,13 @@
 
         } while($row['cnt'] > 0);       // continue if there is already a class with that code
 
-        $class_insert = $conn -> query("INSERT INTO class VALUES ('', '$name', '$code')");
+        $stmt = $conn->prepare(
+            "INSERT INTO class (name, code) VALUES (?, ?)"
+        );
+
+        $stmt->bind_param("ss", $name, $code);
+
+        $class_insert = $stmt->execute();
         if (!$class_insert){
             die($conn->error);
         }
@@ -77,7 +134,13 @@
 
     // Insert Subjects and Schedule in DB
     foreach ($subjects as $subject_number => $subject_name){
-        $subject_insert = $conn -> query("INSERT INTO subject VALUES ('', '$subject_name', $idclass)");
+        $stmt = $conn->prepare(
+            "INSERT INTO subject (name, idclass) VALUES (?, ?)"
+        );
+
+        $stmt->bind_param("si", $subject_name, $idclass);
+
+        $subject_insert = $stmt->execute();
         if (!$subject_insert){
             die($conn->error);
         }
@@ -85,7 +148,13 @@
 
         if (isset($schedule[$subject_number])) {
             foreach ($schedule[$subject_number] as $day => $on) {
-                $schedule_insert = $conn -> query("INSERT INTO schedule VALUES ('', $day, $idsubject)");
+                $stmt = $conn->prepare(
+                    "INSERT INTO schedule (day_of_week, idsubject) VALUES (?, ?)"
+                );
+
+                $stmt->bind_param("ii", $day, $idsubject);
+
+                $schedule_insert = $stmt->execute();
                 if (!$schedule_insert){
                     die($conn->error);
                 }
@@ -95,7 +164,13 @@
 
     // Insert Students in DB
     foreach ($students as $student){
-        $student_insert = $conn -> query("INSERT INTO student VALUES ('', '$student', $idclass)");
+        $stmt = $conn->prepare(
+            "INSERT INTO student (name, idclass) VALUES (?, ?)"
+        );
+
+        $stmt->bind_param("si", $student, $idclass);
+
+        $student_insert = $stmt->execute();
         if (!$student_insert){
             die($conn->error);
         }
@@ -103,7 +178,10 @@
 
     // Output
     if ($isNewClass) {
-        echo "<script> alert(" . json_encode("La classe $name è stata creata! Il codice della classe è: $code") . "); window.location.href='3_class_planner.php?code=$code'; </script>";
+        echo "<script>
+        alert(" . json_encode("La classe $name è stata creata! Il codice della classe è: $code") . ");
+        window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+        </script>";
     }
 
     // Close DB Connection

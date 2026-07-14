@@ -47,7 +47,9 @@
 
     <p>oppure</p>
 
-    <a href="1_home.html"><button>Ho già una classe</button></a>
+    <button type="button" onclick="location.href='1_home.html'">
+        Ho già una classe
+    </button>
 
     <script>
         // Add Subject
@@ -70,7 +72,7 @@
             tdInput.appendChild(inputSubject);
             tr.appendChild(tdInput);
 
-            // Last 6 td with checkbox's
+            // Last 7 td with checkbox's
             const days = [1, 2, 3, 4, 5, 6, 7];
             days.forEach(day => {
                 const tdCheckbox = document.createElement('td');

@@ -7,10 +7,16 @@
         exit();
     }
 
-    $id_class = $_POST["code"];
+    $code = $_POST["code"];
 
     // Class cancellation
-    $result_cancellation = $conn -> query("DELETE FROM class WHERE code = '$id_class'");    // Enough because all tables are delete on cascade 
+    $stmt = $conn->prepare(
+        "DELETE FROM class WHERE code=?"    // Enough because all tables are delete on cascade 
+    );
+    $stmt->bind_param("s", $code);
+
+    $result_cancellation = $stmt->execute();  
+
     if($result_cancellation){
         echo "<script> alert('Classe eliminata correttamente!'); window.location.href='1_home.html'; </script>";
     } else {

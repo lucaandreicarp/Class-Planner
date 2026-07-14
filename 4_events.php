@@ -26,7 +26,14 @@
             // Extracting subject's schedule
             $subject_days = [];
 
-            $schedule = $conn -> query("SELECT day_of_week FROM schedule WHERE idsubject = $id_subject");
+            $stmt = $conn->prepare(
+                "SELECT day_of_week FROM schedule WHERE idsubject=?"
+            );
+            $stmt->bind_param("i", $id_subject);
+            $stmt->execute();
+
+            $schedule = $stmt->get_result();
+
             if ($schedule){
                 while($row = $schedule -> fetch_object()){
                     $subject_days[] = $row -> day_of_week;
@@ -49,7 +56,15 @@
             $inserted = 0;      // Inserted events
 
             foreach ($dates as $date){
-                $slot_insert = $conn -> query("INSERT INTO slot VALUES ('', '$date', $id_class, $id_subject) ON DUPLICATE KEY UPDATE idslot = idslot");     // If duplicate, nothing changes
+                $stmt = $conn->prepare(
+                    "INSERT INTO slot (date, idclass, idsubject) 
+                    VALUES (?, ?, ?)
+                    ON DUPLICATE KEY UPDATE idslot = idslot"    // If duplicate, nothing changes
+                );
+                $stmt->bind_param("sii", $date, $id_class, $id_subject);
+
+                $slot_insert = $stmt->execute();     
+
                 if (!$slot_insert){
                     die($conn->error);               
                 }
@@ -64,15 +79,30 @@
             // Output 
             if ($inserted > 0) {
                 if ($skipped > 0){
-                    echo "<script> alert('$inserted interrogazioni inserite. $skipped erano già presenti.'); window.location.href='3_class_planner.php?code=$code'; </script>";
+                    echo "<script>
+                    alert(" . json_encode("$inserted interrogazioni inserite. $skipped erano già presenti.") . ");
+                    window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                    </script>";
                 } else {
-                    echo "<script> alert('$inserted interrogazioni inserite!'); window.location.href='3_class_planner.php?code=$code'; </script>";
+                    echo "<script>
+                    alert(" . json_encode("$inserted interrogazioni inserite!") . ");
+                    window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                    </script>";
                 }
             } else {
-                echo "<script> alert('Nessuna nuova interrogazione inserita: erano già presenti.'); window.location.href='3_class_planner.php?code=$code'; </script>";
+                echo "<script>
+                alert('Nessuna nuova interrogazione inserita: erano già presenti.');
+                window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                </script>";
             }
         } else {    // Remove event
-            $slot_remove = $conn -> query("DELETE FROM slot WHERE idslot = $idslot");
+            $stmt = $conn->prepare(
+                "DELETE FROM slot WHERE idslot=?"
+            );
+            $stmt->bind_param("i", $idslot);
+
+            $slot_remove = $stmt->execute();
+
             if ($slot_remove) {
                 echo "Interrogazione rimossa con successo!";
             } else {
@@ -87,14 +117,38 @@
             $start_date = $_POST["start_date"];
             $end_date = $_POST["end_date"];
 
-            $event_insert = $conn -> query("INSERT INTO event VALUES ('', '$name', '$description', '$start_date', '$end_date', $id_class)");
+            $stmt = $conn->prepare(
+                "INSERT INTO event (name, description, start_date, end_date, idclass)
+                VALUES (?, ?, ?, ?, ?)"
+            );
+
+            $stmt->bind_param(
+                "ssssi",
+                $name,
+                $description,
+                $start_date,
+                $end_date,
+                $id_class
+            );
+
+            $event_insert = $stmt->execute();
+
             if (!$event_insert){
                 die($conn->error);
             } else {
-                echo "<script> alert('Evento inserito con successo!'); window.location.href='3_class_planner.php?code=$code'; </script>";
+                echo "<script>
+                alert('Evento inserito con successo!');
+                window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                </script>";
             }
         } else {    // Remove event
-            $event_remove = $conn -> query("DELETE FROM event WHERE idevent = $idevent");
+            $stmt = $conn->prepare(
+                "DELETE FROM event WHERE idevent=?"
+            );
+            $stmt->bind_param("i", $idevent);
+
+            $event_remove = $stmt->execute();
+
             if ($event_remove){
                 echo "Evento rimosso con successo!";
             } else {

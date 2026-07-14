@@ -10,7 +10,14 @@
     $currentStudentId = $_GET["student"] ?? null;   // If student's or class' view
 
     // Extracting class 
-    $result_class = $conn -> query("SELECT idclass, name FROM class WHERE code = '$code'");
+    $stmt = $conn->prepare(
+        "SELECT idclass, name FROM class WHERE code=?"
+    );
+
+    $stmt->bind_param("s", $code);
+
+    $stmt->execute();
+    $result_class = $stmt->get_result();
 
     if ($result_class && $result_class->num_rows > 0) {
         $row_class = $result_class->fetch_assoc();
@@ -22,7 +29,15 @@
     }
 
     // Extracting student
-    $result_student = $conn -> query ("SELECT idstudent, name FROM student WHERE idclass = '$id_class'");
+    $stmt = $conn->prepare(
+        "SELECT idstudent, name FROM student WHERE idclass=?"
+    );
+
+    $stmt->bind_param("i", $id_class);
+
+    $stmt->execute();
+    $result_student = $stmt->get_result();
+
     $students = [];
     if ($result_student){
         while ($row_student = $result_student->fetch_assoc()) {
@@ -33,12 +48,18 @@
     }
 
     // Extracting subjects (and schedule)
-    $result_subject = $conn->query("
+    $stmt = $conn->prepare("
         SELECT s.idsubject, s.name, sc.day_of_week
         FROM subject s
         JOIN schedule sc ON s.idsubject = sc.idsubject
-        WHERE s.idclass = '$id_class'
+        WHERE s.idclass = ?
     ");
+
+    $stmt->bind_param("i", $id_class);
+    $stmt->execute();
+
+    $result_subject = $stmt->get_result();
+
     $subjects = [];
 
     if($result_subject){
@@ -99,16 +120,21 @@
     $start_date = array_key_first($week_dates);
     $end_date   = array_key_last($week_dates);
 
-    $result_slots = $conn->query("
+    $stmt = $conn->prepare("
         SELECT s.date, sub.name AS subject, o.idstudent, st.name AS student_name, s.idslot
         FROM slot s
         JOIN subject sub ON s.idsubject = sub.idsubject
         LEFT JOIN oral o ON s.idslot = o.idslot
         LEFT JOIN student st ON o.idstudent = st.idstudent
-        WHERE s.idclass = $id_class
-        AND s.date BETWEEN '$start_date' AND '$end_date'
+        WHERE s.idclass = ?
+        AND s.date BETWEEN ? AND ?
         ORDER BY s.date, sub.name
     ");
+
+    $stmt->bind_param("iss", $id_class, $start_date, $end_date);
+    $stmt->execute();
+
+    $result_slots = $stmt->get_result();
 
     if ($result_slots){
         while($row = $result_slots->fetch_assoc()){
@@ -131,13 +157,18 @@
     }
 
     // Extracting events
-    $result_events = $conn->query("
+    $stmt = $conn->prepare("
         SELECT idevent, name, description, start_date, end_date
         FROM event
-        WHERE idclass = $id_class
-        AND start_date <= '$end_date'
-        AND end_date >= '$start_date'
+        WHERE idclass = ?
+        AND start_date <= ?
+        AND end_date >= ?
     ");
+
+    $stmt->bind_param("iss", $id_class, $end_date, $start_date);
+    $stmt->execute();
+
+    $result_events = $stmt->get_result();
 
     if ($result_events) {
         while($row = $result_events->fetch_assoc()){
@@ -185,7 +216,9 @@
                 <?php 
                     foreach($students as $id_student => $name){
                         $selected = ($currentStudentId == $id_student) ? "selected" : "";
-                        echo "<option value='$id_student' $selected>" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</option>";
+                        echo "<option value='" . htmlspecialchars($id_student, ENT_QUOTES, 'UTF-8') . "' $selected>" 
+                            . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') 
+                            . "</option>";
                     }
                 ?>
             </select>
@@ -198,16 +231,16 @@
     </aside><br>
     <section>
         <div id="div_settings" style="display: none;">      <!-- Settings page -->
-            <p>Codice classe: <?= $code ?></p>    
+            <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
             <button id="edit">[+] Modifica</button>
             <form method="post" action="2_class_data.php" id="form_class" style="display: none;">
-                <input type="hidden" name="code" value="<?php echo $code?>">    <!-- Create hidden code -->
+                <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">    <!-- Create hidden code -->
                 <div>
                     <label for="name">Classe</label>
                     <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?>" required>
                 </div><br>
 
-                <div>
+                <div>i
                     <table border="1" id="schedule_table">
                         <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td><td>Domenica</td></tr>
                         <?php 
@@ -250,14 +283,14 @@
                 <button type="button" onclick="location.reload();">Annulla</button>
             </form><br>
             <form method="post" action="6_delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
-                <input type="hidden" name="code" value="<?php echo $code?>">
+                <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
                 <input type="submit" value="Cancella classe">
             </form>            
             <a href="1_home.html"><button>Logout</button></a>
         </div>
         <form method="post" action="4_events.php" id="form_events" style="display: none;">    <!-- Events page -->
-            <input type="hidden" name="code" value="<?= $code ?>">    
-            <input type="hidden" name="idclass" value="<?= $id_class ?>">
+            <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
+            <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
             <label for="type">Tipologia</label>
             <select name="type" id="type">
                 <option value="oral">Interrogazioni</option>
@@ -270,7 +303,9 @@
                     <?php 
                         foreach($subjects as $idsubject => $subject){
                             $name = $subject["name"];
-                            echo "<option value='$idsubject'>" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</option>";
+                            echo "<option value='" . htmlspecialchars($idsubject, ENT_QUOTES, 'UTF-8') . "'>" 
+                                . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') 
+                                . "</option>";
                         }
                     ?>
                 </select>
@@ -296,9 +331,9 @@
     <main id="calendar">        <!-- Calendar page -->
         <div style="margin-bottom:10px;">   <!-- Calendar's header -->
             <?php $studentParam = $currentStudentId ? "&student=" . urlencode($currentStudentId) : ""; ?>
-            <a href="?week=<?= $week_offset-1 ?>&code=<?= urlencode($code) ?><?= $studentParam ?>"><button>&lt;&lt; Settimana prec</button></a>
+            <a href="<?= htmlspecialchars("?week=" . ($week_offset-1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>&lt;&lt; Settimana prec</button></a>
             <span style="margin:0 10px;"><strong>Settimana del <?= $start_week->format('d/m/Y')?> - <?= $end_week->format('d/m/Y')?></strong>  </span>
-            <a href="?week=<?= $week_offset+1 ?>&code=<?= urlencode($code) ?><?= $studentParam ?>"><button>Settimana succ &gt;&gt;</button></a>
+            <a href="<?= htmlspecialchars("?week=" . ($week_offset+1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>Settimana succ &gt;&gt;</button></a>
         </div>
 
         <div style="display:flex; gap:10px; overflow-x:auto;">
@@ -321,7 +356,7 @@
                             }
                         }
                         ?>
-                        <button class="slot-toggle" data-slotid="<?= $slot['idslot'] ?>"><?= $isInSlot ? '-' : '+' ?></button>
+                        <button class="slot-toggle" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><?= $isInSlot ? '-' : '+' ?></button>
                         <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
                         <div class="students">
                             <?php foreach($slot['students'] as $student): ?>
@@ -334,7 +369,7 @@
                 <?php foreach($day['events'] as $event): ?>     <!-- Event -->
                     <div class="event" style="background:#f0f0f0; padding:2px 5px; margin-top:2px;">
                         <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
-                        <button class="event-elimination" data-eventid="<?= $event['idevent'] ?>">x</button> 
+                        <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>">x</button> 
                         <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
                 <?php endforeach; ?>
@@ -440,7 +475,7 @@
                 fetch("4_events.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `idslot=${slotId}&type=oral&idclass=<?= $id_class ?>`
+                    body: `idslot=${slotId}&type=oral&idclass=<?= json_encode($id_class) ?>`
                 })
                 .then(res => res.text())
                 .then(msg => {
@@ -462,7 +497,7 @@
                 fetch("4_events.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `idevent=${eventId}&type=other&idclass=<?= $id_class ?>`
+                    body: `idevent=${eventId}&type=other&idclass=<?= json_encode($id_class) ?>`
                 })
                 .then(res => res.text())
                 .then(msg => {
