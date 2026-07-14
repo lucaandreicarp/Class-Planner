@@ -39,7 +39,7 @@
             // Update class name
             $update_class = $conn->query("UPDATE class SET name='$name' WHERE idclass=$idclass");
             if ($update_class){
-                echo "<script> alert('La classe $name è stata aggiornata!'); window.location.href='3_class_planner.php?code=$code'; </script>";
+                echo "<script> alert(" . json_encode("La classe $name è stata aggiornata!") . "); window.location.href='3_class_planner.php?code=$code'; </script>";
             } else {
                 die($conn->error);
             }
@@ -103,7 +103,7 @@
 
     // Output
     if ($isNewClass) {
-        echo "<script> alert('La classe $name è stata creata! Il codice della classe è: $code'); window.location.href='3_class_planner.php?code=$code'; </script>";
+        echo "<script> alert(" . json_encode("La classe $name è stata creata! Il codice della classe è: $code") . "); window.location.href='3_class_planner.php?code=$code'; </script>";
     }
 
     // Close DB Connection

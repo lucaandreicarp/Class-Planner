@@ -171,7 +171,7 @@
 </head>
 <body>
     <header>
-        <h2><?php echo "$class_name" ?></h2>
+        <h2><?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?></h2>
         <span id="settings">Impostazioni</span>
     </header><br>
     <aside>
@@ -185,7 +185,7 @@
                 <?php 
                     foreach($students as $id_student => $name){
                         $selected = ($currentStudentId == $id_student) ? "selected" : "";
-                        echo "<option value='$id_student' $selected>$name</option>";
+                        echo "<option value='$id_student' $selected>" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</option>";
                     }
                 ?>
             </select>
@@ -204,7 +204,7 @@
                 <input type="hidden" name="code" value="<?php echo $code?>">    <!-- Create hidden code -->
                 <div>
                     <label for="name">Classe</label>
-                    <input type="text" name="name" id="name" value="<?php echo "$class_name"?>" required>
+                    <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?>" required>
                 </div><br>
 
                 <div>
@@ -216,7 +216,7 @@
                                 $iSubject ++;
                                 $name = $subject["name"];
                                 echo "<tr>";
-                                echo "<td><input type='text' name='subjects[subject$iSubject]' value='$name' required></td>";
+                                echo "<td><input type='text' name='subjects[subject$iSubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required></td>";
                                 for ($i = 1; $i <= 7; $i++){
                                     $checked = in_array($i, $subject['days']) ? "checked" : "";
                                     echo "<td><input type='checkbox' name='schedule[subject$iSubject][$i]' $checked></td>";
@@ -235,7 +235,7 @@
                     <div id="students_container">
                         <?php 
                             foreach ($students as $id_student => $name){
-                                echo "<input type='text' name='students[]' value='$name' required>";
+                                echo "<input type='text' name='students[]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required>";
                             }
                         ?>
                     </div>
@@ -270,7 +270,7 @@
                     <?php 
                         foreach($subjects as $idsubject => $subject){
                             $name = $subject["name"];
-                            echo "<option value='$idsubject'>$name</option>";
+                            echo "<option value='$idsubject'>" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</option>";
                         }
                     ?>
                 </select>
@@ -308,7 +308,7 @@
 
                 <?php foreach($day['slots'] as $subject => $slot): ?>       <!-- Slot -->
                     <div class="slot" style="margin-bottom:5px;">
-                        <strong><?= $subject ?></strong>
+                        <strong><?= htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') ?></strong>
                         <?php       // To determine button's text
                         $isInSlot = false;
 
@@ -325,7 +325,7 @@
                         <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
                         <div class="students">
                             <?php foreach($slot['students'] as $student): ?>
-                                [<?= $student['name'] ?>]
+                                [<?= htmlspecialchars($student['name'], ENT_QUOTES, 'UTF-8') ?>]
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -333,9 +333,9 @@
 
                 <?php foreach($day['events'] as $event): ?>     <!-- Event -->
                     <div class="event" style="background:#f0f0f0; padding:2px 5px; margin-top:2px;">
-                        <strong><?= $event['name'] ?></strong>
+                        <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
                         <button class="event-elimination" data-eventid="<?= $event['idevent'] ?>">x</button> 
-                        <p><?= $event['description'] ?></p>
+                        <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
                 <?php endforeach; ?>
             </div>
