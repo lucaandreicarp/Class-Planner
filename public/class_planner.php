@@ -194,6 +194,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Planner</title>
+    <link rel="stylesheet" href="css/class_planner.css">
 </head>
 <body>
     <header>
@@ -225,10 +226,10 @@
         </div>
     </aside><br>
     <section>
-        <div id="div_settings" style="display: none;">      <!-- Settings page -->
+        <div id="div_settings" class="hidden">      <!-- Settings page -->
             <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
             <button id="edit">[+] Modifica</button>
-            <form method="post" action="../php/class_data.php" id="form_class" style="display: none;">
+            <form method="post" action="../php/class_data.php" id="form_class" class="hidden">
                 <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">    <!-- Create hidden code -->
                 <div>
                     <label for="name">Classe</label>
@@ -283,7 +284,7 @@
             </form>            
             <a href="index.html"><button>Logout</button></a>
         </div>
-        <form method="post" action="../php/events.php" id="form_events" style="display: none;">    <!-- Events page -->
+        <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
             <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
             <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
             <label for="type">Tipologia</label>
@@ -324,20 +325,20 @@
         </form>
     </section>
     <main id="calendar">        <!-- Calendar page -->
-        <div style="margin-bottom:10px;">   <!-- Calendar's header -->
+        <div id="calendar-header">   <!-- Calendar's header -->
             <?php $studentParam = $currentStudentId ? "&student=" . urlencode($currentStudentId) : ""; ?>
             <a href="<?= htmlspecialchars("?week=" . ($week_offset-1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>&lt;&lt; Settimana prec</button></a>
-            <span style="margin:0 10px;"><strong>Settimana del <?= $start_week->format('d/m/Y')?> - <?= $end_week->format('d/m/Y')?></strong>  </span>
+            <span id="header-text"><strong>Settimana del <?= $start_week->format('d/m/Y')?> - <?= $end_week->format('d/m/Y')?></strong>  </span>
             <a href="<?= htmlspecialchars("?week=" . ($week_offset+1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>Settimana succ &gt;&gt;</button></a>
         </div>
 
-        <div style="display:flex; gap:10px; overflow-x:auto;">
+        <div id="week-container">
         <?php foreach($week_dates as $date => $day): ?>
-            <div class="day" style="min-width:150px; border:1px solid #ccc; padding:5px;">
+            <div class="day">
                 <h4><?= $day['day_name'] . " " . date('d/m', strtotime($date)) ?></h4>      <!-- Day name and date -->
 
                 <?php foreach($day['slots'] as $subject => $slot): ?>       <!-- Slot -->
-                    <div class="slot" style="margin-bottom:5px;">
+                    <div class="slot">
                         <strong><?= htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') ?></strong>
                         <?php       // To determine button's text
                         $isInSlot = false;
@@ -362,7 +363,7 @@
                 <?php endforeach; ?>
 
                 <?php foreach($day['events'] as $event): ?>     <!-- Event -->
-                    <div class="event" style="background:#f0f0f0; padding:2px 5px; margin-top:2px;">
+                    <div class="event">
                         <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
                         <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>">x</button> 
                         <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>

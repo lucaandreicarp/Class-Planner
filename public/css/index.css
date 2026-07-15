@@ -1,0 +1,123 @@
+/* General settings */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F5F7FB;
+    color: #1F2937;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 100vh;
+    margin: 0;
+}
+
+
+/* Title */
+
+h1 {
+    font-size: 40px;
+    margin-bottom: 40px;
+}
+
+
+/* Form */
+
+form {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* Code input */
+
+input[type="text"] {
+    padding: 12px;
+    width: 250px;
+
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+
+    font-size: 16px;
+}
+
+
+/* Enter button */
+
+input[type="submit"] {
+    background-color: #2563EB;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 12px 20px;
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+    background-color: #1D4ED8;
+}
+
+
+/* Separator */
+
+p {
+    margin: 25px 0;
+    color: #6B7280;
+}
+
+
+/* Create class button */
+
+button {
+    background-color: white;
+    color: #2563EB;
+
+    border: 2px solid #2563EB;
+    border-radius: 8px;
+
+    padding: 12px 25px;
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #EFF6FF;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+
+    h1 {
+        font-size: 32px;
+        text-align: center;
+    }
+
+
+    form {
+        flex-direction: column;
+        width: 90%;
+    }
+
+
+    input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+
+    input[type="submit"]{
+        width: 100%;
+    }
+
+    button {
+        width: 90%;
+    }
+
+}

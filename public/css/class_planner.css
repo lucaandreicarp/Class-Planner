@@ -1,0 +1,302 @@
+/* =========================
+   GENERAL SETTINGS
+========================= */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F5F7FB;
+    color: #1F2937;
+
+    margin: 0;
+    padding: 20px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: white;
+
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+
+header h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+
+#settings {
+    color: #2563EB;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#settings:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   ASIDE
+========================= */
+
+aside {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: white;
+
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+
+select,
+input[type="date"],
+textarea,
+input[type="text"] {
+    font-size: 14px;
+    padding: 8px;
+
+    border-radius: 8px;
+    border: 1px solid #D1D5DB;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+button,
+input[type="submit"] {
+    background-color: #2563EB;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 8px 15px;
+
+    cursor: pointer;
+    font-size: 14px;
+}
+
+
+button:hover,
+input[type="submit"]:hover {
+    background-color: #1D4ED8;
+}
+
+
+/* Delete buttons */
+
+.slot-elimination,
+.event-elimination {
+    background-color: #EF4444;
+
+    padding: 3px 8px;
+    font-size: 12px;
+}
+
+
+.slot-elimination:hover,
+.event-elimination:hover {
+
+    background-color: #DC2626;
+}
+
+
+
+/* =========================
+   CALENDAR
+========================= */
+
+
+#calendar {
+    background-color: white;
+
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 12px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+ 
+/* Header */
+
+#calendar-header {
+    margin-bottom: 10px;
+}
+
+#header-text {
+    margin: 0 10px;
+}
+
+/* Week buttons */
+
+#calendar > div:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Days */
+
+#week-container {
+    display:flex; 
+    gap:10px; 
+    overflow-x:auto;
+}
+
+.day {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+
+    min-width: 150px;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+
+.day h4 {
+    margin: 5px;
+    text-align: center;
+    color: #2563EB;
+}
+
+
+/* =========================
+   SLOTS / ORALS
+========================= */
+
+
+.slot {
+    background-color: #FEF3C7;
+
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom:5px;
+}
+
+
+.slot strong {
+    display: block;
+    margin-bottom: 5px;
+
+}
+
+
+.students {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #6B7280;
+}
+
+
+/* =========================
+   EVENTS
+========================= */
+
+
+.event {
+    background-color: #DBEAFE;
+
+    border-radius: 8px;
+    padding: 8px;
+    margin-top:2px;
+}
+
+
+.event p {
+    margin: 5px 0;
+    font-size: 13px;
+}
+
+
+
+/* =========================
+   SETTINGS PANEL
+========================= */
+
+.hidden {
+    display: none;
+}
+
+#div_settings,
+#form_events {
+    background-color: white;
+
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 20px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+
+/* Schedule table */
+
+
+#schedule_table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px 0;
+}
+
+
+#schedule_table td {
+    border: 1px solid #D1D5DB;
+    padding: 8px;
+    text-align:center;
+}
+
+
+#schedule_table tr:first-child {
+    background-color: #EFF6FF;
+    font-weight:bold;
+}
+
+
+/* Students edit */
+
+#students_container {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+
+@media(max-width:700px){
+
+    body {
+        padding:10px;
+    }
+
+    #calendar {
+        padding:10px;
+    }
+
+    .day {
+        min-width:130px !important;
+    }
+
+}
