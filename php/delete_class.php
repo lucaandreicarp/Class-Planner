@@ -1,11 +1,5 @@
 <?php
-
-    $conn = new mysqli("localhost", "root", "", "class_planner");
-
-    if ($conn -> connect_errno){
-        echo "Errore nella creazione della connessione";
-        exit();
-    }
+    require_once "../config/database.php";
 
     $code = $_POST["code"];
 
@@ -18,7 +12,7 @@
     $result_cancellation = $stmt->execute();  
 
     if($result_cancellation){
-        echo "<script> alert('Classe eliminata correttamente!'); window.location.href='1_home.html'; </script>";
+        echo "<script> alert('Classe eliminata correttamente!'); window.location.href='../public/index.html'; </script>";
     } else {
         die($conn->error); 
     }

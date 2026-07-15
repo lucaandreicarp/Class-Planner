@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Class</title>
+</head>
+<body>
+    <h2>CREA UNA NUOVA CLASSE</h2>
+
+    <form method="post" action="../php/class_data.php" id="form_class">
+        <div>
+            <label for="name">Classe</label>
+            <input type="text" name="name" id="name" placeholder="Inserisci un nome" required>
+        </div><br>
+
+        <div>
+            <table border="1" id="schedule_table">
+                <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td><td>Domenica</td></tr>
+                <tr>
+                    <td><input type="text" name="subjects[subject1]" placeholder="Inserisci una materia" required></td>
+                    <td><input type="checkbox" name="schedule[subject1][1]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][2]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][3]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][4]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][5]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][6]"></td>
+                    <td><input type="checkbox" name="schedule[subject1][7]"></td>
+                </tr>
+            </table>
+
+            <button type="button" id="add_subject">+ Aggiungi materia</button>
+            <button type="button" id="remove_subject">- Rimuovi materia</button>
+        </div>
+
+        <div>
+            <p>Studenti</p>
+            <div id="students_container">
+                <input type="text" name="students[]" placeholder="Inserisci uno studente" required>
+            </div>
+            <button type="button" id="add_student">+ Aggiungi studente</button>
+            <button type="button" id="remove_student">- Rimuovi studente</button>
+        </div><br>
+
+        <input type="submit" value="Invia">
+    </form>
+
+    <p>oppure</p>
+
+    <button type="button" onclick="location.href='index.html'">
+        Ho già una classe
+    </button>
+
+    <script src="js/create_class.js"></script>
+</body>
+</html>

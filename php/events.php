@@ -1,10 +1,5 @@
 <?php
-    $conn = new mysqli("localhost", "root", "", "class_planner");
-
-    if ($conn -> connect_errno){
-        echo "Errore nella creazione della connessione";
-        exit();
-    }
+    require_once "../config/database.php";
 
     $id_class = $_POST["idclass"];
     $type = $_POST["type"];
@@ -81,18 +76,18 @@
                 if ($skipped > 0){
                     echo "<script>
                     alert(" . json_encode("$inserted interrogazioni inserite. $skipped erano già presenti.") . ");
-                    window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                    window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
                     </script>";
                 } else {
                     echo "<script>
                     alert(" . json_encode("$inserted interrogazioni inserite!") . ");
-                    window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                    window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
                     </script>";
                 }
             } else {
                 echo "<script>
                 alert('Nessuna nuova interrogazione inserita: erano già presenti.');
-                window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
                 </script>";
             }
         } else {    // Remove event
@@ -138,7 +133,7 @@
             } else {
                 echo "<script>
                 alert('Evento inserito con successo!');
-                window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
                 </script>";
             }
         } else {    // Remove event

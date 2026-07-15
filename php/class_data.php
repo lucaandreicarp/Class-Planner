@@ -1,10 +1,5 @@
 <?php
-    $conn = new mysqli("localhost", "root", "", "class_planner");
-
-    if ($conn -> connect_errno){
-        echo "Errore nella creazione della connessione";
-        exit();
-    }
+    require_once "../config/database.php";
 
     $name = $_POST["name"];
     $subjects = $_POST["subjects"];
@@ -81,7 +76,7 @@
             if ($update_class){
                 echo "<script>
                 alert(" . json_encode("La classe $name è stata aggiornata!") . ");
-                window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
                 </script>";
             } else {
                 die($conn->error);
@@ -180,7 +175,7 @@
     if ($isNewClass) {
         echo "<script>
         alert(" . json_encode("La classe $name è stata creata! Il codice della classe è: $code") . ");
-        window.location.href=" . json_encode("3_class_planner.php?code=" . urlencode($code)) . ";
+        window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
         </script>";
     }
 

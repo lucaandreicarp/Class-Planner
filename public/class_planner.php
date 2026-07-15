@@ -1,10 +1,5 @@
 <?php
-    $conn = new mysqli("localhost", "root", "", "class_planner");
-
-    if ($conn -> connect_errno){
-        echo "Errore nella creazione della connessione";
-        exit();
-    }
+    require_once "../config/database.php";
 
     $code = $_GET["code"];
     $currentStudentId = $_GET["student"] ?? null;   // If student's or class' view
@@ -24,7 +19,7 @@
         $id_class = $row_class["idclass"];
         $class_name = $row_class["name"];
     } else {
-        echo "<script> alert('Codice classe non trovato!'); window.location.href='1_home.html'; </script>";
+        echo "<script> alert('Codice classe non trovato!'); window.location.href='index.html'; </script>";
         die($conn->error);
     }
 
@@ -233,7 +228,7 @@
         <div id="div_settings" style="display: none;">      <!-- Settings page -->
             <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
             <button id="edit">[+] Modifica</button>
-            <form method="post" action="2_class_data.php" id="form_class" style="display: none;">
+            <form method="post" action="../php/class_data.php" id="form_class" style="display: none;">
                 <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">    <!-- Create hidden code -->
                 <div>
                     <label for="name">Classe</label>
@@ -282,13 +277,13 @@
 
                 <button type="button" onclick="location.reload();">Annulla</button>
             </form><br>
-            <form method="post" action="6_delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
+            <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
                 <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
                 <input type="submit" value="Cancella classe">
             </form>            
-            <a href="1_home.html"><button>Logout</button></a>
+            <a href="index.html"><button>Logout</button></a>
         </div>
-        <form method="post" action="4_events.php" id="form_events" style="display: none;">    <!-- Events page -->
+        <form method="post" action="../php/events.php" id="form_events" style="display: none;">    <!-- Events page -->
             <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
             <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
             <label for="type">Tipologia</label>
@@ -377,310 +372,7 @@
         <?php endforeach; ?>
         </div>
     </main>
-    <script>
-        // View set
-        const view = document.getElementById("view");
-        const div_event = document.getElementById("div_event");
-        
-        const form_events = document.getElementById("form_events")
-        let events_displayed = false;
-        let button_event = document.getElementById("add_event");
-        let label_button_event = document.getElementById("label_button_event");
 
-        const edit = document.getElementById("edit");
-        const form_cancellation = document.getElementById("form_cancellation");
-
-        let currentStudentId = (view.value === "CLASS") ? null : view.value;
-
-        view.addEventListener('change', () => {
-            const selectedValue = view.value;
-            const url = new URL(window.location);
-
-            if (selectedValue == "CLASS"){
-                currentStudentId = null;
-
-                url.searchParams.delete("student");
-            } else {
-                currentStudentId = selectedValue;
-
-                url.searchParams.set("student", selectedValue);
-            }
-            window.location.href = url.toString();
-        });
-
-        // Toggle visibility
-        if (currentStudentId){
-            edit.style.display = "none";
-            form_cancellation.style.display = "none";
-
-            div_event.style.display = "none";
-            
-            document.querySelectorAll(".slot-toggle").forEach(btn => {
-                btn.style.display = "inline-block";
-            });
-            
-            document.querySelectorAll(".slot-elimination").forEach(btn => {
-                btn.style.display = "none";
-            });
-            
-            document.querySelectorAll(".event-elimination").forEach(btn => {
-                btn.style.display = "none";
-            });
-        } else {
-            edit.style.display = "block";
-            form_cancellation.style.display = "block";
-
-            div_event.style.display = "block";
-
-            document.querySelectorAll(".slot-toggle").forEach(btn => {
-                btn.style.display = "none";
-            });
-            
-            document.querySelectorAll(".slot-elimination").forEach(btn => {
-                btn.style.display = "inline-block";
-            });
-            
-            document.querySelectorAll(".event-elimination").forEach(btn => {
-                btn.style.display = "inline-block";
-            });
-        }
-        
-        // Oral's management
-        document.querySelectorAll(".slot-toggle").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const slotId = btn.getAttribute("data-slotid");
-
-                fetch("5_oral.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `idslot=${slotId}&idstudent=${currentStudentId}`
-                })
-                .then(res => res.text())
-                .then(msg => {
-                    alert(msg);
-                    location.reload(); 
-                });
-            });
-        });
-
-        // Slot elimination
-        document.querySelectorAll(".slot-elimination").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const slotId = btn.getAttribute("data-slotid");
-
-                if (!confirm("Sei sicuro di voler eliminare questa interrogazione?")) {
-                    return;
-                }
-
-                fetch("4_events.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `idslot=${slotId}&type=oral&idclass=<?= json_encode($id_class) ?>`
-                })
-                .then(res => res.text())
-                .then(msg => {
-                    alert(msg);
-                    location.reload(); 
-                });
-            });
-        });
-        
-        // Event elimination
-        document.querySelectorAll(".event-elimination").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const eventId = btn.getAttribute("data-eventid");
-
-                if (!confirm("Sei sicuro di voler eliminare questo evento?")) {
-                    return;
-                }
-
-                fetch("4_events.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `idevent=${eventId}&type=other&idclass=<?= json_encode($id_class) ?>`
-                })
-                .then(res => res.text())
-                .then(msg => {
-                    alert(msg);
-                    location.reload(); 
-                });
-            });
-        });
-
-        // Settings toggle
-        const name_settings = document.getElementById("settings");
-        const container_settings = document.getElementById("div_settings"); 
-
-        let settings_displayed = false;
-        let edit_displayed = false;
-
-        function toggleSettings() {
-            if(!settings_displayed){
-                settings_displayed = true;
-                container_settings.style.display = "block";
-            } else {
-                settings_displayed = false;
-                container_settings.style.display = "none";
-                if (edit_displayed) toggleEdit();
-            }
-        }
-
-        name_settings.addEventListener('click', () => {
-            toggleSettings();
-        })
-
-        // Edit toggle
-        const form_class = document.getElementById('form_class');
-
-        function toggleEdit(){
-            if(!edit_displayed){
-                edit_displayed = true;
-                form_class.style.display = "block";
-                edit.textContent = "[-] Modifica";
-            } else {
-                edit_displayed = false;
-                form_class.style.display = "none";
-                edit.textContent = "[+] Modifica";
-            }
-        }
-
-        edit.addEventListener('click', () => {
-            toggleEdit();
-        })
-
-        // Add Subject
-        const table = document.getElementById('schedule_table');
-        let subjectNumber = (table.getElementsByTagName("tr").length) - 1; // subject counter 
-
-        document.getElementById('add_subject').addEventListener('click', () => {
-            subjectNumber++;
-
-            // Create the row
-            const tr = document.createElement('tr');
-
-            // First td
-            const tdInput = document.createElement('td');
-            const inputSubject = document.createElement('input');
-            inputSubject.type = 'text';
-            inputSubject.name = `subjects[subject${subjectNumber}]`
-            inputSubject.placeholder = 'Inserisci una materia';
-            inputSubject.required = true;
-            tdInput.appendChild(inputSubject);
-            tr.appendChild(tdInput);
-            // Last 7 td with checkbox's
-            const days = [1, 2, 3, 4, 5, 6, 7];
-            days.forEach(day => {
-                const tdCheckbox = document.createElement('td');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.name = `schedule[subject${subjectNumber}][${day}]`; // multidimensional array
-                tdCheckbox.appendChild(checkbox);
-                tr.appendChild(tdCheckbox);
-            });
-
-            // Add the tr to the table
-            table.appendChild(tr);
-        });
-
-        // Remove Subject
-        document.getElementById('remove_subject').addEventListener('click', () => {
-            if(table.rows.length > 2){ // keep at least the header and the first row
-                table.deleteRow(table.rows.length - 1);
-                subjectNumber--;  // remove it when you will be able to remove a specific subject, not just the last one
-            }
-        });
-
-        // Add Student
-        const containerStudents = document.getElementById('students_container');
-        document.getElementById('add_student').addEventListener('click', () => {
-            const inputStudent = document.createElement('input');
-            inputStudent.type = 'text';
-            inputStudent.name = 'students[]';
-            inputStudent.placeholder = 'Inserisci uno studente';
-            inputStudent.required = true;
-            containerStudents.appendChild(inputStudent);
-        });
-
-        // Remove Student
-        document.getElementById('remove_student').addEventListener('click', () => {
-            const inputsStudents = containerStudents.getElementsByTagName('input');
-            if (inputsStudents.length > 1) {
-                containerStudents.removeChild(inputsStudents[inputsStudents.length - 1]);
-            }
-        });
-
-        // Checkbox check
-        form_class.addEventListener('submit', (e) => {
-            const rows = table.querySelectorAll('tr:not(:first-child)');
-            let error = false;
-
-            rows.forEach(row => {
-                const checkbox = row.querySelectorAll('input[type="checkbox"]');
-                const atleastOneSelected = Array.from(checkbox).some(cb => cb.checked);
-
-                if (!atleastOneSelected) {
-                    error = true;
-                }
-            });
-
-            if (error) {
-                e.preventDefault();
-                alert("Ogni materia deve avere almeno un giorno selezionato!");
-            }            
-        });
-
-        // Event toggle
-        function toggleEvents(){
-            if(!events_displayed){
-                events_displayed = true;
-                form_events.style.display = "block";
-                button_event.textContent = "-";
-                label_button_event.textContent = "Rimuovi evento";
-            } else {
-                events_displayed = false;
-                form_events.style.display = "none";
-                button_event.textContent = "+";
-                label_button_event.textContent = "Aggiungi evento";
-            }
-        }
-
-        button_event.addEventListener('click', () => {
-            toggleEvents();
-        })
-
-        // Event form
-        const typeSelect = document.getElementById("type");
-        const oralDiv = document.querySelector(".oral");
-        const otherDiv = document.querySelector(".other");
-        const nameInput = document.getElementById("event_name");
-
-        function toggleEventType() {
-            if(typeSelect.value === "oral"){
-                oralDiv.style.display = "block";  // show oral
-                otherDiv.style.display = "none";  // hide other
-
-                nameInput.required = false;
-            } else {
-                oralDiv.style.display = "none";   // hide oral
-                otherDiv.style.display = "block"; // show other
-
-                nameInput.required = true;
-            }
-        }
-
-        typeSelect.addEventListener("change", toggleEventType); // If the select changes
-        toggleEventType(); // Refresh at starting page
-
-        // Dates check
-        form_events.addEventListener("submit", (e) => {
-            const start = document.getElementById("start_date").value;
-            const end = document.getElementById("end_date").value;
-
-            if (start > end) {
-                e.preventDefault();
-                alert("La data di inizio non può essere successiva alla data di fine!");
-            }
-        });
-    </script>
+    <script src="js/class_planner.js"></script>
 </body>
 </html>

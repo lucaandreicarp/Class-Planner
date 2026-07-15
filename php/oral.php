@@ -1,10 +1,5 @@
 <?php
-    $conn = new mysqli("localhost", "root", "", "class_planner");
-
-    if ($conn -> connect_errno){
-        echo "Errore nella creazione della connessione";
-        exit();
-    }
+    require_once "../config/database.php";
 
     $id_slot = $_POST["idslot"];
     $id_student = $_POST["idstudent"];
