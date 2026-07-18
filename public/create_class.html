@@ -12,36 +12,38 @@
     <form method="post" action="../php/class_data.php" id="form_class">
         <div>
             <label for="name">Classe</label>
-            <input type="text" name="name" id="name" placeholder="Inserisci un nome" required>
-        </div><br>
+            <input type="text" name="name" id="name" placeholder="Nome classe" required>
+        </div>
 
         <div>
-            <table border="1" id="schedule_table">
-                <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td><td>Domenica</td></tr>
+            <table id="schedule_table">
+                <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td></tr>
                 <tr>
-                    <td><input type="text" name="subjects[subject1]" placeholder="Inserisci una materia" required></td>
+                    <td><input type="text" name="subjects[subject1]" placeholder="Materia" required></td>
                     <td><input type="checkbox" name="schedule[subject1][1]"></td>
                     <td><input type="checkbox" name="schedule[subject1][2]"></td>
                     <td><input type="checkbox" name="schedule[subject1][3]"></td>
                     <td><input type="checkbox" name="schedule[subject1][4]"></td>
                     <td><input type="checkbox" name="schedule[subject1][5]"></td>
                     <td><input type="checkbox" name="schedule[subject1][6]"></td>
-                    <td><input type="checkbox" name="schedule[subject1][7]"></td>
                 </tr>
             </table>
-
-            <button type="button" id="add_subject">+ Aggiungi materia</button>
-            <button type="button" id="remove_subject">- Rimuovi materia</button>
+            <div class="mobile_buttons">
+                <button type="button" id="add_subject">+ Aggiungi materia</button>
+                <button type="button" id="remove_subject">- Rimuovi materia</button>
+            </div>
         </div>
 
         <div>
-            <p>Studenti</p>
+            <b>Studenti</b>
             <div id="students_container">
-                <input type="text" name="students[]" placeholder="Inserisci uno studente" required>
+                <input type="text" name="students[]" placeholder="Nome studente" required>
             </div>
-            <button type="button" id="add_student">+ Aggiungi studente</button>
-            <button type="button" id="remove_student">- Rimuovi studente</button>
-        </div><br>
+            <div class="mobile_buttons">
+                <button type="button" id="add_student">+ Aggiungi studente</button>
+                <button type="button" id="remove_student">- Rimuovi studente</button>
+            </div>
+        </div>
 
         <input type="submit" value="Invia">
     </form>

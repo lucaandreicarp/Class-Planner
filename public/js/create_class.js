@@ -12,13 +12,13 @@ document.getElementById('add_subject').addEventListener('click', () => {
     const inputSubject = document.createElement('input');
     inputSubject.type = 'text';
     inputSubject.name = `subjects[subject${subjectNumber}]`
-    inputSubject.placeholder = 'Inserisci una materia';
+    inputSubject.placeholder = 'Materia';
     inputSubject.required = true;
     tdInput.appendChild(inputSubject);
     tr.appendChild(tdInput);
 
-    // Last 7 td with checkbox's
-    const days = [1, 2, 3, 4, 5, 6, 7];
+    // Last 6 td with checkbox's
+    const days = [1, 2, 3, 4, 5, 6];
     days.forEach(day => {
         const tdCheckbox = document.createElement('td');
         const checkbox = document.createElement('input');
@@ -46,7 +46,7 @@ document.getElementById('add_student').addEventListener('click', () => {
     const inputStudent = document.createElement('input');
     inputStudent.type = 'text';
     inputStudent.name = 'students[]';
-    inputStudent.placeholder = 'Inserisci uno studente';
+    inputStudent.placeholder = 'Nome studente';
     inputStudent.required = true;
     containerStudents.appendChild(inputStudent);
 });

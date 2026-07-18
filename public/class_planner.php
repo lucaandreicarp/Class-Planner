@@ -200,7 +200,7 @@
     <header>
         <h2><?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?></h2>
         <span id="settings">Impostazioni</span>
-    </header><br>
+    </header>
     <aside>
         <div>   <!-- View -->
             <label for="view">Visuale</label>
@@ -224,7 +224,7 @@
             <button id="add_event">+</button>
             <label for="add_event" id="label_button_event">Aggiungi evento</label>
         </div>
-    </aside><br>
+    </aside>
     <section>
         <div id="div_settings" class="hidden">      <!-- Settings page -->
             <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
@@ -234,11 +234,11 @@
                 <div>
                     <label for="name">Classe</label>
                     <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?>" required>
-                </div><br>
+                </div>
 
-                <div>i
-                    <table border="1" id="schedule_table">
-                        <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td><td>Domenica</td></tr>
+                <div>
+                    <table id="schedule_table">
+                        <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td></tr>
                         <?php 
                             $iSubject = 0;
                             foreach ($subjects as $idsubject => $subject){
@@ -246,7 +246,7 @@
                                 $name = $subject["name"];
                                 echo "<tr>";
                                 echo "<td><input type='text' name='subjects[subject$iSubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required></td>";
-                                for ($i = 1; $i <= 7; $i++){
+                                for ($i = 1; $i <= 6; $i++){
                                     $checked = in_array($i, $subject['days']) ? "checked" : "";
                                     echo "<td><input type='checkbox' name='schedule[subject$iSubject][$i]' $checked></td>";
                                 }
@@ -270,14 +270,14 @@
                     </div>
                     <button type="button" id="add_student">+ Aggiungi studente</button>
                     <button type="button" id="remove_student">- Rimuovi studente</button>
-                </div><br>
+                </div>
 
                 <input type="submit" value="Aggiorna">
 
                 <p>oppure</p>
 
                 <button type="button" onclick="location.reload();">Annulla</button>
-            </form><br>
+            </form>
             <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
                 <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
                 <input type="submit" value="Cancella classe">

@@ -46,7 +46,7 @@ CREATE TABLE Student (
 
 CREATE TABLE Schedule (
 	idschedule INT AUTO_INCREMENT NOT NULL,
-	day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 1 AND 7),
+	day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 1 AND 6),
 	idsubject INT NOT NULL,
 	PRIMARY KEY (idschedule),
 		FOREIGN KEY (idsubject) REFERENCES Subject (idsubject) ON DELETE CASCADE

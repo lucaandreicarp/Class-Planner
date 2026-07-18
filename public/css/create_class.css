@@ -8,9 +8,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    justify-content: center;
+    
+    min-height: 100vh;
     margin: 0;
-    padding: 40px 20px;
+    padding: 0 20px;
 }
 
 
@@ -32,8 +34,8 @@ form {
 
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 
-    width: 100%;
-    max-width: 900px;
+    width: 900px;
+    max-width: 90%;
 }
 
 
@@ -68,29 +70,15 @@ input[type="text"] {
 
 table {
     width: 100%;
-
     border-collapse: collapse;
-
-    margin-top: 25px;
-    margin-bottom: 20px;
 }
 
 
 td {
     border: 1px solid #D1D5DB;
-
     padding: 10px;
-
     text-align: center;
 }
-
-
-/* First row subjects */
-
-td:first-child {
-    min-width: 150px;
-}
-
 
 /* Table header */
 
@@ -99,6 +87,12 @@ tr:first-child {
     font-weight: bold;
 }
 
+/* Table text inputs */
+
+td > input[type="text"]{
+    width: 100%;
+    box-sizing: border-box;
+}
 
 /* Checkbox */
 
@@ -109,25 +103,22 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-
 /* Student container */
 
 #students_container {
     display: flex;
     flex-direction: column;
 
-    gap: 10px;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    gap: 5px;
 }
-
 
 /* Section title */
 
 p {
-    font-weight: bold;
     margin-top: 25px;
+    color: #6B7280;
 }
-
 
 /* General buttons */
 
@@ -146,10 +137,12 @@ input[type="submit"] {
     cursor: pointer;
 }
 
+input[type="submit"] {
+    margin: 0;
+}
 
 button:hover,
 input[type="submit"]:hover {
-
     background-color: #1D4ED8;
 }
 
@@ -161,8 +154,6 @@ body > button {
     color: #2563EB;
 
     border: 2px solid #2563EB;
-
-    margin-top: 20px;
 }
 
 
@@ -174,43 +165,58 @@ body > button:hover {
 /* Space between groups */
 
 form > div {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
-
 
 
 /* Mobile */
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
 
-    body {
-        padding: 20px 10px;
+    #name {
+        margin-top: 10px;
+        width: 100%;
     }
-
-
-    form {
-        padding: 20px;
-    }
-
 
     table {
+        width: 100%;
         font-size: 12px;
     }
-
 
     td {
         padding: 5px;
     }
 
+    td > input[type="text"]::placeholder {
+        font-size: 12px;
+    }
+
+    input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
 
     input[type="text"] {
         width: 100%;
         box-sizing: border-box;
     }
 
-
-    #name {
+    .mobile_buttons {
+        display: flex;
+        gap: 10px;
         width: 100%;
     }
-    
+
+    .mobile_buttons button {
+        flex: 1;
+        width: 50%;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+
+    body > button {
+        width: 90%;
+    }
 }
