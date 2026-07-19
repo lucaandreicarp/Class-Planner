@@ -122,10 +122,9 @@ p {
 
 /* General buttons */
 
-button,
-input[type="submit"] {
+button {
     font-size: 15px;
-    background-color: #2563EB;
+    background-color: #3B82F6;
     color: white;
 
     border: none;
@@ -137,15 +136,34 @@ input[type="submit"] {
     cursor: pointer;
 }
 
-input[type="submit"] {
+button:hover {
+    background-color: #2563EB;
+}
+
+#submit_container {
+    width: 100%;
+    text-align: right;
     margin: 0;
 }
 
-button:hover,
+input[type="submit"] {
+    font-size: 15px;
+
+    background-color: #2563EB;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 10px 18px;
+    margin: 0;
+
+    cursor: pointer;
+}
+
 input[type="submit"]:hover {
     background-color: #1D4ED8;
 }
-
 
 /* Back button */
 
