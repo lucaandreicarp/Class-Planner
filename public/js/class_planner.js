@@ -3,7 +3,6 @@ const view = document.getElementById("view");
 const div_event = document.getElementById("div_event");
 
 const form_events = document.getElementById("form_events")
-let events_displayed = false;
 let button_event = document.getElementById("add_event");
 let label_button_event = document.getElementById("label_button_event");
 
@@ -127,21 +126,50 @@ document.querySelectorAll(".event-elimination").forEach(btn => {
     });
 });
 
+// Modal closure
+const overlay = document.getElementById("overlay"); 
+
+function openModal(modal){
+
+    overlay.style.display = "flex";
+    modal.style.display = "block";
+
+}
+
+
+function closeModal(){
+
+    overlay.style.display = "none";
+
+    container_settings.style.display = "none";
+    form_events.style.display = "none";
+
+    if(edit_displayed){
+        toggleEdit();
+    }
+}
+
+document.querySelectorAll(".close-modal").forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+        closeModal();
+
+    });
+
+});
+
 // Settings toggle
 const name_settings = document.getElementById("settings");
-const container_settings = document.getElementById("div_settings"); 
+const container_settings = document.getElementById("div_settings");
 
-let settings_displayed = false;
 let edit_displayed = false;
 
-function toggleSettings() {
-    if(!settings_displayed){
-        settings_displayed = true;
-        container_settings.style.display = "block";
+function toggleSettings(){
+    if(container_settings.style.display === "block"){
+        closeModal();
     } else {
-        settings_displayed = false;
-        container_settings.style.display = "none";
-        if (edit_displayed) toggleEdit();
+        openModal(container_settings);
     }
 }
 
@@ -251,16 +279,10 @@ form_class.addEventListener('submit', (e) => {
 
 // Event toggle
 function toggleEvents(){
-    if(!events_displayed){
-        events_displayed = true;
-        form_events.style.display = "block";
-        button_event.textContent = "-";
-        label_button_event.textContent = "Rimuovi evento";
+    if(form_events.style.display === "block"){
+        closeModal();
     } else {
-        events_displayed = false;
-        form_events.style.display = "none";
-        button_event.textContent = "+";
-        label_button_event.textContent = "Aggiungi evento";
+        openModal(form_events);
     }
 }
 

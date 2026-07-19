@@ -276,8 +276,12 @@
             </div>
         </main>
     </div>
-    <section>
+    <section id="overlay">
         <div id="div_settings" class="hidden">      <!-- Settings page -->
+            <div class="modal-header">
+                <h2>Impostazioni</h2>
+                <button class="close-modal">×</button>
+            </div>
             <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
             <button id="edit">[+] Modifica</button>
             <form method="post" action="../php/class_data.php" id="form_class" class="hidden">
@@ -336,6 +340,10 @@
             <a href="index.html"><button>Logout</button></a>
         </div>
         <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
+            <div class="modal-header">
+                <h2>Aggiungi evento</h2>
+                <button type="button" class="close-modal">×</button>
+            </div>
             <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
             <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
             <label for="type">Tipologia</label>
