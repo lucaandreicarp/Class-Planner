@@ -99,6 +99,21 @@
         'Sunday' => 'Domenica'
     ];
 
+    $months_italian = [
+        'January' => 'Gennaio',
+        'February' => 'Febbraio',
+        'March' => 'Marzo',
+        'April' => 'Aprile',
+        'May' => 'Maggio',
+        'June' => 'Giugno',
+        'July' => 'Luglio',
+        'August' => 'Agosto',
+        'September' => 'Settembre',
+        'October' => 'Ottobre',
+        'November' => 'Novembre',
+        'December' => 'Dicembre'
+    ];
+
     // Week structure
     $week_dates = [];
     for($i = 0; $i < 7; $i++){
@@ -227,52 +242,73 @@
             </div>
         </aside>
         <main id="calendar">        <!-- Calendar page -->
-            <div id="calendar-header">   <!-- Calendar's header -->
-                <?php $studentParam = $currentStudentId ? "&student=" . urlencode($currentStudentId) : ""; ?>
-                <a href="<?= htmlspecialchars("?week=" . ($week_offset-1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>←</button></a>
-                <span id="header-text"><strong>Settimana del <?= $start_week->format('d/m/Y')?> - <?= $end_week->format('d/m/Y')?></strong>  </span>
-                <a href="<?= htmlspecialchars("?week=" . ($week_offset+1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>→</button></a>
-            </div>
+            <div id="calendar-content">     <!-- Wrapper -->
+                <div id="calendar-header">   <!-- Calendar's header -->
+                    <?php $studentParam = $currentStudentId ? "&student=" . urlencode($currentStudentId) : ""; ?>
+                    <a href="<?= htmlspecialchars("?week=" . ($week_offset-1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>←</button></a>
+                    <span id="header-text">
+                        <?php if ($start_week->format('m') == $end_week->format('m')): ?>
 
-            <div id="week-container">
-            <?php foreach($week_dates as $date => $day): ?>
-                <div class="day">
-                    <h4><?= $day['day_name'] . " " . date('d/m', strtotime($date)) ?></h4>      <!-- Day name and date -->
+                                <?= $start_week->format('d') ?>
+                                -
+                                <?= $end_week->format('d') ?>
+                                <?= $months_italian[$start_week->format('F')] ?>
+                                <?= $start_week->format('Y') ?>
 
-                    <?php foreach($day['slots'] as $subject => $slot): ?>       <!-- Slot -->
-                        <div class="slot">
-                            <strong><?= htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') ?></strong>
-                            <?php       // To determine button's text
-                            $isInSlot = false;
+                        <?php else: ?>
 
-                            if ($currentStudentId !== null) {
-                                foreach ($slot['students'] as $student) {
-                                    if ($student['id'] == $currentStudentId) {      // If student's already in slot
-                                        $isInSlot = true;
-                                        break;
+                                <?= $start_week->format('d') ?>
+                                <?= $months_italian[$start_week->format('F')] ?>
+                                -
+                                <?= $end_week->format('d') ?>
+                                <?= $months_italian[$end_week->format('F')] ?>
+                                <?= $end_week->format('Y') ?>
+
+                        <?php endif; ?>
+                    </span>
+                    <a href="<?= htmlspecialchars("?week=" . ($week_offset+1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>→</button></a>
+                </div>
+
+                <div id="week-container">
+                <?php foreach($week_dates as $date => $day): ?>
+                    <div class="day">
+                        <h4><?= $day['day_name'] . " " . date('d/m', strtotime($date)) ?></h4>      <!-- Day name and date -->
+
+                        <?php foreach($day['slots'] as $subject => $slot): ?>       <!-- Slot -->
+                            <div class="slot">
+                                <strong><?= htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') ?></strong>
+                                <?php       // To determine button's text
+                                $isInSlot = false;
+
+                                if ($currentStudentId !== null) {
+                                    foreach ($slot['students'] as $student) {
+                                        if ($student['id'] == $currentStudentId) {      // If student's already in slot
+                                            $isInSlot = true;
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                            ?>
-                            <button class="slot-toggle" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><?= $isInSlot ? '-' : '+' ?></button>
-                            <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
-                            <div class="students">
-                                <?php foreach($slot['students'] as $student): ?>
-                                    [<?= htmlspecialchars($student['name'], ENT_QUOTES, 'UTF-8') ?>]
-                                <?php endforeach; ?>
+                                ?>
+                                <button class="slot-toggle" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><?= $isInSlot ? '-' : '+' ?></button>
+                                <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
+                                <div class="students">
+                                    <?php foreach($slot['students'] as $student): ?>
+                                        [<?= htmlspecialchars($student['name'], ENT_QUOTES, 'UTF-8') ?>]
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
 
-                    <?php foreach($day['events'] as $event): ?>     <!-- Event -->
-                        <div class="event">
-                            <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
-                            <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>">x</button> 
-                            <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php foreach($day['events'] as $event): ?>     <!-- Event -->
+                            <div class="event">
+                                <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>">x</button> 
+                                <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
                 </div>
-            <?php endforeach; ?>
             </div>
         </main>
     </div>

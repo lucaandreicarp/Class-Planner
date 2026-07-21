@@ -168,23 +168,33 @@ input[type="submit"]:hover {
 
     overflow-y:auto;
 }
+
+#calendar-content {
+    min-height: 100%;
+    width: 100%;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap: 20px;
+}
  
 /* Header */
 
 #calendar-header {
     margin-bottom: 10px;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #header-text {
     margin: 0 10px;
-}
-
-/* Week buttons */
-
-#calendar > div:first-child {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-weight: bold;
 }
 
 /* Days */
@@ -193,6 +203,8 @@ input[type="submit"]:hover {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 10px;
+
+    width: 100%;
 }
 
 .day {
