@@ -313,7 +313,9 @@ input[type="submit"]:hover {
 /* Settings and events */
 
 #div_settings,
-#form_events {
+#form_events, 
+#edit-setting {
+    position:absolute;
     background-color: white;
 
     width: min(600px, 90vw);
@@ -327,6 +329,14 @@ input[type="submit"]:hover {
     box-shadow: 0 10px 40px rgba(0,0,0,0.25);
 
     margin: 0;
+}
+
+#div_settings {
+    z-index:1000;
+}
+
+#edit-setting {
+    z-index:1100;
 }
 
 #div_settings > *,

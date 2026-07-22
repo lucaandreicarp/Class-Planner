@@ -320,8 +320,22 @@
                 <button class="close-modal">×</button>
             </div>
             <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
-            <button id="edit">[+] Modifica</button>
-            <form method="post" action="../php/class_data.php" id="form_class" class="hidden">
+            <button id="edit">Modifica</button>
+            <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
+                <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="submit" value="Cancella classe">
+            </form>            
+            <a href="index.html" id="logout">
+                <i data-lucide="log-out" id="logout-icon"></i>
+                Logout
+            </a>
+        </div>
+        <div id="edit-setting" class="hidden">
+            <div class="modal-header">
+                <h2>Modifica</h2>
+                <button class="close-modal">×</button>
+            </div>
+            <form method="post" action="../php/class_data.php" id="form_class">
                 <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">    <!-- Create hidden code -->
                 <div>
                     <label for="name">Classe</label>
@@ -370,14 +384,6 @@
 
                 <button type="button" onclick="location.reload();">Annulla</button>
             </form>
-            <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
-                <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
-                <input type="submit" value="🗑 Cancella classe">
-            </form>            
-            <a href="index.html" id="logout">
-                <i data-lucide="log-out" id="logout-icon"></i>
-                Logout
-            </a>
         </div>
         <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
             <div class="modal-header">

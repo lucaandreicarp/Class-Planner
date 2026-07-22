@@ -129,7 +129,8 @@ document.querySelectorAll(".event-elimination").forEach(btn => {
 });
 
 // Modal closure
-const overlay = document.getElementById("overlay"); 
+const overlay = document.getElementById("overlay");
+edit_displayed = false; 
 
 function openModal(modal){
 
@@ -140,14 +141,13 @@ function openModal(modal){
 
 
 function closeModal(){
-
-    overlay.style.display = "none";
-
-    container_settings.style.display = "none";
-    form_events.style.display = "none";
-
     if(edit_displayed){
-        toggleEdit();
+        edit_setting.style.display = "none";
+        edit_displayed = false;
+    } else {
+        overlay.style.display = "none";
+        container_settings.style.display = "none";
+        form_events.style.display = "none";
     }
 }
 
@@ -165,8 +165,6 @@ document.querySelectorAll(".close-modal").forEach(btn => {
 const name_settings = document.getElementById("settings");
 const container_settings = document.getElementById("div_settings");
 
-let edit_displayed = false;
-
 function toggleSettings(){
     if(container_settings.style.display === "block"){
         closeModal();
@@ -180,22 +178,11 @@ name_settings.addEventListener('click', () => {
 })
 
 // Edit toggle
-const form_class = document.getElementById('form_class');
-
-function toggleEdit(){
-    if(!edit_displayed){
-        edit_displayed = true;
-        form_class.style.display = "block";
-        edit.textContent = "[-] Modifica";
-    } else {
-        edit_displayed = false;
-        form_class.style.display = "none";
-        edit.textContent = "[+] Modifica";
-    }
-}
+const edit_setting = document.getElementById("edit-setting");
 
 edit.addEventListener('click', () => {
-    toggleEdit();
+    openModal(edit_setting);
+    edit_displayed = true;
 })
 
 // Add Subject
@@ -260,6 +247,8 @@ document.getElementById('remove_student').addEventListener('click', () => {
 });
 
 // Checkbox check
+const form_class = document.getElementById('form_class');
+
 form_class.addEventListener('submit', (e) => {
     const rows = table.querySelectorAll('tr:not(:first-child)');
     let error = false;
