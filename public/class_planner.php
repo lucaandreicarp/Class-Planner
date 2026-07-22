@@ -211,14 +211,14 @@
     <title>Class Planner</title>
     <link rel="stylesheet" href="css/class_planner.css">
 </head>
-<body>
+<body data-idclass="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
     <header>
         <h1><?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?></h1>
         <span id="settings">Impostazioni</span>
     </header>
     <div id="app-layout">
         <aside>
-            <div>   <!-- View -->
+            <div id="div_view">   <!-- View -->
                 <label for="view">Visuale</label>
                 <select name="view" id="view">
                     <option value="CLASS" <?= $currentStudentId === null ? "selected" : "" ?>>
@@ -373,7 +373,7 @@
                 <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
                 <input type="submit" value="Cancella classe">
             </form>            
-            <a href="index.html"><button>Logout</button></a>
+            <a href="index.html" id="logout">Logout</a>
         </div>
         <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
             <div class="modal-header">
@@ -382,12 +382,15 @@
             </div>
             <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
             <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
-            <label for="type">Tipologia</label>
-            <select name="type" id="type">
-                <option value="oral">Interrogazioni</option>
-                <option value="other">Altro</option>
-            </select>
             
+            <div>
+                <label for="type">Tipologia</label>
+                <select name="type" id="type">
+                    <option value="oral">Interrogazioni</option>
+                    <option value="other">Altro</option>
+                </select>
+            </div>
+
             <div class="oral">
                 <label for="subject">Materia</label>
                 <select name="subject" id="subject">
@@ -403,20 +406,30 @@
             </div>
 
             <div class="other">
-                <label for="event_name">Nome</label>
-                <input type="text" name="event_name" id="event_name" placeholder="Inserire il nome dell'evento" required>
+                <div>
+                    <label for="event_name">Nome</label>
+                    <input type="text" name="event_name" id="event_name" placeholder="Inserire il nome dell'evento" required>
+                </div>
 
-                <label for="description">Descrizione</label>
-                <textarea name="description" id="description" placeholder="Inserire una descrizione"></textarea>
+                <div>
+                    <label for="description">Descrizione</label>
+                    <textarea name="description" id="description" placeholder="Inserire una descrizione"></textarea>
+                </div>
             </div>
 
-            <label for="start_date">Data Inizio</label>
-            <input type="date" name="start_date" id="start_date" required>
+            <div>
+                <label for="start_date">Data Inizio</label>
+                <input type="date" name="start_date" id="start_date" required>
+            </div>
 
-            <label for="end_date">Data Fine</label>
-            <input type="date" name="end_date" id="end_date" required>
+            <div id="submit_events">
+                <div>
+                    <label for="end_date">Data Fine</label>
+                    <input type="date" name="end_date" id="end_date" required>
+                </div>
+                <input type="submit" value="Crea">
+            </div>
 
-            <input type="submit" value="Crea">
         </form>
     </section>
 

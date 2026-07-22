@@ -45,13 +45,14 @@ header h1 {
     font-size: 28px; 
 }
 
-#settings {
+#settings, #logout{
     color: #2563EB;
     cursor: pointer;
     font-weight: bold;
+    text-decoration: none;
 }
 
-#settings:hover {
+#settings:hover, #logout:hover {
     text-decoration: underline;
 }
 
@@ -106,6 +107,12 @@ input[type="text"] {
     border: 1px solid #D1D5DB;
 }
 
+#div_view, #div_event {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
 
 /* =========================
    BUTTONS
@@ -131,6 +138,13 @@ input[type="submit"]:hover {
     background-color: #1D4ED8;
 }
 
+#form_cancellation input[type="submit"] {
+    background-color: #DC2626;
+}
+
+#form_cancellation input[type="submit"]:hover {
+    background-color: #B91C1C;
+}
 
 /* Delete buttons */
 
@@ -183,13 +197,12 @@ input[type="submit"]:hover {
 /* Header */
 
 #calendar-header {
-    margin-bottom: 10px;
-
     width: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 
 #header-text {
@@ -300,7 +313,6 @@ input[type="submit"]:hover {
 
 #div_settings,
 #form_events {
-
     background-color: white;
 
     width: min(600px, 90vw);
@@ -314,6 +326,22 @@ input[type="submit"]:hover {
     box-shadow: 0 10px 40px rgba(0,0,0,0.25);
 
     margin: 0;
+}
+
+#div_settings > *,
+#form_events > * {
+    margin-bottom: 10px;
+}
+
+#div_settings > *:last-child,
+#form_events > *:last-child {
+    margin-bottom: 0;
+}
+
+#submit_events {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .close-modal {

@@ -49,7 +49,7 @@ if (currentStudentId){
     edit.style.display = "block";
     form_cancellation.style.display = "block";
 
-    div_event.style.display = "block";
+    div_event.style.display = "flex";
 
     document.querySelectorAll(".slot-toggle").forEach(btn => {
         btn.style.display = "none";
@@ -83,6 +83,8 @@ document.querySelectorAll(".slot-toggle").forEach(btn => {
 });
 
 // Slot elimination
+const idClass = document.body.dataset.idclass;
+
 document.querySelectorAll(".slot-elimination").forEach(btn => {
     btn.addEventListener("click", () => {
         const slotId = btn.getAttribute("data-slotid");
@@ -94,7 +96,7 @@ document.querySelectorAll(".slot-elimination").forEach(btn => {
         fetch("../php/events.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `idslot=${slotId}&type=oral&idclass=<?= json_encode($id_class) ?>`
+            body: `idslot=${slotId}&type=oral&idclass=${idClass}`
         })
         .then(res => res.text())
         .then(msg => {
@@ -116,7 +118,7 @@ document.querySelectorAll(".event-elimination").forEach(btn => {
         fetch("../php/events.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `idevent=${eventId}&type=other&idclass=<?= json_encode($id_class) ?>`
+            body: `idevent=${eventId}&type=other&idclass=${idClass}`
         })
         .then(res => res.text())
         .then(msg => {
