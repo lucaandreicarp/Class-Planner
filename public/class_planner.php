@@ -210,6 +210,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Planner</title>
     <link rel="stylesheet" href="css/class_planner.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body data-idclass="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
     <header>
@@ -371,9 +372,12 @@
             </form>
             <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
                 <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
-                <input type="submit" value="Cancella classe">
+                <input type="submit" value="🗑 Cancella classe">
             </form>            
-            <a href="index.html" id="logout">Logout</a>
+            <a href="index.html" id="logout">
+                <i data-lucide="log-out" id="logout-icon"></i>
+                Logout
+            </a>
         </div>
         <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
             <div class="modal-header">
@@ -434,5 +438,6 @@
     </section>
 
     <script src="js/class_planner.js"></script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>

@@ -45,14 +45,13 @@ header h1 {
     font-size: 28px; 
 }
 
-#settings, #logout{
+#settings{
     color: #2563EB;
     cursor: pointer;
     font-weight: bold;
-    text-decoration: none;
 }
 
-#settings:hover, #logout:hover {
+#settings:hover{
     text-decoration: underline;
 }
 
@@ -311,6 +310,8 @@ input[type="submit"]:hover {
     height: 100%;
 }
 
+/* Settings and events */
+
 #div_settings,
 #form_events {
     background-color: white;
@@ -344,6 +345,44 @@ input[type="submit"]:hover {
     justify-content: space-between;
 }
 
+#logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    color: #6B7280;
+    text-decoration: none;
+
+    font-weight: 600;
+
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+#logout:hover {
+    background-color: #F3F4F6;
+    color: #374151;
+}
+
+#logout-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
 .close-modal {
 
     background: transparent;
@@ -368,20 +407,6 @@ input[type="submit"]:hover {
 
     background: #FEE2E2;
     color: #DC2626;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    margin-bottom: 20px;
-}
-
-
-.modal-header h2 {
-    margin: 0;
-    font-size: 22px;
 }
 
 /* Schedule table */
