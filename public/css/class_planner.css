@@ -104,6 +104,8 @@ input[type="text"] {
 
     border-radius: 8px;
     border: 1px solid #D1D5DB;
+
+    max-width: 100%;
 }
 
 #div_view, #div_event {
@@ -318,10 +320,11 @@ input[type="submit"]:hover {
     position:absolute;
     background-color: white;
 
-    width: min(600px, 90vw);
-    max-height: 85vh;
+    width: min(800px, calc(100vw - 40px));
+    max-height: calc(100vh - 40px);
 
-    overflow-y: auto;
+    overflow-y:auto;
+    overflow-x:hidden;
 
     padding: 25px;
     border-radius: 15px;
@@ -425,6 +428,9 @@ input[type="submit"]:hover {
     border-collapse: collapse;
     width: 100%;
     margin: 15px 0;
+
+    width:100%;
+    table-layout:fixed;
 }
 
 
@@ -432,14 +438,27 @@ input[type="submit"]:hover {
     border: 1px solid #D1D5DB;
     padding: 8px;
     text-align:center;
+
+    overflow:hidden;
 }
 
+#schedule_table td:first-child {
+    width: 25%;
+}
+
+#schedule_table td:not(:first-child) {
+    width: calc(75% / 6);
+}
 
 #schedule_table tr:first-child {
     background-color: #EFF6FF;
     font-weight:bold;
 }
 
+#form_class > div > label {
+    font-weight: bold;
+    margin-right: 10px;
+}
 
 /* Students edit */
 

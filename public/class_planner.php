@@ -366,7 +366,7 @@
                 </div>
 
                 <div>
-                    <p>Studenti</p>
+                    <b>Studenti</b>
                     <div id="students_container">
                         <?php 
                             foreach ($students as $id_student => $name){
@@ -379,10 +379,6 @@
                 </div>
 
                 <input type="submit" value="Aggiorna">
-
-                <p>oppure</p>
-
-                <button type="button" onclick="location.reload();">Annulla</button>
             </form>
         </div>
         <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
