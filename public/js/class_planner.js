@@ -141,13 +141,31 @@ function openModal(modal){
 
 
 function closeModal(){
+
     if(edit_displayed){
+
+        if(formHasChanged()){
+
+            const confirmExit = confirm(
+                "Hai modifiche non salvate. Vuoi eliminarle?"
+            );
+
+            if(!confirmExit){
+                return;
+            }
+
+            restoreForm();
+        }
+
         edit_setting.style.display = "none";
         edit_displayed = false;
+
     } else {
+
         overlay.style.display = "none";
         container_settings.style.display = "none";
         form_events.style.display = "none";
+
     }
 }
 
@@ -180,71 +198,129 @@ name_settings.addEventListener('click', () => {
 // Edit toggle
 const edit_setting = document.getElementById("edit-setting");
 
+let initialFormData = null;
+let initialFormHTML = null;
+
 edit.addEventListener('click', () => {
+
     openModal(edit_setting);
     edit_displayed = true;
-})
 
-// Add Subject
-const table = document.getElementById('schedule_table');
-let subjectNumber = (table.getElementsByTagName("tr").length) - 1; // subject counter 
+    initialFormData = new FormData(form_class); // To save content
+    initialFormHTML = form_class.innerHTML; // To save structure
 
-document.getElementById('add_subject').addEventListener('click', () => {
-    subjectNumber++;
+});
 
-    // Create the row
-    const tr = document.createElement('tr');
+function restoreForm(){
 
-    // First td
-    const tdInput = document.createElement('td');
-    const inputSubject = document.createElement('input');
-    inputSubject.type = 'text';
-    inputSubject.name = `subjects[subject${subjectNumber}]`
-    inputSubject.placeholder = 'Materia';
-    inputSubject.required = true;
-    tdInput.appendChild(inputSubject);
-    tr.appendChild(tdInput);
-    // Last 6 td with checkbox's
-    const days = [1, 2, 3, 4, 5, 6];
-    days.forEach(day => {
-        const tdCheckbox = document.createElement('td');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.name = `schedule[subject${subjectNumber}][${day}]`; // multidimensional array
-        tdCheckbox.appendChild(checkbox);
-        tr.appendChild(tdCheckbox);
+    form_class.innerHTML = initialFormHTML;
+
+    // To add again functions to new html elements
+    setupSubjectButtons();
+    setupStudentButtons();
+
+}
+
+function formHasChanged(){
+
+    const currentState = new FormData(form_class);
+
+    // Transforming data into a comparable format
+    const initial = {};
+    const current = {};
+
+    // Saving initial state
+    for (const [key, value] of initialFormData.entries()) {
+
+        if (!initial[key]) {
+            initial[key] = [];
+        }
+
+        initial[key].push(value);
+    }
+
+    // Saving current state
+    for (const [key, value] of currentState.entries()) {
+
+        if (!current[key]) {
+            current[key] = [];
+        }
+
+        current[key].push(value);
+    }
+
+    // Tranforming into comparable strings
+    return JSON.stringify(initial) !== JSON.stringify(current);
+}
+
+// Add/Remove Subject
+let table;
+let subjectNumber = 0; // subject counter 
+
+function setupSubjectButtons(){
+    table = document.getElementById('schedule_table');
+    subjectNumber = table.getElementsByTagName("tr").length - 1;
+
+    document.getElementById('add_subject').addEventListener('click', () => {
+        subjectNumber++;
+
+        // Create the row
+        const tr = document.createElement('tr');
+
+        // First td
+        const tdInput = document.createElement('td');
+        const inputSubject = document.createElement('input');
+        inputSubject.type = 'text';
+        inputSubject.name = `subjects[subject${subjectNumber}]`
+        inputSubject.placeholder = 'Materia';
+        inputSubject.required = true;
+        tdInput.appendChild(inputSubject);
+        tr.appendChild(tdInput);
+        // Last 6 td with checkbox's
+        const days = [1, 2, 3, 4, 5, 6];
+        days.forEach(day => {
+            const tdCheckbox = document.createElement('td');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = `schedule[subject${subjectNumber}][${day}]`; // multidimensional array
+            tdCheckbox.appendChild(checkbox);
+            tr.appendChild(tdCheckbox);
+        });
+
+        // Add the tr to the table
+        table.appendChild(tr);
     });
 
-    // Add the tr to the table
-    table.appendChild(tr);
-});
+    document.getElementById('remove_subject').addEventListener('click', () => {
+        if(table.rows.length > 2){ // keep at least the header and the first row
+            table.deleteRow(table.rows.length - 1);
+            subjectNumber--;  // remove it when you will be able to remove a specific subject, not just the last one
+        }
+    });
+}
 
-// Remove Subject
-document.getElementById('remove_subject').addEventListener('click', () => {
-    if(table.rows.length > 2){ // keep at least the header and the first row
-        table.deleteRow(table.rows.length - 1);
-        subjectNumber--;  // remove it when you will be able to remove a specific subject, not just the last one
-    }
-});
+// Add/Remove Student
+function setupStudentButtons(){
+    const containerStudents = document.getElementById('students_container');
+    document.getElementById('add_student').addEventListener('click', () => {
+        const inputStudent = document.createElement('input');
+        inputStudent.type = 'text';
+        inputStudent.name = 'students[]';
+        inputStudent.placeholder = 'Nome studente';
+        inputStudent.required = true;
+        containerStudents.appendChild(inputStudent);
+    });
 
-// Add Student
-const containerStudents = document.getElementById('students_container');
-document.getElementById('add_student').addEventListener('click', () => {
-    const inputStudent = document.createElement('input');
-    inputStudent.type = 'text';
-    inputStudent.name = 'students[]';
-    inputStudent.placeholder = 'Nome studente';
-    inputStudent.required = true;
-    containerStudents.appendChild(inputStudent);
-});
+    document.getElementById('remove_student').addEventListener('click', () => {
+        const inputsStudents = containerStudents.getElementsByTagName('input');
+        if (inputsStudents.length > 1) {
+            containerStudents.removeChild(inputsStudents[inputsStudents.length - 1]);
+        }
+    });
+}
 
-// Remove Student
-document.getElementById('remove_student').addEventListener('click', () => {
-    const inputsStudents = containerStudents.getElementsByTagName('input');
-    if (inputsStudents.length > 1) {
-        containerStudents.removeChild(inputsStudents[inputsStudents.length - 1]);
-    }
-});
+setupSubjectButtons();
+setupStudentButtons();  
 
 // Checkbox check
 const form_class = document.getElementById('form_class');
