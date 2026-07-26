@@ -347,6 +347,11 @@ input[type="submit"]:hover {
     margin-bottom: 10px;
 }
 
+#div_settings .modal-header,
+#form_events .modal-header {
+    margin-bottom: 25px;
+}
+
 #div_settings > *:last-child,
 #form_events > *:last-child {
     margin-bottom: 0;
@@ -382,14 +387,25 @@ input[type="submit"]:hover {
     height: 14px;
 }
 
+/* Modal */
+
 .modal-header {
+    position: sticky;
+    top: -25px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    margin-bottom: 20px;
-}
+    margin: -25px -25px 25px -25px;
+    padding: 20px 25px;
 
+    background-color: white;
+    z-index: 10;
+
+    border-bottom: 1px solid #E5E7EB;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
 
 .modal-header h2 {
     margin: 0;

@@ -130,7 +130,7 @@ document.querySelectorAll(".event-elimination").forEach(btn => {
 
 // Modal closure
 const overlay = document.getElementById("overlay");
-edit_displayed = false; 
+let edit_displayed = false; 
 
 function openModal(modal){
 
