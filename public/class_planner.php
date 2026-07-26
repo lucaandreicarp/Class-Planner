@@ -378,7 +378,9 @@
                     <button type="button" id="remove_student">- Rimuovi studente</button>
                 </div>
 
-                <input type="submit" value="Aggiorna">
+                <div id="submit_container">
+                    <input type="submit" value="Aggiorna">
+                </div>
             </form>
         </div>
         <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->

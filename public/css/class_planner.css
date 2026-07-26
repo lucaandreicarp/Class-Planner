@@ -139,6 +139,43 @@ input[type="submit"]:hover {
     background-color: #1D4ED8;
 }
 
+#form_class > div > button {
+    font-size: 15px;
+    background-color: #3B82F6;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 10px 18px;
+    margin-top: 10px;
+
+    cursor: pointer;
+}
+
+#form_class > div > button:hover{
+    background-color: #2563EB;
+}
+
+#form_class > div > input[type="submit"] {
+    font-size: 15px;
+
+    background-color: #2563EB;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 10px 18px;
+    margin: 0;
+
+    cursor: pointer;
+}
+
+#form_class > div > input[type="submit"]:hover {
+    background-color: #1D4ED8;
+}
+
 #form_cancellation input[type="submit"] {
     background-color: #DC2626;
 }
@@ -287,7 +324,6 @@ input[type="submit"]:hover {
 }
 
 
-
 /* =========================
    MODAL OVERLAY
 ========================= */
@@ -357,10 +393,21 @@ input[type="submit"]:hover {
     margin-bottom: 0;
 }
 
+#form_events > div > label,
+#form_events > div > div > label {
+    margin-right: 10px;
+}
+
 #submit_events {
     width: 100%;
     display: flex;
     justify-content: space-between;
+}
+
+#submit_container {
+    width: 100%;
+    text-align: right;
+    margin: 0 !important;
 }
 
 #logout {
@@ -443,9 +490,6 @@ input[type="submit"]:hover {
 #schedule_table {
     border-collapse: collapse;
     width: 100%;
-    margin: 15px 0;
-
-    width:100%;
     table-layout:fixed;
 }
 
@@ -476,12 +520,18 @@ input[type="submit"]:hover {
     margin-right: 10px;
 }
 
+#form_class > div {
+    margin-bottom: 40px;
+}
+
 /* Students edit */
 
 #students_container {
     display:flex;
     flex-direction:column;
-    gap:10px;
+
+    margin-top: 10px;
+    gap:5px;
 }
 
 
