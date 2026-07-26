@@ -234,18 +234,26 @@ input[type="submit"]:hover {
  
 /* Header */
 
-#calendar-header {
-    width: 100%;
-
+#header-content {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+}
+
+#calendar-header {
+    display:grid;
+    grid-template-columns:40px 1fr 40px;
+    align-items:center;
     gap: 10px;
 }
 
-#header-text {
+#date-range {
+    display:flex;
+    gap:5px;
     margin: 0 10px;
-    font-weight: bold;
 }
 
 /* Days */
@@ -552,6 +560,21 @@ input[type="submit"]:hover {
 
     .day {
         min-width:130px !important;
+    }
+
+    #header-content {
+        width: 100%;
+    }
+    
+    #calendar-header {
+        width: 100%;
+    }
+
+    #date-range {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 14px;
     }
 
 }

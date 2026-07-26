@@ -244,30 +244,49 @@
         </aside>
         <main id="calendar">        <!-- Calendar page -->
             <div id="calendar-content">     <!-- Wrapper -->
-                <div id="calendar-header">   <!-- Calendar's header -->
+                <div id="header-content">  <!-- Calendar header -->
                     <?php $studentParam = $currentStudentId ? "&student=" . urlencode($currentStudentId) : ""; ?>
-                    <a href="<?= htmlspecialchars("?week=" . ($week_offset-1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>←</button></a>
-                    <span id="header-text">
-                        <?php if ($start_week->format('m') == $end_week->format('m')): ?>
+                        
+                    <?php
+                        $startYear  = $start_week->format('Y');
+                        $endYear    = $end_week->format('Y');
 
-                                <?= $start_week->format('d') ?>
-                                -
-                                <?= $end_week->format('d') ?>
-                                <?= $months_italian[$start_week->format('F')] ?>
-                                <?= $start_week->format('Y') ?>
+                        $sameYear = ($startYear === $endYear);
+                    ?>
 
+                    <!-- Year -->
+                    <span id="year">
+                        <?php if ($sameYear): ?>
+                            <?= $startYear ?>
                         <?php else: ?>
-
-                                <?= $start_week->format('d') ?>
-                                <?= $months_italian[$start_week->format('F')] ?>
-                                -
-                                <?= $end_week->format('d') ?>
-                                <?= $months_italian[$end_week->format('F')] ?>
-                                <?= $end_week->format('Y') ?>
-
+                            <?= $endYear ?>
                         <?php endif; ?>
                     </span>
-                    <a href="<?= htmlspecialchars("?week=" . ($week_offset+1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>"><button>→</button></a>
+                    
+                    <div id="calendar-header">
+                        <!-- Previous week -->
+                        <a href="<?= htmlspecialchars("?week=" . ($week_offset - 1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>">
+                            <button>←</button>
+                        </a>
+
+                        <!-- Date range -->
+                        <span id="date-range">
+                            <span>
+                                <?= $start_week->format('d') ?>
+                                <?= $months_italian[$start_week->format('F')] ?>
+                            </span>
+                            <span>-</span>
+                            <span>
+                                <?= $end_week->format('d') ?>
+                                <?= $months_italian[$end_week->format('F')] ?>
+                            </span>
+                        </span>
+
+                        <!-- Next week -->
+                        <a href="<?= htmlspecialchars("?week=" . ($week_offset + 1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>">
+                            <button>→</button>
+                        </a>
+                    </div>
                 </div>
 
                 <div id="week-container">
