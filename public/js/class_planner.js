@@ -64,6 +64,18 @@ if (currentStudentId){
     });
 }
 
+// Calendar overflow
+const calendar = document.getElementById("calendar");
+const headerContent = document.getElementById("header-content");
+
+calendar.addEventListener("scroll", () => {
+    if (calendar.scrollTop > 0) {
+        headerContent.classList.add("scrolled");
+    } else {
+        headerContent.classList.remove("scrolled");
+    }
+});
+
 // Oral's management
 document.querySelectorAll(".slot-toggle").forEach(btn => {
     btn.addEventListener("click", () => {
