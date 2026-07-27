@@ -186,18 +186,21 @@ input[type="submit"]:hover {
 
 /* Delete buttons */
 
-.slot-toggle,
+.add-oral,
+.remove-oral,
 .slot-elimination,
 .event-elimination {
     padding: 3px 8px;
     font-size: 12px;
 }
 
+.remove-oral,
 .slot-elimination,
 .event-elimination {
     background-color: #EF4444;
 }
 
+.remove-oral:hover,
 .slot-elimination:hover,
 .event-elimination:hover {
 

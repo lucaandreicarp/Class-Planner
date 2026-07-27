@@ -310,7 +310,7 @@
                                         }
                                     }
                                     ?>
-                                    <button class="slot-toggle" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><?= $isInSlot ? '-' : '+' ?></button>
+                                    <button class="<?= $isInSlot ? 'remove-oral' : 'add-oral' ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><?= $isInSlot ? '-' : '+' ?></button>
                                     <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
                                 </div>
                     

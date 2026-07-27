@@ -34,7 +34,11 @@ if (currentStudentId){
 
     div_event.style.display = "none";
     
-    document.querySelectorAll(".slot-toggle").forEach(btn => {
+    document.querySelectorAll(".add-oral").forEach(btn => {
+        btn.style.display = "inline-block";
+    });
+
+    document.querySelectorAll(".remove-oral").forEach(btn => {
         btn.style.display = "inline-block";
     });
     
@@ -51,7 +55,11 @@ if (currentStudentId){
 
     div_event.style.display = "flex";
 
-    document.querySelectorAll(".slot-toggle").forEach(btn => {
+    document.querySelectorAll(".add-oral").forEach(btn => {
+        btn.style.display = "none";
+    });
+
+    document.querySelectorAll(".remove-oral").forEach(btn => {
         btn.style.display = "none";
     });
     
@@ -77,7 +85,7 @@ calendar.addEventListener("scroll", () => {
 });
 
 // Oral's management
-document.querySelectorAll(".slot-toggle").forEach(btn => {
+document.querySelectorAll(".add-oral, .remove-oral").forEach(btn => {
     btn.addEventListener("click", () => {
         const slotId = btn.getAttribute("data-slotid");
 
