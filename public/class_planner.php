@@ -296,34 +296,43 @@
 
                         <?php foreach($day['slots'] as $subject => $slot): ?>       <!-- Slot -->
                             <div class="slot">
-                                <strong><?= htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') ?></strong>
-                                <?php       // To determine button's text
-                                $isInSlot = false;
+                                <div class="header-event">
+                                    <strong><?= htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') ?></strong>
+                                    <?php       // To determine button's text
+                                    $isInSlot = false;
 
-                                if ($currentStudentId !== null) {
-                                    foreach ($slot['students'] as $student) {
-                                        if ($student['id'] == $currentStudentId) {      // If student's already in slot
-                                            $isInSlot = true;
-                                            break;
+                                    if ($currentStudentId !== null) {
+                                        foreach ($slot['students'] as $student) {
+                                            if ($student['id'] == $currentStudentId) {      // If student's already in slot
+                                                $isInSlot = true;
+                                                break;
+                                            }
                                         }
                                     }
-                                }
-                                ?>
-                                <button class="slot-toggle" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><?= $isInSlot ? '-' : '+' ?></button>
-                                <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
-                                <div class="students">
-                                    <?php foreach($slot['students'] as $student): ?>
-                                        [<?= htmlspecialchars($student['name'], ENT_QUOTES, 'UTF-8') ?>]
-                                    <?php endforeach; ?>
+                                    ?>
+                                    <button class="slot-toggle" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><?= $isInSlot ? '-' : '+' ?></button>
+                                    <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
                                 </div>
+                    
+                                <?php if (count($slot['students']) > 0): ?>
+                                    <ul class="students">
+                                    <?php foreach($slot['students'] as $student): ?>
+                                        <li><?= htmlspecialchars($student['name'], ENT_QUOTES, 'UTF-8') ?></li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                </ul>
                             </div>
                         <?php endforeach; ?>
 
                         <?php foreach($day['events'] as $event): ?>     <!-- Event -->
                             <div class="event">
-                                <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>">x</button> 
-                                <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>
+                                <div class="header-event">
+                                    <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                    <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>">x</button>
+                                </div> 
+                                <?php if (!empty($event['description'])): ?>
+                                    <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
