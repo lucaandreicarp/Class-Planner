@@ -304,6 +304,14 @@ input[type="submit"]:hover {
     color: #2563EB;
 }
 
+.day.today {
+    border: 1px solid #94A3B8;
+}
+
+.day.has-oral {
+    background-color: #FFF7ED;
+    border: 1px solid #F59E0B;
+}
 
 /* =========================
    SLOTS / ORALS
@@ -311,7 +319,7 @@ input[type="submit"]:hover {
 
 
 .slot {
-    background-color: #FFFBEB;;
+    background-color: #FEF3C7;
 
     border-radius: 8px;
     padding: 8px;

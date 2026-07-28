@@ -122,7 +122,8 @@
         $week_dates[$d->format('Y-m-d')] = [
             'day_name' => $days_italian[$d->format('l')],   // Extracting week's day
             'slots' => [],
-            'events' => []
+            'events' => [],
+            'has_oral' => false
         ];
     }
 
@@ -160,6 +161,9 @@
                     'id' => $row['idstudent'],
                     'name' => $row['student_name']
                 ];
+            }
+            if ($currentStudentId !== null && $row['idstudent'] == $currentStudentId) {
+                $week_dates[$date]['has_oral'] = true;
             }
         }
     } else {
@@ -291,7 +295,24 @@
 
                 <div id="week-container">
                 <?php foreach($week_dates as $date => $day): ?>
-                    <div class="day">
+                    <?php 
+                    
+                        $todayDate = new DateTime();
+                        $today_string = $todayDate->format('Y-m-d');
+
+                        $isToday = ($date === $today_string);
+                        $today = "";
+
+                        $hasOral = ""; 
+
+                        if ($day['has_oral']) {
+                            $hasOral = 'has-oral';
+                        } elseif ($isToday && $currentStudentId === null) {
+                            $today = 'today';
+                        }
+
+                    ?>
+                    <div class="day <?= $today ?> <?= $hasOral ?>">
                         <h4><?= $day['day_name'] . " " . date('d/m', strtotime($date)) ?></h4>      <!-- Day name and date -->
 
                         <?php foreach($day['slots'] as $subject => $slot): ?>       <!-- Slot -->
