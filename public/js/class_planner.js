@@ -275,11 +275,10 @@ function formHasChanged(){
 
 // Add/Remove Subject
 let table;
-let subjectNumber = 0; // subject counter 
 
 function setupSubjectButtons(){
+    let subjectNumber = 0; // subject counter 
     table = document.getElementById('schedule_table');
-    subjectNumber = table.getElementsByTagName("tr").length - 1;
 
     document.getElementById('add_subject').addEventListener('click', () => {
         subjectNumber++;
@@ -291,7 +290,7 @@ function setupSubjectButtons(){
         const tdInput = document.createElement('td');
         const inputSubject = document.createElement('input');
         inputSubject.type = 'text';
-        inputSubject.name = `subjects[subject${subjectNumber}]`
+        inputSubject.name = `subjects[new_${subjectNumber}]`;
         inputSubject.placeholder = 'Materia';
         inputSubject.required = true;
         tdInput.appendChild(inputSubject);
@@ -302,7 +301,7 @@ function setupSubjectButtons(){
             const tdCheckbox = document.createElement('td');
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.name = `schedule[subject${subjectNumber}][${day}]`; // multidimensional array
+            checkbox.name = `schedule[new_${subjectNumber}][${day}]`; // multidimensional array
             tdCheckbox.appendChild(checkbox);
             tr.appendChild(tdCheckbox);
         });
@@ -314,18 +313,23 @@ function setupSubjectButtons(){
     document.getElementById('remove_subject').addEventListener('click', () => {
         if(table.rows.length > 2){ // keep at least the header and the first row
             table.deleteRow(table.rows.length - 1);
-            subjectNumber--;  // remove it when you will be able to remove a specific subject, not just the last one
         }
     });
 }
 
 // Add/Remove Student
 function setupStudentButtons(){
+    
+    let studentNumber = 0; // student counter
     const containerStudents = document.getElementById('students_container');
+
     document.getElementById('add_student').addEventListener('click', () => {
+        
+        studentNumber++;
+
         const inputStudent = document.createElement('input');
         inputStudent.type = 'text';
-        inputStudent.name = 'students[]';
+        inputStudent.name = `students[new_${studentNumber}]`;
         inputStudent.placeholder = 'Nome studente';
         inputStudent.required = true;
         containerStudents.appendChild(inputStudent);

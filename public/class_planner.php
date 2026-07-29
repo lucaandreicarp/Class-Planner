@@ -395,15 +395,13 @@
                     <table id="schedule_table">
                         <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td></tr>
                         <?php 
-                            $iSubject = 0;
                             foreach ($subjects as $idsubject => $subject){
-                                $iSubject ++;
                                 $name = $subject["name"];
                                 echo "<tr>";
-                                echo "<td><input type='text' name='subjects[subject$iSubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required></td>";
+                                echo "<td><input type='text' name='subjects[$idsubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required></td>";
                                 for ($i = 1; $i <= 6; $i++){
                                     $checked = in_array($i, $subject['days']) ? "checked" : "";
-                                    echo "<td><input type='checkbox' name='schedule[subject$iSubject][$i]' $checked></td>";
+                                    echo "<td><input type='checkbox' name='schedule[$idsubject][$i]' $checked></td>";
                                 }
                                 echo "</tr>";
                             }
@@ -419,7 +417,7 @@
                     <div id="students_container">
                         <?php 
                             foreach ($students as $id_student => $name){
-                                echo "<input type='text' name='students[]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required>";
+                                echo "<input type='text' name='students[$id_student]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required>";
                             }
                         ?>
                     </div>
