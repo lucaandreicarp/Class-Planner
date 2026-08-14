@@ -224,7 +224,7 @@
     <div id="app-layout">
         <aside>
             <div id="div_view">   <!-- View -->
-                <label for="view">Visuale</label>
+                <label for="view" class="hidden_mobile">Visuale</label>
                 <select name="view" id="view">
                     <option value="CLASS" <?= $currentStudentId === null ? "selected" : "" ?>>
                         CLASSE
@@ -243,7 +243,7 @@
 
             <div id="div_event">    <!-- Event button -->
                 <button id="add_event">+</button>
-                <label for="add_event" id="label_button_event">Aggiungi evento</label>
+                <label for="add_event" id="label_button_event" class="hidden_mobile">Aggiungi evento</label>
             </div>
         </aside>
         <main id="calendar">        <!-- Calendar page -->
