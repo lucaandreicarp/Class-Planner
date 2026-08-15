@@ -139,7 +139,7 @@ input[type="submit"]:hover {
     background-color: #1D4ED8;
 }
 
-#form_class > div > button {
+.formclass_buttons button{
     font-size: 15px;
     background-color: #3B82F6;
     color: white;
@@ -153,7 +153,7 @@ input[type="submit"]:hover {
     cursor: pointer;
 }
 
-#form_class > div > button:hover{
+.formclass_buttons button:hover{
     background-color: #2563EB;
 }
 
@@ -273,6 +273,7 @@ input[type="submit"]:hover {
 
 #date-range {
     display:flex;
+    justify-content:center;
     gap:5px;
     margin: 0 10px;
 }
@@ -569,6 +570,11 @@ input[type="submit"]:hover {
     font-weight:bold;
 }
 
+#schedule_table td > input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
 #form_class > div > label {
     font-weight: bold;
     margin-right: 10px;
@@ -631,10 +637,32 @@ input[type="submit"]:hover {
         width: 100%;
     }
 
-    #date-range {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    #schedule_table,
+    #form_class input[type="text"][value] {
+        font-size: 12px;
     }
 
+    #schedule_table td {
+        padding: 5px;
+    }
+
+    #schedule_table td > input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .formclass_buttons {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .formclass_buttons button {
+        flex: 1;
+        width: 50%;
+    }
+
+    #form_class > div > input[type="submit"] {
+        width: 100%;
+    }
 }

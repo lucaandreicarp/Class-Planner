@@ -100,18 +100,18 @@
     ];
 
     $months_italian = [
-        'January' => 'Gennaio',
-        'February' => 'Febbraio',
-        'March' => 'Marzo',
-        'April' => 'Aprile',
-        'May' => 'Maggio',
-        'June' => 'Giugno',
-        'July' => 'Luglio',
-        'August' => 'Agosto',
-        'September' => 'Settembre',
-        'October' => 'Ottobre',
-        'November' => 'Novembre',
-        'December' => 'Dicembre'
+        'January' => 'Gen',
+        'February' => 'Feb',
+        'March' => 'Mar',
+        'April' => 'Apr',
+        'May' => 'Mag',
+        'June' => 'Giu',
+        'July' => 'Lug',
+        'August' => 'Ago',
+        'September' => 'Set',
+        'October' => 'Ott',
+        'November' => 'Nov',
+        'December' => 'Dic'
     ];
 
     // Week structure
@@ -250,21 +250,10 @@
             <div id="calendar-content">     <!-- Wrapper -->
                 <div id="header-content">  <!-- Calendar header -->
                     <?php $studentParam = $currentStudentId ? "&student=" . urlencode($currentStudentId) : ""; ?>
-                        
-                    <?php
-                        $startYear  = $start_week->format('Y');
-                        $endYear    = $end_week->format('Y');
-
-                        $sameYear = ($startYear === $endYear);
-                    ?>
 
                     <!-- Year -->
                     <span id="year">
-                        <?php if ($sameYear): ?>
-                            <?= $startYear ?>
-                        <?php else: ?>
-                            <?= $endYear ?>
-                        <?php endif; ?>
+                        <?= $end_week->format('Y'); ?>
                     </span>
                     
                     <div id="calendar-header">
@@ -313,7 +302,7 @@
 
                     ?>
                     <div class="day <?= $today ?> <?= $hasOral ?>">
-                        <h4><?= $day['day_name'] . " " . date('d/m', strtotime($date)) ?></h4>      <!-- Day name and date -->
+                        <h4><?= $day['day_name'] . " " . date('d', strtotime($date)) ?></h4>      <!-- Day name and date -->
 
                         <?php foreach($day['slots'] as $subject => $slot): ?>       <!-- Slot -->
                             <div class="slot">
@@ -407,9 +396,11 @@
                             }
                         ?>
                     </table>
-
-                    <button type="button" id="add_subject">+ Aggiungi materia</button>
-                    <button type="button" id="remove_subject">- Rimuovi materia</button>
+                    
+                    <div class="formclass_buttons">
+                        <button type="button" id="add_subject">+ Aggiungi materia</button>
+                        <button type="button" id="remove_subject">- Rimuovi materia</button>
+                    </div>
                 </div>
 
                 <div>
@@ -421,8 +412,11 @@
                             }
                         ?>
                     </div>
-                    <button type="button" id="add_student">+ Aggiungi studente</button>
-                    <button type="button" id="remove_student">- Rimuovi studente</button>
+
+                    <div class="formclass_buttons">
+                        <button type="button" id="add_student">+ Aggiungi studente</button>
+                        <button type="button" id="remove_student">- Rimuovi studente</button>
+                    </div>
                 </div>
 
                 <div id="submit_container">
