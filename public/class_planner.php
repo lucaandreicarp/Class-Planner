@@ -382,7 +382,7 @@
 
                 <div>
                     <table id="schedule_table">
-                        <tr><td>Materie</td><td>Lunedì</td><td>Martedì</td><td>Mercoledì</td><td>Giovedì</td><td>Venerdì</td><td>Sabato</td></tr>
+                        <tr><td>Materie</td><td>Lun</td><td>Mar</td><td>Mer</td><td>Gio</td><td>Ven</td><td>Sab</td></tr>
                         <?php 
                             foreach ($subjects as $idsubject => $subject){
                                 $name = $subject["name"];

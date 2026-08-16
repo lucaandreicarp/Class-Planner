@@ -637,15 +637,6 @@ input[type="submit"]:hover {
         width: 100%;
     }
 
-    #schedule_table,
-    #form_class input[type="text"][value] {
-        font-size: 12px;
-    }
-
-    #schedule_table td {
-        padding: 5px;
-    }
-
     #schedule_table td > input[type="checkbox"] {
         width: 16px;
         height: 16px;
