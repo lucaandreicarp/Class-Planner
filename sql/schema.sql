@@ -1,4 +1,4 @@
-CREATE DATABASE class_planner IF NOT EXISTS class_planner;
+CREATE DATABASE IF NOT EXISTS class_planner;
 
 USE class_planner;
 
