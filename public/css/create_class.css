@@ -148,6 +148,7 @@ button:hover {
 
 input[type="submit"] {
     font-size: 15px;
+    font-weight: 600;
 
     background-color: #2563EB;
     color: white;

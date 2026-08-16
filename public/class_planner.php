@@ -219,7 +219,9 @@
 <body data-idclass="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
     <header>
         <h1><?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?></h1>
-        <span id="settings">Impostazioni</span>
+        <span id="settings">
+            <i data-lucide="settings"></i>
+        </span>
     </header>
     <div id="app-layout">
         <aside>
@@ -242,7 +244,7 @@
             </div>
 
             <div id="div_event">    <!-- Event button -->
-                <button id="add_event">+</button>
+                <button id="add_event"><i data-lucide="plus"></i></button>
                 <label for="add_event" id="label_button_event" class="hidden_mobile">Aggiungi evento</label>
             </div>
         </aside>
@@ -259,7 +261,7 @@
                     <div id="calendar-header">
                         <!-- Previous week -->
                         <a href="<?= htmlspecialchars("?week=" . ($week_offset - 1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>">
-                            <button>←</button>
+                            <button class="arrow-icon"><i data-lucide="chevron-left"></i></button>
                         </a>
 
                         <!-- Date range -->
@@ -277,7 +279,7 @@
 
                         <!-- Next week -->
                         <a href="<?= htmlspecialchars("?week=" . ($week_offset + 1) . "&code=" . urlencode($code) . $studentParam, ENT_QUOTES, 'UTF-8') ?>">
-                            <button>→</button>
+                            <button class="arrow-icon"><i data-lucide="chevron-right"></i></button>
                         </a>
                     </div>
                 </div>
@@ -320,8 +322,8 @@
                                         }
                                     }
                                     ?>
-                                    <button class="<?= $isInSlot ? 'remove-oral' : 'add-oral' ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><?= $isInSlot ? '-' : '+' ?></button>
-                                    <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>">x</button>
+                                    <button class="<?= $isInSlot ? 'remove-oral' : 'add-oral' ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="<?= $isInSlot ? 'minus' : 'plus' ?>"></i></button>
+                                    <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>"><i data-lucide="x"></i></button>
                                 </div>
                     
                                 <?php if (count($slot['students']) > 0): ?>
@@ -338,7 +340,7 @@
                             <div class="event">
                                 <div class="header-event">
                                     <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                    <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>">x</button>
+                                    <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="x"></i></button>
                                 </div> 
                                 <?php if (!empty($event['description'])): ?>
                                     <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>
@@ -355,7 +357,7 @@
         <div id="div_settings" class="hidden">      <!-- Settings page -->
             <div class="modal-header">
                 <h2>Impostazioni</h2>
-                <button class="close-modal">×</button>
+                <button class="close-modal"><i data-lucide="x"></i></button>
             </div>
             <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
             <button id="edit">Modifica</button>
@@ -371,7 +373,7 @@
         <div id="edit-setting" class="hidden">
             <div class="modal-header">
                 <h2>Modifica</h2>
-                <button class="close-modal">×</button>
+                <button class="close-modal"><i data-lucide="x"></i></button>
             </div>
             <form method="post" action="../php/class_data.php" id="form_class">
                 <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">    <!-- Create hidden code -->
@@ -398,8 +400,15 @@
                     </table>
                     
                     <div class="formclass_buttons">
-                        <button type="button" id="add_subject">+ Aggiungi materia</button>
-                        <button type="button" id="remove_subject">- Rimuovi materia</button>
+                        <button type="button" id="add_subject">
+                            <i data-lucide="plus"></i>
+                            <span>Aggiungi materia</span>
+                        </button>
+
+                        <button type="button" id="remove_subject">
+                            <i data-lucide="trash-2"></i>
+                            <span>Rimuovi materia</span>
+                        </button>
                     </div>
                 </div>
 
@@ -414,20 +423,26 @@
                     </div>
 
                     <div class="formclass_buttons">
-                        <button type="button" id="add_student">+ Aggiungi studente</button>
-                        <button type="button" id="remove_student">- Rimuovi studente</button>
+                        <button type="button" id="add_student">
+                            <i data-lucide="plus"></i>
+                            <span>Aggiungi studente</span>
+                        </button>
+                        <button type="button" id="remove_student">
+                            <i data-lucide="trash-2"></i>
+                            <span>Rimuovi studente</span>
+                        </button>
                     </div>
                 </div>
 
                 <div id="submit_container">
-                    <input type="submit" value="Aggiorna">
+                    <input type="submit" value="Aggiorna" class="submit_button">
                 </div>
             </form>
         </div>
         <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
             <div class="modal-header">
                 <h2>Aggiungi evento</h2>
-                <button type="button" class="close-modal">×</button>
+                <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
             <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
             <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
@@ -476,7 +491,7 @@
                     <label for="end_date">Data Fine</label>
                     <input type="date" name="end_date" id="end_date" required>
                 </div>
-                <input type="submit" value="Crea">
+                <input type="submit" value="Crea" class="submit_button">
             </div>
 
         </form>
