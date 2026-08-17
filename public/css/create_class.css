@@ -1,17 +1,12 @@
 /* General settings */
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #F5F7FB;
-    color: #1F2937;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     
     min-height: 100vh;
-    margin: 0;
     padding: 0 20px;
 }
 
@@ -51,10 +46,6 @@ label {
 
 input[type="text"] {
     padding: 10px;
-
-    border: 1px solid #D1D5DB;
-    border-radius: 8px;
-
     font-size: 15px;
 }
 
@@ -75,7 +66,7 @@ table {
 
 
 td {
-    border: 1px solid #D1D5DB;
+    border: 1px solid var(--color-border);
     padding: 10px;
     text-align: center;
 }
@@ -83,7 +74,7 @@ td {
 /* Table header */
 
 tr:first-child {
-    background-color: #EFF6FF;
+    background-color: var(--color-primary-light);
     font-weight: bold;
 }
 
@@ -117,7 +108,7 @@ input[type="checkbox"] {
 
 p {
     margin-top: 25px;
-    color: #6B7280;
+    color: var(--color-muted);
 }
 
 /* General buttons */
@@ -137,7 +128,7 @@ button {
 }
 
 button:hover {
-    background-color: #2563EB;
+    background-color: var(--color-primary);
 }
 
 #submit_container {
@@ -148,36 +139,23 @@ button:hover {
 
 input[type="submit"] {
     font-size: 15px;
-    font-weight: 600;
-
-    background-color: #2563EB;
-    color: white;
-
-    border: none;
-    border-radius: 8px;
 
     padding: 10px 18px;
     margin: 0;
-
-    cursor: pointer;
-}
-
-input[type="submit"]:hover {
-    background-color: #1D4ED8;
 }
 
 /* Back button */
 
 body > button {
     background-color: white;
-    color: #2563EB;
+    color: var(--color-primary);
 
-    border: 2px solid #2563EB;
+    border: 2px solid var(--color-primary);
 }
 
 
 body > button:hover {
-    background-color: #EFF6FF;
+    background-color: var(--color-primary-light);
 }
 
 

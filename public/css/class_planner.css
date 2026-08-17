@@ -7,13 +7,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #F5F7FB;
-    color: #1F2937;
-
-    margin: 0;
     height: 100vh;
-
     overflow: hidden;
 }
 
@@ -46,7 +40,7 @@ header h1 {
 }
 
 #settings{
-    color: #2563EB;
+    color: var(--color-primary);
     cursor: pointer;
 }
 
@@ -106,7 +100,7 @@ input[type="text"] {
     padding: 8px;
 
     border-radius: 8px;
-    border: 1px solid #D1D5DB;
+    border: 1px solid var(--color-border);
 
     max-width: 100%;
 }
@@ -145,7 +139,7 @@ input[type="text"] {
 
 button,
 input[type="submit"] {
-    background-color: #2563EB;
+    background-color: var(--color-primary);
     color: white;
 
     border: none;
@@ -160,7 +154,7 @@ input[type="submit"] {
 
 button:hover,
 input[type="submit"]:hover {
-    background-color: #1D4ED8;
+    background-color: var(--color-primary-hover);
 }
 
 .formclass_buttons button{
@@ -190,13 +184,13 @@ input[type="submit"]:hover {
 }
 
 .formclass_buttons button:hover{
-    background-color: #2563EB;
+    background-color: var(--color-primary);
 }
 
 #form_class > div > input[type="submit"] {
     font-size: 15px;
 
-    background-color: #2563EB;
+    background-color: var(--color-primary);
     color: white;
 
     border: none;
@@ -209,7 +203,7 @@ input[type="submit"]:hover {
 }
 
 #form_class > div > input[type="submit"]:hover {
-    background-color: #1D4ED8;
+    background-color: var(--color-primary-hover);
 }
 
 #form_cancellation input[type="submit"] {
@@ -370,7 +364,7 @@ input[type="submit"]:hover {
 .day h4 {
     margin: 10px 10px 10px;
     text-align: center;
-    color: #2563EB;
+    color: var(--color-primary);
 }
 
 .day.today {
@@ -414,7 +408,7 @@ input[type="submit"]:hover {
     padding: 8px 0 0 18px;
     font-size: 13px;
 
-    border-top:1px solid #D1D5DB;
+    border-top:1px solid var(--color-border);
 }
 
 .students li {
@@ -429,7 +423,7 @@ input[type="submit"]:hover {
 
 
 .event {
-    background-color: #EFF6FF;
+    background-color: var(--color-primary-light);
 
     border-radius: 8px;
     padding: 8px;
@@ -539,7 +533,7 @@ input[type="submit"]:hover {
     align-items: center;
     gap: 5px;
 
-    color: #6B7280;
+    color: var(--color-muted);
     text-decoration: none;
 
     font-weight: 500;
@@ -621,7 +615,7 @@ input[type="submit"]:hover {
 
 
 #schedule_table td {
-    border: 1px solid #D1D5DB;
+    border: 1px solid var(--color-border);
     padding: 8px;
     text-align:center;
 
@@ -637,7 +631,7 @@ input[type="submit"]:hover {
 }
 
 #schedule_table tr:first-child {
-    background-color: #EFF6FF;
+    background-color: var(--color-primary-light);
     font-weight:bold;
 }
 
