@@ -6,6 +6,7 @@
     <title>Crea classe | Class Planner</title>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/create_class.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <h1>CREA UNA NUOVA CLASSE</h1>
@@ -30,8 +31,14 @@
                 </tr>
             </table>
             <div class="mobile_buttons">
-                <button type="button" id="add_subject">+ Aggiungi materia</button>
-                <button type="button" id="remove_subject">- Rimuovi materia</button>
+                <button type="button" id="add_subject">
+                    <i data-lucide="plus"></i>
+                    <span>Aggiungi materia</span>
+                </button>
+                <button type="button" id="remove_subject">
+                    <i data-lucide="trash-2"></i>
+                    <span>Rimuovi materia</span>
+                </button>
             </div>
         </div>
 
@@ -41,8 +48,14 @@
                 <input type="text" name="students[]" placeholder="Nome studente" required>
             </div>
             <div class="mobile_buttons">
-                <button type="button" id="add_student">+ Aggiungi studente</button>
-                <button type="button" id="remove_student">- Rimuovi studente</button>
+                <button type="button" id="add_student">
+                    <i data-lucide="plus"></i>
+                    <span>Aggiungi studente</span>
+                </button>
+                <button type="button" id="remove_student">
+                    <i data-lucide="trash-2"></i>
+                    <span>Rimuovi studente</span>
+                </button>
             </div>
         </div>
 
@@ -58,5 +71,6 @@
     </button>
 
     <script src="js/create_class.js"></script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>

@@ -114,6 +114,11 @@ p {
 /* General buttons */
 
 button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
     font-size: 15px;
     background-color: #3B82F6;
     color: white;
@@ -125,6 +130,13 @@ button {
     margin-top: 10px;
 
     cursor: pointer;
+}
+
+button svg {
+    width: 15px;
+    height: 15px;
+
+    stroke-width: 2.5;
 }
 
 button:hover {
