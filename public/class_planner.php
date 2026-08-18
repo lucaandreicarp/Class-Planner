@@ -414,7 +414,7 @@
                 </div>
 
                 <div>
-                    <b>Studenti</b>
+                    <b id="students_label"></b>
                     <div id="students_container">
                         <?php 
                             foreach ($students as $id_student => $name){

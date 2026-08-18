@@ -41,7 +41,10 @@ document.getElementById('remove_subject').addEventListener('click', () => {
 });
 
 // Add Student
+const labelStudents = document.getElementById('students_label');
 const containerStudents = document.getElementById('students_container');
+const inputsStudents = containerStudents.getElementsByTagName('input');
+
 document.getElementById('add_student').addEventListener('click', () => {
     const inputStudent = document.createElement('input');
     inputStudent.type = 'text';
@@ -49,15 +52,26 @@ document.getElementById('add_student').addEventListener('click', () => {
     inputStudent.placeholder = 'Nome studente';
     inputStudent.required = true;
     containerStudents.appendChild(inputStudent);
+
+    // Update the label with the new count
+    updateStudentLabel();
 });
 
 // Remove Student
 document.getElementById('remove_student').addEventListener('click', () => {
-    const inputsStudents = containerStudents.getElementsByTagName('input');
     if (inputsStudents.length > 1) {
         containerStudents.removeChild(inputsStudents[inputsStudents.length - 1]);
+        
+        // Update the label with the new count
+        updateStudentLabel();
     }
 });
+
+// Set the initial label text with the count of students
+function updateStudentLabel() {
+    labelStudents.textContent = `Studenti (${inputsStudents.length})`;
+}
+updateStudentLabel();
 
 // Checkbox check
 const form = document.getElementById('form_class');

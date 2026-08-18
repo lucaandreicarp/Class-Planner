@@ -319,9 +319,16 @@ function setupSubjectButtons(){
 
 // Add/Remove Student
 function setupStudentButtons(){
-    
-    let studentNumber = 0; // student counter
+    const labelStudents = document.getElementById('students_label');
     const containerStudents = document.getElementById('students_container');
+    const inputsStudents = containerStudents.getElementsByTagName('input');
+    let studentNumber = 0; // student counter
+
+    // Set the initial label text with the count of students
+    function updateStudentLabel() {
+        labelStudents.textContent = `Studenti (${inputsStudents.length})`;
+    }
+    updateStudentLabel();
 
     document.getElementById('add_student').addEventListener('click', () => {
         
@@ -333,18 +340,23 @@ function setupStudentButtons(){
         inputStudent.placeholder = 'Nome studente';
         inputStudent.required = true;
         containerStudents.appendChild(inputStudent);
+
+        // Update the label with the new count
+        updateStudentLabel();
     });
 
     document.getElementById('remove_student').addEventListener('click', () => {
-        const inputsStudents = containerStudents.getElementsByTagName('input');
         if (inputsStudents.length > 1) {
             containerStudents.removeChild(inputsStudents[inputsStudents.length - 1]);
+            
+            // Update the label with the new count
+            updateStudentLabel();
         }
     });
 }
 
 setupSubjectButtons();
-setupStudentButtons();  
+setupStudentButtons();
 
 // Checkbox check
 const form_class = document.getElementById('form_class');
