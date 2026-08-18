@@ -9,13 +9,11 @@
     );
     $stmt->bind_param("s", $code);
 
-    $result_cancellation = $stmt->execute();  
-
-    if($result_cancellation){
-        echo "<script> alert('Classe eliminata correttamente!'); window.location.href='../public/index.html'; </script>";
-    } else {
-        die($conn->error); 
+    if (!$stmt->execute()) {
+        dbError($stmt->error, "Non è stato possibile eliminare la classe.");
     }
+
+    echo "<script> alert('Classe eliminata correttamente!'); window.location.href='../public/index.html'; </script>";
 
     // Close DB Connection
     $conn -> close();

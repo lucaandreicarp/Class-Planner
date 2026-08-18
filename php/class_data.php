@@ -13,210 +13,208 @@
         $stmt = $conn->prepare(
             "SELECT idclass FROM class WHERE code=?"
         );
+
         $stmt->bind_param("s", $code);
-        $stmt->execute();
+        
+        if(!$stmt->execute()){
+            dbError($stmt->error, "Non è stato possibile caricare la classe.");
+        }
 
         $result_idclass = $stmt->get_result();
-        if ($result_idclass) {
-            $row_idclass = $result_idclass -> fetch_assoc();
+        $row_idclass = $result_idclass -> fetch_assoc();
+        $idclass = $row_idclass["idclass"];
 
-            if(!$row_idclass){
-                die("Classe non trovata");
-            }
+        // Extracting data from database to compare
 
-            $idclass = $row_idclass["idclass"];
+        $idsubjects_db = [];
+        $idstudents_db = [];
+        $schedule_db = []; 
+        
+        $stmt = $conn->prepare(     // Subjects
+            "SELECT idsubject FROM subject WHERE idclass=?"
+        );
 
-            // Extracting data from database to compare
+        $stmt->bind_param("i", $idclass);
+        
+        if(!$stmt->execute()){
+            dbError($stmt->error, "Non è stato possibile caricare le materie della classe.");
+        }
 
-            $idsubjects_db = [];
-            $idstudents_db = [];
-            $schedule_db = []; 
-            
-            $stmt = $conn->prepare(     // Subjects
-                "SELECT idsubject FROM subject WHERE idclass=?"
-            );
-            $stmt->bind_param("i", $idclass);
-            $stmt->execute();
+        $result_idsubject = $stmt->get_result();
 
-            $result_idsubject = $stmt->get_result();
-            if ($result_idsubject) {
-                while ($row_idsubject = $result_idsubject -> fetch_assoc()) {
-                    $idsubjects_db[] = $row_idsubject["idsubject"];
+        while ($row_idsubject = $result_idsubject -> fetch_assoc()) {
+            $idsubjects_db[] = $row_idsubject["idsubject"];
+        }
+
+        $stmt = $conn->prepare(        // Students
+            "SELECT idstudent FROM student WHERE idclass=?"
+        );
+
+        $stmt->bind_param("i", $idclass);
+        
+        if(!$stmt->execute()){
+            dbError($stmt->error, "Non è stato possibile caricare gli studenti della classe.");
+        }
+
+        $result_idstudent = $stmt->get_result();
+
+        while ($row_idstudent = $result_idstudent -> fetch_assoc()) {
+            $idstudents_db[] = $row_idstudent["idstudent"];
+        }
+
+        $stmt = $conn->prepare(         // Schedule      
+            "SELECT 
+                sub.idsubject,
+                sc.idschedule,
+                sc.day_of_week
+            FROM subject sub
+            JOIN schedule sc ON sub.idsubject = sc.idsubject
+            WHERE sub.idclass=?"
+        );
+
+        $stmt->bind_param("i", $idclass);
+        
+        if(!$stmt->execute()){
+            dbError($stmt->error, "Non è stato possibile caricare l'orario della classe.");
+        }
+
+        $result_schedule = $stmt->get_result();
+
+        while ($row = $result_schedule -> fetch_assoc()) {
+            $schedule_db[$row["idsubject"]][$row["day_of_week"]] = $row["idschedule"];
+        }
+
+        // Delete missing data
+        foreach ($schedule_db as $idsubject_db => $days_db) {      // Schedule
+            foreach ($days_db as $day_db => $idschedule_db) {
+                if (!isset($schedule_form[$idsubject_db]) || !isset($schedule_form[$idsubject_db][$day_db])) {
+
+                    $stmt = $conn->prepare(
+                        "DELETE FROM schedule WHERE idschedule=?"
+                    );
+
+                    $stmt->bind_param("i", $idschedule_db);
+
+                    if (!$stmt->execute()) {
+                        dbError($stmt->error, "Non è stato possibile eliminare un orario della classe.");
+                    }
                 }
-            } else {
-                die($conn->error);
             }
+        }
 
-            $stmt = $conn->prepare(        // Students
-                "SELECT idstudent FROM student WHERE idclass=?"
-            );
-            $stmt->bind_param("i", $idclass);
-            $stmt->execute();
+        foreach ($idsubjects_db as $idsubject_db) {     // Subjects
+            if (!isset($subjects_form[$idsubject_db])) {
 
-            $result_idstudent = $stmt->get_result();
-            if($result_idstudent){
-                while ($row_idstudent = $result_idstudent -> fetch_assoc()) {
-                    $idstudents_db[] = $row_idstudent["idstudent"];
+                $stmt = $conn->prepare(
+                    "DELETE FROM subject WHERE idsubject=?"
+                );
+
+                $stmt->bind_param("i", $idsubject_db);
+
+                if (!$stmt->execute()) {
+                    dbError($stmt->error, "Non è stato possibile eliminare una materia della classe.");
                 }
-            } else {
-                die($conn->error);
             }
+        }
 
-            $stmt = $conn->prepare(         // Schedule      
-                "SELECT 
-                    sub.idsubject,
-                    sc.idschedule,
-                    sc.day_of_week
-                FROM subject sub
-                JOIN schedule sc ON sub.idsubject = sc.idsubject
-                WHERE sub.idclass=?"
-            );
-            $stmt->bind_param("i", $idclass);
-            $stmt->execute();
+        foreach ($idstudents_db as $idstudent_db) {     // Students
+            if (!isset($students_form[$idstudent_db])) {
 
-            $result_schedule = $stmt->get_result();
-            if ($result_schedule) {
-                while ($row = $result_schedule -> fetch_assoc()) {
-                    $schedule_db[$row["idsubject"]][$row["day_of_week"]] = $row["idschedule"];
+                $stmt = $conn->prepare(
+                    "DELETE FROM student WHERE idstudent=?"
+                );
+
+                $stmt->bind_param("i", $idstudent_db);
+
+                if (!$stmt->execute()) {
+                    dbError($stmt->error, "Non è stato possibile eliminare uno studente della classe.");
                 }
-            } else {
-                die($conn->error);
+            }
+        }
+
+        // Update and insert of subjects and schedule
+        foreach ($subjects_form as $id => $subject_name) {
+            if (is_numeric($id)) {      // Update existing subjects
+                $stmt = $conn->prepare(
+                    "UPDATE subject SET name=? WHERE idsubject=?"
+                );
+                $stmt->bind_param("si", $subject_name, $id);
+                if ($stmt->execute()) {
+                    $idsubject = $id;
+                } else {
+                    dbError($stmt->error, "Non è stato possibile aggiornare una materia della classe.");
+                }
+            } else {        // Insert new subjects
+                $stmt = $conn->prepare(
+                    "INSERT INTO subject (name, idclass) VALUES (?, ?)"
+                );
+                $stmt->bind_param("si", $subject_name, $idclass);
+                if ($stmt->execute()) {
+                    $idsubject = $conn->insert_id;
+                } else {
+                    dbError($stmt->error, "Non è stato possibile inserire una nuova materia nella classe.");
+                }
             }
 
-            // Delete missing data
-            foreach ($schedule_db as $idsubject_db => $days_db) {      // Schedule
-                foreach ($days_db as $day_db => $idschedule_db) {
-                    if (!isset($schedule_form[$idsubject_db]) || !isset($schedule_form[$idsubject_db][$day_db])) {
+            if (isset($schedule_form[$id])) {   // Insert new schedule
+                foreach ($schedule_form[$id] as $day => $on) {
+                    if (!isset($schedule_db[$idsubject][$day])) {
 
                         $stmt = $conn->prepare(
-                            "DELETE FROM schedule WHERE idschedule=?"
+                            "INSERT INTO schedule (day_of_week, idsubject) VALUES (?, ?)"
                         );
 
-                        $stmt->bind_param("i", $idschedule_db);
+                        $stmt->bind_param("ii", $day, $idsubject);
 
                         if (!$stmt->execute()) {
-                            die($conn->error);
+                            dbError($stmt->error, "Non è stato possibile inserire un nuovo orario nella classe.");
                         }
                     }
                 }
             }
-
-            foreach ($idsubjects_db as $idsubject_db) {     // Subjects
-                if (!isset($subjects_form[$idsubject_db])) {
-
-                    $stmt = $conn->prepare(
-                        "DELETE FROM subject WHERE idsubject=?"
-                    );
-
-                    $stmt->bind_param("i", $idsubject_db);
-
-                    if (!$stmt->execute()) {
-                        die($conn->error);
-                    }
-                }
-            }
-
-            foreach ($idstudents_db as $idstudent_db) {     // Students
-                if (!isset($students_form[$idstudent_db])) {
-
-                    $stmt = $conn->prepare(
-                        "DELETE FROM student WHERE idstudent=?"
-                    );
-
-                    $stmt->bind_param("i", $idstudent_db);
-
-                    if (!$stmt->execute()) {
-                        die($conn->error);
-                    }
-                }
-            }
-
-            // Update and insert of subjects and schedule
-            foreach ($subjects_form as $id => $subject_name) {
-                if (is_numeric($id)) {      // Update existing subjects
-                    $stmt = $conn->prepare(
-                        "UPDATE subject SET name=? WHERE idsubject=?"
-                    );
-                    $stmt->bind_param("si", $subject_name, $id);
-                    if ($stmt->execute()) {
-                        $idsubject = $id;
-                    } else {
-                        die($conn->error);
-                    }
-                } else {        // Insert new subjects
-                    $stmt = $conn->prepare(
-                        "INSERT INTO subject (name, idclass) VALUES (?, ?)"
-                    );
-                    $stmt->bind_param("si", $subject_name, $idclass);
-                    if ($stmt->execute()) {
-                        $idsubject = $conn->insert_id;
-                    } else {
-                        die($conn->error);
-                    }
-                }
-
-                if (isset($schedule_form[$id])) {   // Insert new schedule
-                    foreach ($schedule_form[$id] as $day => $on) {
-                        if (!isset($schedule_db[$idsubject][$day])) {
-
-                            $stmt = $conn->prepare(
-                                "INSERT INTO schedule (day_of_week, idsubject) VALUES (?, ?)"
-                            );
-
-                            $stmt->bind_param("ii", $day, $idsubject);
-
-                            if (!$stmt->execute()) {
-                                die($conn->error);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Update and insert students
-            foreach ($students_form as $id => $student_name) {
-                if (is_numeric($id)) {      // Update existing students
-                    $stmt = $conn->prepare(
-                        "UPDATE student SET name=? WHERE idstudent=?"
-                    );
-
-                    $stmt->bind_param("si", $student_name, $id);
-
-                    if (!$stmt->execute()) {
-                        die($conn->error);
-                    }
-
-                } else {        
-                    $stmt = $conn->prepare(     // Insert new students
-                        "INSERT INTO student (name, idclass) VALUES (?, ?)"
-                    );
-
-                    $stmt->bind_param("si", $student_name, $idclass);
-
-                    if (!$stmt->execute()) {
-                        die($conn->error);
-                    }
-                }
-            }
-            
-            // Update class name
-            $stmt = $conn->prepare(
-                "UPDATE class SET name=? WHERE idclass=?"
-            );
-
-            $stmt->bind_param("si", $name_form, $idclass);
-            
-            if ($stmt->execute()){
-                echo "<script>
-                alert(" . json_encode("La classe $name_form è stata aggiornata!") . ");
-                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
-                </script>";
-            } else {
-                die($conn->error);
-            }
-        } else {
-            die($conn->error);
         }
+
+        // Update and insert students
+        foreach ($students_form as $id => $student_name) {
+            if (is_numeric($id)) {      // Update existing students
+                $stmt = $conn->prepare(
+                    "UPDATE student SET name=? WHERE idstudent=?"
+                );
+
+                $stmt->bind_param("si", $student_name, $id);
+
+                if (!$stmt->execute()) {
+                    dbError($stmt->error, "Non è stato possibile aggiornare uno studente della classe.");
+                }
+
+            } else {        
+                $stmt = $conn->prepare(     // Insert new students
+                    "INSERT INTO student (name, idclass) VALUES (?, ?)"
+                );
+
+                $stmt->bind_param("si", $student_name, $idclass);
+
+                if (!$stmt->execute()) {
+                    dbError($stmt->error, "Non è stato possibile inserire un nuovo studente nella classe.");
+                }
+            }
+        }
+        
+        // Update class name
+        $stmt = $conn->prepare(
+            "UPDATE class SET name=? WHERE idclass=?"
+        );
+
+        $stmt->bind_param("si", $name_form, $idclass);
+        
+        if (!$stmt->execute()){
+            dbError($stmt->error, "Non è stato possibile aggiornare il nome della classe.");
+        }
+        
+        echo "<script>
+        alert(" . json_encode("La classe $name_form è stata aggiornata!") . ");
+        window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+        </script>";
     } else {
         // Insert Class in DB
         function generateCode($length = 6) {
@@ -236,14 +234,12 @@
 
             $stmt->bind_param("s", $code);
 
-            $stmt->execute();
+            if (!$stmt->execute()) {
+                dbError($stmt->error, "Non è stato possibile controllare l'esistenza di una classe con il codice generato.");
+            }
 
             $res = $stmt->get_result();
-            if ($res){
-                $row = $res->fetch_assoc();
-            } else {
-                die($conn->error);
-            }
+            $row = $res->fetch_assoc();
 
         } while($row['cnt'] > 0);       // continue if there is already a class with that code
 
@@ -253,10 +249,10 @@
 
         $stmt->bind_param("ss", $name_form, $code);
 
-        $class_insert = $stmt->execute();
-        if (!$class_insert){
-            die($conn->error);
+        if (!$stmt->execute()) {
+            dbError($stmt->error, "Non è stato possibile creare la classe.");
         }
+
         $idclass = $conn->insert_id; 
 
         // Insert Subjects and Schedule in DB
@@ -267,10 +263,10 @@
 
             $stmt->bind_param("si", $subject_name, $idclass);
 
-            $subject_insert = $stmt->execute();
-            if (!$subject_insert){
-                die($conn->error);
+            if(!$stmt->execute()){
+                dbError($stmt->error, "Non è stato possibile creare una materia nella classe.");
             }
+
             $idsubject = $conn->insert_id;
 
             if (isset($schedule_form[$subject_number])) {
@@ -281,9 +277,8 @@
 
                     $stmt->bind_param("ii", $day, $idsubject);
 
-                    $schedule_insert = $stmt->execute();
-                    if (!$schedule_insert){
-                        die($conn->error);
+                    if (!$stmt->execute()) {
+                        dbError($stmt->error, "Non è stato possibile creare un orario per una materia.");
                     }
                 }
             }
@@ -297,9 +292,8 @@
 
             $stmt->bind_param("si", $student, $idclass);
 
-            $student_insert = $stmt->execute();
-            if (!$student_insert){
-                die($conn->error);
+            if (!$stmt->execute()) {
+                dbError($stmt->error, "Non è stato possibile creare uno studente nella classe.");
             }
         }
     }

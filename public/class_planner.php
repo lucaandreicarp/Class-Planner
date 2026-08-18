@@ -11,16 +11,18 @@
 
     $stmt->bind_param("s", $code);
 
-    $stmt->execute();
+    if(!$stmt->execute()){
+        dbError($stmt->error, "Non è stato possibile cercare la classe.");
+    }
+
     $result_class = $stmt->get_result();
 
-    if ($result_class && $result_class->num_rows > 0) {
+    if ($result_class->num_rows > 0) {
         $row_class = $result_class->fetch_assoc();
         $id_class = $row_class["idclass"];
         $class_name = $row_class["name"];
     } else {
-        echo "<script> alert('Codice classe non trovato!'); window.location.href='index.html'; </script>";
-        die($conn->error);
+        dbError("", "Codice classe non trovato!");
     }
 
     // Extracting student
@@ -30,16 +32,15 @@
 
     $stmt->bind_param("i", $id_class);
 
-    $stmt->execute();
-    $result_student = $stmt->get_result();
+    if(!$stmt->execute()){
+        dbError($stmt->error, "Non è stato possibile caricare gli studenti della classe.");
+    }
 
+    $result_student = $stmt->get_result();
     $students = [];
-    if ($result_student){
-        while ($row_student = $result_student->fetch_assoc()) {
-            $students[$row_student["idstudent"]] = $row_student["name"];
-        }
-    } else {
-        die($conn->error);
+
+    while ($row_student = $result_student->fetch_assoc()) {
+        $students[$row_student["idstudent"]] = $row_student["name"];
     }
 
     // Extracting subjects (and schedule)
@@ -51,29 +52,27 @@
     ");
 
     $stmt->bind_param("i", $id_class);
-    $stmt->execute();
+    
+    if(!$stmt->execute()){
+        dbError($stmt->error, "Non è stato possibile caricare le materie e l'orario della classe.");
+    }
 
     $result_subject = $stmt->get_result();
-
     $subjects = [];
 
-    if($result_subject){
-        while ($row_subject = $result_subject->fetch_assoc()) {
-            $id_subject = $row_subject["idsubject"];
+    while ($row_subject = $result_subject->fetch_assoc()) {
+        $id_subject = $row_subject["idsubject"];
 
-            // If the subject doesn't exist yet, create it
-            if (!isset($subjects[$id_subject])) {
-                $subjects[$id_subject] = [
-                    "name" => $row_subject["name"],
-                    "days" => []
-                ];
-            }
-
-            // Add the day
-            $subjects[$id_subject]["days"][] = $row_subject["day_of_week"];
+        // If the subject doesn't exist yet, create it
+        if (!isset($subjects[$id_subject])) {
+            $subjects[$id_subject] = [
+                "name" => $row_subject["name"],
+                "days" => []
+            ];
         }
-    } else {
-        die($conn->error);
+
+        // Add the day
+        $subjects[$id_subject]["days"][] = $row_subject["day_of_week"];
     }
 
     // Calculate current week
@@ -143,31 +142,30 @@
     ");
 
     $stmt->bind_param("iss", $id_class, $start_date, $end_date);
-    $stmt->execute();
+    
+    if(!$stmt->execute()){
+        dbError($stmt->error, "Non è stato possibile caricare le interrogazioni della settimana.");
+    }
 
     $result_slots = $stmt->get_result();
 
-    if ($result_slots){
-        while($row = $result_slots->fetch_assoc()){
-            $date = $row['date'];
-            if(!isset($week_dates[$date]['slots'][$row['subject']])){
-                $week_dates[$date]['slots'][$row['subject']] = [
-                    'idslot' => $row['idslot'],     // Extracting id slot
-                    'students' => []
-                ];
-            }
-            if($row['student_name']){       // Extracting student
-                $week_dates[$date]['slots'][$row['subject']]['students'][] = [
-                    'id' => $row['idstudent'],
-                    'name' => $row['student_name']
-                ];
-            }
-            if ($currentStudentId !== null && $row['idstudent'] == $currentStudentId) {
-                $week_dates[$date]['has_oral'] = true;
-            }
+    while($row = $result_slots->fetch_assoc()){
+        $date = $row['date'];
+        if(!isset($week_dates[$date]['slots'][$row['subject']])){
+            $week_dates[$date]['slots'][$row['subject']] = [
+                'idslot' => $row['idslot'],     // Extracting id slot
+                'students' => []
+            ];
         }
-    } else {
-        die($conn->error);
+        if($row['student_name']){       // Extracting student
+            $week_dates[$date]['slots'][$row['subject']]['students'][] = [
+                'id' => $row['idstudent'],
+                'name' => $row['student_name']
+            ];
+        }
+        if ($currentStudentId !== null && $row['idstudent'] == $currentStudentId) {
+            $week_dates[$date]['has_oral'] = true;
+        }
     }
 
     // Extracting events
@@ -180,27 +178,26 @@
     ");
 
     $stmt->bind_param("iss", $id_class, $end_date, $start_date);
-    $stmt->execute();
+    
+    if(!$stmt->execute()){
+        dbError($stmt->error, "Non è stato possibile caricare gli eventi della settimana.");
+    }
 
     $result_events = $stmt->get_result();
 
-    if ($result_events) {
-        while($row = $result_events->fetch_assoc()){
-            $event_start = new DateTime($row['start_date']);
-            $event_end   = new DateTime($row['end_date']);
-            foreach($week_dates as $date => $day){
-                $d = new DateTime($date);
-                if($d >= $event_start && $d <= $event_end){
-                    $week_dates[$date]['events'][] = [
-                        'idevent' => $row['idevent'],
-                        'name' => $row['name'],
-                        'description' => $row['description'],
-                    ];
-                }
+    while($row = $result_events->fetch_assoc()){
+        $event_start = new DateTime($row['start_date']);
+        $event_end   = new DateTime($row['end_date']);
+        foreach($week_dates as $date => $day){
+            $d = new DateTime($date);
+            if($d >= $event_start && $d <= $event_end){
+                $week_dates[$date]['events'][] = [
+                    'idevent' => $row['idevent'],
+                    'name' => $row['name'],
+                    'description' => $row['description'],
+                ];
             }
         }
-    } else {
-        die($conn->error);
     }
 
     // Close DB Connection
