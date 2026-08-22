@@ -178,7 +178,14 @@ function closeModal(){
         }
 
         edit_setting.style.display = "none";
+        container_settings.style.display = "block";
         edit_displayed = false;
+
+    } else if(event_displayed){
+
+        form_slots.style.display = "none";
+        form_events.style.display = "block";
+        event_displayed = false;
 
     } else {
 
@@ -223,6 +230,7 @@ let initialFormHTML = null;
 
 edit.addEventListener('click', () => {
 
+    container_settings.style.display = "none";
     openModal(edit_setting);
     edit_displayed = true;
 
@@ -393,11 +401,12 @@ button_event.addEventListener('click', () => {
     toggleEvents();
 })
 
-// Event form
+// Toggle event type
 const typeSelect = document.getElementById("type");
 const oralDiv = document.querySelector(".oral");
 const otherDiv = document.querySelector(".other");
 const nameInput = document.getElementById("event_name");
+const submit_event = form_events.querySelector('input[type="submit"]');
 
 function toggleEventType() {
     if(typeSelect.value === "oral"){
@@ -405,24 +414,91 @@ function toggleEventType() {
         otherDiv.style.display = "none";  // hide other
 
         nameInput.required = false;
+
+        submit_event.value = "Continua";
     } else {
         oralDiv.style.display = "none";   // hide oral
         otherDiv.style.display = "block"; // show other
 
         nameInput.required = true;
+
+        submit_event.value = "Crea";
     }
 }
 
 typeSelect.addEventListener("change", toggleEventType); // If the select changes
 toggleEventType(); // Refresh at starting page
 
-// Dates check
-form_events.addEventListener("submit", (e) => {
-    const start = document.getElementById("start_date").value;
-    const end = document.getElementById("end_date").value;
+// Form event
+const form_slots = document.getElementById("form_slots");
+const slots_container = document.getElementById("slots_container");
 
-    if (start > end) {
+let event_displayed = false;
+
+form_events.addEventListener("submit", (e) => {
+    const start_date = document.getElementById("start_date").value;
+    const end_date = document.getElementById("end_date").value;
+
+    // Check dates
+    if (start_date > end_date) {
         e.preventDefault();
         alert("La data di inizio non può essere successiva alla data di fine!");
+        return;
     }
+
+    // Type other, submit the form normally
+    if (typeSelect.value === "other") {
+        return;
+    }
+
+    e.preventDefault();     // Type oral
+
+    const id_subject = document.getElementById("subject").value;
+    const subject = subjects[id_subject];
+
+    document.getElementById("slots_subject").value = id_subject;
+
+    // Calculate dates between start and end
+    const dates = [];
+
+    for (let date = new Date(start_date); date <= new Date(end_date); date.setDate(date.getDate() + 1)) {
+        const number_day = date.getDay() === 0 ? 7 : date.getDay();     // Sunday is 0, but we want it to be 7
+
+        if (subject.days.includes(number_day)) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+
+            dates.push(`${year}-${month}-${day}`);
+        }
+    }
+
+    // Populate new form with the calculated dates
+    slots_container.innerHTML = "";     // Clear previous content
+
+    dates.forEach(date => {
+
+        const div = document.createElement("div");
+        div.classList.add("slot-row");
+
+        const inputDate = document.createElement("input");
+        inputDate.type = "date";
+        inputDate.value = date;
+        inputDate.readOnly = true;
+
+        const inputCapacity = document.createElement("input");
+        inputCapacity.type = "number";
+        inputCapacity.name = `capacity[${date}]`;
+        inputCapacity.min = "1";
+        inputCapacity.required = true;
+
+        div.appendChild(inputDate);
+        div.appendChild(inputCapacity);
+
+        slots_container.appendChild(div);
+    });
+
+    form_events.style.display = "none";
+    openModal(form_slots);
+    event_displayed = true;
 });

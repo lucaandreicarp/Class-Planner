@@ -12,50 +12,18 @@
 
             $code = $_POST["code"];
             $id_subject = $_POST["subject"];
-            $start_date = $_POST["start_date"];
-            $end_date = $_POST["end_date"];
-
-            $start_date = new DateTime($start_date);
-            $end_date = new DateTime($end_date);    
-            
-            // Extracting subject's schedule
-            $subject_days = [];
-
-            $stmt = $conn->prepare(
-                "SELECT day_of_week FROM schedule WHERE idsubject=?"
-            );
-            $stmt->bind_param("i", $id_subject);
-            
-            if(!$stmt->execute()){
-                dbError($stmt->error, "Non è stato possibile recuperare l'orario della materia.");
-            }
-
-            $schedule = $stmt->get_result();
-
-            while($row = $schedule -> fetch_object()){
-                $subject_days[] = $row -> day_of_week;
-            }
-
-            // Calculating dates between start date and end date, where the subject is in schedule 
-            $dates = [];
-
-            for($date = clone $start_date; $date <= $end_date; $date->modify('+1 day')){
-                $number_day = $date -> format("N");
-                if (in_array($number_day, $subject_days)){
-                    $dates[] = $date->format("Y-m-d");
-                }
-            }
+            $capacity = $_POST["capacity"];
 
             // Inserting values in db
             $inserted = 0;      // Inserted events
 
-            foreach ($dates as $date){
+            foreach ($capacity as $date => $cap) {
                 $stmt = $conn->prepare(
-                    "INSERT INTO slot (date, idclass, idsubject) 
-                    VALUES (?, ?, ?)
+                    "INSERT INTO slot (date, capacity, idclass, idsubject) 
+                    VALUES (?, ?, ?, ?)
                     ON DUPLICATE KEY UPDATE idslot = idslot"    // If duplicate, nothing changes
                 );
-                $stmt->bind_param("sii", $date, $id_class, $id_subject);
+                $stmt->bind_param("siii", $date, $cap, $id_class, $id_subject);
 
                 if (!$stmt->execute()) {
                     dbError($stmt->error, "Non è stato possibile inserire una interrogazione.");
@@ -66,7 +34,7 @@
                 }
             }
 
-            $skipped = count($dates) - $inserted;   // Skipped events
+            $skipped = count($capacity) - $inserted;   // Skipped events
 
             // Output 
             if ($inserted > 0) {

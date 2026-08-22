@@ -157,7 +157,7 @@ input[type="submit"]:hover {
     background-color: var(--color-primary-hover);
 }
 
-.formclass_buttons button{
+.form_buttons button{
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -176,14 +176,14 @@ input[type="submit"]:hover {
     cursor: pointer;
 }
 
-.formclass_buttons button svg {
+.form_buttons button svg {
     width: 15px;
     height: 15px;
 
     stroke-width: 2.5;
 }
 
-.formclass_buttons button:hover{
+.form_buttons button:hover{
     background-color: var(--color-primary);
 }
 
@@ -470,7 +470,8 @@ input[type="submit"]:hover {
 
 #div_settings,
 #form_events, 
-#edit-setting {
+#edit-setting,
+#form_slots {
     position:absolute;
     background-color: white;
 
@@ -496,6 +497,14 @@ input[type="submit"]:hover {
     z-index:1100;
 }
 
+#form_events {
+    z-index:1000;
+}
+
+#form_slots {
+    z-index:1100;
+}
+
 #div_settings > *,
 #form_events > * {
     margin-bottom: 10px;
@@ -514,12 +523,6 @@ input[type="submit"]:hover {
 #form_events > div > label,
 #form_events > div > div > label {
     margin-right: 10px;
-}
-
-#submit_events {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
 }
 
 #submit_container {
@@ -707,13 +710,13 @@ input[type="submit"]:hover {
         height: 16px;
     }
 
-    .formclass_buttons {
+    .form_buttons {
         display: flex;
         gap: 10px;
         width: 100%;
     }
 
-    .formclass_buttons button {
+    .form_buttons button {
         flex: 1;
         width: 50%;
     }

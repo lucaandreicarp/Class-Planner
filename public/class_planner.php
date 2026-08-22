@@ -397,7 +397,7 @@
                         ?>
                     </table>
                     
-                    <div class="formclass_buttons">
+                    <div class="form_buttons">
                         <button type="button" id="add_subject">
                             <i data-lucide="plus"></i>
                             <span>Aggiungi materia</span>
@@ -420,7 +420,7 @@
                         ?>
                     </div>
 
-                    <div class="formclass_buttons">
+                    <div class="form_buttons">
                         <button type="button" id="add_student">
                             <i data-lucide="plus"></i>
                             <span>Aggiungi studente</span>
@@ -438,12 +438,13 @@
             </form>
         </div>
         <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
+            <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
+            <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">    
+
             <div class="modal-header">
                 <h2>Aggiungi evento</h2>
                 <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
-            <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
-            <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
             
             <div>
                 <label for="type">Tipologia</label>
@@ -484,16 +485,53 @@
                 <input type="date" name="start_date" id="start_date" required>
             </div>
 
-            <div id="submit_events">
-                <div>
-                    <label for="end_date">Data Fine</label>
-                    <input type="date" name="end_date" id="end_date" required>
-                </div>
-                <input type="submit" value="Crea" class="submit_button">
+            <div>
+                <label for="end_date">Data Fine</label>
+                <input type="date" name="end_date" id="end_date" required>
             </div>
 
+            <div id="submit_container">
+                <input type="submit" value="Continua" class="submit_button">
+            </div>
+        </form>
+        <form method="post" action="../php/events.php" id="form_slots" class="hidden">
+            <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">  
+            <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="type" value="oral">
+            <input type="hidden" name="subject" id="slots_subject">
+            
+            <div class="modal-header">
+                <h2>Crea interrogazioni</h2>
+                <button type="button" class="close-modal"><i data-lucide="x"></i></button>
+            </div>
+
+            <div id="slots_container"></div>
+
+            <div class="form_buttons">
+                <button type="button" id="add_slot">
+                    <i data-lucide="plus"></i>
+                    <span>Aggiungi slot</span>
+                </button>
+                <button type="button" id="remove_slot">
+                    <i data-lucide="trash-2"></i>
+                    <span>Rimuovi slot</span>
+                </button>
+            </div>
+            
+            <div id="automatic_assignment_container">
+                <input type="checkbox" name="automatic_assignment" id="automatic_assignment">
+                <label for="automatic_assignment">Assegnazione automatica</label>
+            </div>
+
+            <div id="submit_container">
+                <input type="submit" value="Conferma" class="submit_button">
+            </div>
         </form>
     </section>
+
+    <script>
+        const subjects = <?= json_encode($subjects, JSON_UNESCAPED_UNICODE) ?>;
+    </script>
 
     <script src="js/class_planner.js"></script>
     <script>lucide.createIcons();</script>

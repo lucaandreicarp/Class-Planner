@@ -55,6 +55,7 @@ CREATE TABLE Schedule (
 CREATE TABLE Slot (
 	idslot INT AUTO_INCREMENT NOT NULL,
 	date DATE NOT NULL,
+	capacity INT NOT NULL CHECK (capacity > 0),
 	idclass INT NOT NULL,
 	idsubject INT NOT NULL,
 	PRIMARY KEY (idslot),
