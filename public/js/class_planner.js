@@ -176,8 +176,8 @@ function closeModal(){
 
             restoreForm();
         }
-
-        edit_setting.style.display = "none";
+        
+        form_class.style.display = "none";
         container_settings.style.display = "block";
         edit_displayed = false;
 
@@ -223,15 +223,13 @@ name_settings.addEventListener('click', () => {
 })
 
 // Edit toggle
-const edit_setting = document.getElementById("edit-setting");
-
 let initialFormData = null;
 let initialFormHTML = null;
 
 edit.addEventListener('click', () => {
 
     container_settings.style.display = "none";
-    openModal(edit_setting);
+    openModal(form_class);
     edit_displayed = true;
 
     initialFormData = new FormData(form_class); // To save content
@@ -246,6 +244,8 @@ function restoreForm(){
     // To add again functions to new html elements
     setupSubjectButtons();
     setupStudentButtons();
+
+    form_class.querySelector(".close-modal").addEventListener("click", closeModal);
 
 }
 
@@ -432,12 +432,14 @@ toggleEventType(); // Refresh at starting page
 // Form event
 const form_slots = document.getElementById("form_slots");
 const slots_container = document.getElementById("slots_container");
-
+let dates = [];
+let subject = null;
+let end_date = null;
 let event_displayed = false;
 
 form_events.addEventListener("submit", (e) => {
     const start_date = document.getElementById("start_date").value;
-    const end_date = document.getElementById("end_date").value;
+    end_date = document.getElementById("end_date").value;
 
     // Check dates
     if (start_date > end_date) {
@@ -454,12 +456,12 @@ form_events.addEventListener("submit", (e) => {
     e.preventDefault();     // Type oral
 
     const id_subject = document.getElementById("subject").value;
-    const subject = subjects[id_subject];
+    subject = subjects[id_subject];
 
     document.getElementById("slots_subject").value = id_subject;
 
     // Calculate dates between start and end
-    const dates = [];
+    dates = [];
 
     for (let date = new Date(start_date); date <= new Date(end_date); date.setDate(date.getDate() + 1)) {
         const number_day = date.getDay() === 0 ? 7 : date.getDay();     // Sunday is 0, but we want it to be 7
@@ -473,32 +475,112 @@ form_events.addEventListener("submit", (e) => {
         }
     }
 
+    if (dates.length === 0) {
+        alert("Non ci sono date disponibili per la materia selezionata in questo intervallo di tempo.");
+        return;
+    }
+
     // Populate new form with the calculated dates
-    slots_container.innerHTML = "";     // Clear previous content
+    slots_container.innerHTML = `
+        <tr>
+            <td>Data</td>
+            <td>Posti</td>
+        </tr>
+    `;
 
     dates.forEach(date => {
 
-        const div = document.createElement("div");
-        div.classList.add("slot-row");
+        const tr = document.createElement("tr");
 
-        const inputDate = document.createElement("input");
-        inputDate.type = "date";
-        inputDate.value = date;
-        inputDate.readOnly = true;
+        const tdDate = document.createElement("td");
+        const dateText = document.createElement("span");
 
+        dateText.textContent = date;
+
+        tdDate.appendChild(dateText);
+
+        const tdCapacity = document.createElement("td");
         const inputCapacity = document.createElement("input");
+
         inputCapacity.type = "number";
         inputCapacity.name = `capacity[${date}]`;
         inputCapacity.min = "1";
         inputCapacity.required = true;
 
-        div.appendChild(inputDate);
-        div.appendChild(inputCapacity);
+        tdCapacity.appendChild(inputCapacity);
 
-        slots_container.appendChild(div);
+        tr.appendChild(tdDate);
+        tr.appendChild(tdCapacity);
+
+        slots_container.appendChild(tr);
     });
 
     form_events.style.display = "none";
     openModal(form_slots);
     event_displayed = true;
+});
+
+// Add slot
+document.getElementById("add_slot").addEventListener("click", () => {
+
+    let date = new Date(end_date);
+    date.setDate(date.getDate() + 1);
+
+    while (true) {
+        const number_day = date.getDay() === 0 ? 7 : date.getDay();
+
+        if (subject.days.includes(number_day)) {
+            break;
+        }
+
+        date.setDate(date.getDate() + 1);
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const newDate = `${year}-${month}-${day}`;
+
+    dates.push(newDate);
+    end_date = newDate;
+
+    // Creating new row
+    const tr = document.createElement("tr");
+
+    const tdDate = document.createElement("td");
+    const dateText = document.createElement("span");
+
+    dateText.textContent = newDate;
+
+    tdDate.appendChild(dateText);
+
+    const tdCapacity = document.createElement("td");
+    const inputCapacity = document.createElement("input");
+
+    inputCapacity.type = "number";
+    inputCapacity.name = `capacity[${newDate}]`;
+    inputCapacity.min = "1";
+    inputCapacity.required = true;
+
+    tdCapacity.appendChild(inputCapacity);
+
+    tr.appendChild(tdDate);
+    tr.appendChild(tdCapacity);
+
+    slots_container.appendChild(tr);
+});
+
+// Remove slot
+document.getElementById("remove_slot").addEventListener("click", () => {
+
+    if (dates.length === 1) {       // Don't remove the last slot
+        return;
+    }
+
+    dates.pop();
+    slots_container.lastElementChild.remove();
+
+    // Update end_date
+    end_date = dates[dates.length - 1];
 });

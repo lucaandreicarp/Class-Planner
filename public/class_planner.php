@@ -357,87 +357,89 @@
                 <h2>Impostazioni</h2>
                 <button class="close-modal"><i data-lucide="x"></i></button>
             </div>
-            <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
-            <button id="edit">Modifica</button>
-            <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
-                <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
-                <input type="submit" value="Cancella classe">
-            </form>            
-            <a href="index.html" id="logout">
-                <i data-lucide="log-out" id="logout-icon"></i>
-                Logout
-            </a>
+            <div class="modal_content">
+                <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
+                <button id="edit">Modifica</button>
+                <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
+                    <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="submit" value="Cancella classe">
+                </form>            
+                <a href="index.html" id="logout">
+                    <i data-lucide="log-out" id="logout-icon"></i>
+                    Logout
+                </a>
+            </div>
         </div>
-        <div id="edit-setting" class="hidden">
+        <form method="post" action="../php/class_data.php" id="form_class" class="hidden">
+            <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">    <!-- Create hidden code -->
+        
             <div class="modal-header">
                 <h2>Modifica</h2>
-                <button class="close-modal"><i data-lucide="x"></i></button>
+                <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
-            <form method="post" action="../php/class_data.php" id="form_class">
-                <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">    <!-- Create hidden code -->
-                <div>
-                    <label for="name">Classe</label>
-                    <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?>" required>
-                </div>
 
-                <div>
-                    <table id="schedule_table">
-                        <tr><td>Materie</td><td>Lun</td><td>Mar</td><td>Mer</td><td>Gio</td><td>Ven</td><td>Sab</td></tr>
-                        <?php 
-                            foreach ($subjects as $idsubject => $subject){
-                                $name = $subject["name"];
-                                echo "<tr>";
-                                echo "<td><input type='text' name='subjects[$idsubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required></td>";
-                                for ($i = 1; $i <= 6; $i++){
-                                    $checked = in_array($i, $subject['days']) ? "checked" : "";
-                                    echo "<td><input type='checkbox' name='schedule[$idsubject][$i]' $checked></td>";
-                                }
-                                echo "</tr>";
+            <div>
+                <label for="name">Classe</label>
+                <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?>" required>
+            </div>
+
+            <div>
+                <table id="schedule_table">
+                    <tr><td>Materie</td><td>Lun</td><td>Mar</td><td>Mer</td><td>Gio</td><td>Ven</td><td>Sab</td></tr>
+                    <?php 
+                        foreach ($subjects as $idsubject => $subject){
+                            $name = $subject["name"];
+                            echo "<tr>";
+                            echo "<td><input type='text' name='subjects[$idsubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required></td>";
+                            for ($i = 1; $i <= 6; $i++){
+                                $checked = in_array($i, $subject['days']) ? "checked" : "";
+                                echo "<td><input type='checkbox' name='schedule[$idsubject][$i]' $checked></td>";
                             }
-                        ?>
-                    </table>
-                    
-                    <div class="form_buttons">
-                        <button type="button" id="add_subject">
-                            <i data-lucide="plus"></i>
-                            <span>Aggiungi materia</span>
-                        </button>
+                            echo "</tr>";
+                        }
+                    ?>
+                </table>
+                
+                <div class="form_buttons">
+                    <button type="button" id="add_subject">
+                        <i data-lucide="plus"></i>
+                        <span>Aggiungi materia</span>
+                    </button>
 
-                        <button type="button" id="remove_subject">
-                            <i data-lucide="trash-2"></i>
-                            <span>Rimuovi materia</span>
-                        </button>
-                    </div>
+                    <button type="button" id="remove_subject">
+                        <i data-lucide="trash-2"></i>
+                        <span>Rimuovi materia</span>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <div id="students_label"></div>
+                <div id="students_container">
+                    <?php 
+                        foreach ($students as $id_student => $name){
+                            echo "<input type='text' name='students[$id_student]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required>";
+                        }
+                    ?>
                 </div>
 
-                <div>
-                    <b id="students_label"></b>
-                    <div id="students_container">
-                        <?php 
-                            foreach ($students as $id_student => $name){
-                                echo "<input type='text' name='students[$id_student]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required>";
-                            }
-                        ?>
-                    </div>
-
-                    <div class="form_buttons">
-                        <button type="button" id="add_student">
-                            <i data-lucide="plus"></i>
-                            <span>Aggiungi studente</span>
-                        </button>
-                        <button type="button" id="remove_student">
-                            <i data-lucide="trash-2"></i>
-                            <span>Rimuovi studente</span>
-                        </button>
-                    </div>
+                <div class="form_buttons">
+                    <button type="button" id="add_student">
+                        <i data-lucide="plus"></i>
+                        <span>Aggiungi studente</span>
+                    </button>
+                    <button type="button" id="remove_student">
+                        <i data-lucide="trash-2"></i>
+                        <span>Rimuovi studente</span>
+                    </button>
                 </div>
+            </div>
 
-                <div id="submit_container">
-                    <input type="submit" value="Aggiorna" class="submit_button">
-                </div>
-            </form>
-        </div>
-        <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
+            <div class="submit_container">
+                <input type="submit" value="Aggiorna" class="submit_button">
+            </div>
+        </form>
+       <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
             <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
             <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">    
 
@@ -445,52 +447,54 @@
                 <h2>Aggiungi evento</h2>
                 <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
-            
-            <div>
-                <label for="type">Tipologia</label>
-                <select name="type" id="type">
-                    <option value="oral">Interrogazioni</option>
-                    <option value="other">Altro</option>
-                </select>
-            </div>
 
-            <div class="oral">
-                <label for="subject">Materia</label>
-                <select name="subject" id="subject">
-                    <?php 
-                        foreach($subjects as $idsubject => $subject){
-                            $name = $subject["name"];
-                            echo "<option value='" . htmlspecialchars($idsubject, ENT_QUOTES, 'UTF-8') . "'>" 
-                                . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') 
-                                . "</option>";
-                        }
-                    ?>
-                </select>
-            </div>
-
-            <div class="other">
+            <div class="modal_content">
                 <div>
-                    <label for="event_name">Nome</label>
-                    <input type="text" name="event_name" id="event_name" placeholder="Inserire il nome dell'evento" required>
+                    <label for="type">Tipologia</label>
+                    <select name="type" id="type">
+                        <option value="oral">Interrogazioni</option>
+                        <option value="other">Altro</option>
+                    </select>
+                </div>
+
+                <div class="oral">
+                    <label for="subject">Materia</label>
+                    <select name="subject" id="subject">
+                        <?php 
+                            foreach($subjects as $idsubject => $subject){
+                                $name = $subject["name"];
+                                echo "<option value='" . htmlspecialchars($idsubject, ENT_QUOTES, 'UTF-8') . "'>" 
+                                    . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') 
+                                    . "</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="other">
+                    <div>
+                        <label for="event_name">Nome</label>
+                        <input type="text" name="event_name" id="event_name" placeholder="Inserire il nome dell'evento" required>
+                    </div>
+
+                    <div>
+                        <label for="description">Descrizione</label>
+                        <textarea name="description" id="description" placeholder="Inserire una descrizione"></textarea>
+                    </div>
                 </div>
 
                 <div>
-                    <label for="description">Descrizione</label>
-                    <textarea name="description" id="description" placeholder="Inserire una descrizione"></textarea>
+                    <label for="start_date">Data Inizio</label>
+                    <input type="date" name="start_date" id="start_date" required>
+                </div>
+
+                <div>
+                    <label for="end_date">Data Fine</label>
+                    <input type="date" name="end_date" id="end_date" required>
                 </div>
             </div>
 
-            <div>
-                <label for="start_date">Data Inizio</label>
-                <input type="date" name="start_date" id="start_date" required>
-            </div>
-
-            <div>
-                <label for="end_date">Data Fine</label>
-                <input type="date" name="end_date" id="end_date" required>
-            </div>
-
-            <div id="submit_container">
+            <div class="submit_container">
                 <input type="submit" value="Continua" class="submit_button">
             </div>
         </form>
@@ -505,17 +509,19 @@
                 <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
 
-            <div id="slots_container"></div>
+            <div>
+                <table id="slots_container"></table>
 
-            <div class="form_buttons">
-                <button type="button" id="add_slot">
-                    <i data-lucide="plus"></i>
-                    <span>Aggiungi slot</span>
-                </button>
-                <button type="button" id="remove_slot">
-                    <i data-lucide="trash-2"></i>
-                    <span>Rimuovi slot</span>
-                </button>
+                <div class="form_buttons">
+                    <button type="button" id="add_slot">
+                        <i data-lucide="plus"></i>
+                        <span>Aggiungi slot</span>
+                    </button>
+                    <button type="button" id="remove_slot">
+                        <i data-lucide="trash-2"></i>
+                        <span>Rimuovi slot</span>
+                    </button>
+                </div>
             </div>
             
             <div id="automatic_assignment_container">
@@ -523,7 +529,7 @@
                 <label for="automatic_assignment">Assegnazione automatica</label>
             </div>
 
-            <div id="submit_container">
+            <div class="submit_container">
                 <input type="submit" value="Conferma" class="submit_button">
             </div>
         </form>

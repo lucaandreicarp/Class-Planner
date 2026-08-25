@@ -95,7 +95,8 @@ aside {
 select,
 input[type="date"],
 textarea,
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
     font-size: 14px;
     padding: 8px;
 
@@ -470,7 +471,7 @@ input[type="submit"]:hover {
 
 #div_settings,
 #form_events, 
-#edit-setting,
+#form_class,
 #form_slots {
     position:absolute;
     background-color: white;
@@ -493,7 +494,7 @@ input[type="submit"]:hover {
     z-index:1000;
 }
 
-#edit-setting {
+#form_class {
     z-index:1100;
 }
 
@@ -505,30 +506,24 @@ input[type="submit"]:hover {
     z-index:1100;
 }
 
-#div_settings > *,
-#form_events > * {
+#div_settings .modal_content > *,
+#form_events .modal_content > * {
     margin-bottom: 10px;
 }
 
-#div_settings .modal-header,
-#form_events .modal-header {
-    margin-bottom: 25px;
-}
-
-#div_settings > *:last-child,
-#form_events > *:last-child {
-    margin-bottom: 0;
-}
-
-#form_events > div > label,
-#form_events > div > div > label {
+#form_events label {
     margin-right: 10px;
 }
 
-#submit_container {
+#div_settings > div:not(:last-child),
+#form_events > div {
+    margin-bottom: 25px;
+}
+
+.submit_container {
     width: 100%;
     text-align: right;
-    margin: 0 !important;
+    margin: 0px !important;
 }
 
 #logout {
@@ -567,7 +562,7 @@ input[type="submit"]:hover {
     justify-content: space-between;
     align-items: center;
 
-    margin: -25px -25px 25px -25px;
+    margin: -25px -25px 0px -25px;
     padding: 20px 25px;
 
     background-color: white;
@@ -610,14 +605,16 @@ input[type="submit"]:hover {
 
 /* Schedule table */
 
-#schedule_table {
+#schedule_table,
+#slots_container {
     border-collapse: collapse;
     width: 100%;
     table-layout:fixed;
 }
 
 
-#schedule_table td {
+#schedule_table td, 
+#slots_container td {
     border: 1px solid var(--color-border);
     padding: 8px;
     text-align:center;
@@ -633,12 +630,13 @@ input[type="submit"]:hover {
     width: calc(75% / 6);
 }
 
-#schedule_table tr:first-child {
+#schedule_table tr:first-child,
+#slots_container tr:first-child {
     background-color: var(--color-primary-light);
     font-weight:bold;
 }
 
-#schedule_table td > input[type="checkbox"] {
+input[type="checkbox"] {
     width: 18px;
     height: 18px;
 }
@@ -648,20 +646,41 @@ input[type="submit"]:hover {
     margin-right: 10px;
 }
 
-#form_class > div {
+#form_class > div,
+#form_slots > div {
     margin-bottom: 40px;
 }
 
 /* Students edit */
 
 #students_container {
-    display:flex;
-    flex-direction:column;
+    display: inline-flex;
+    flex-direction: column;
 
     margin-top: 10px;
     gap:5px;
 }
 
+#students_label {
+    font-weight: bold;
+}
+
+/* Slots edit */
+#slots_container td {
+    width: 50%;
+}
+
+#slots_container input {
+    width: 100%;
+    text-align: center;
+}
+
+#automatic_assignment_container {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 5px;
+}
 
 /* =========================
    MOBILE
@@ -705,7 +724,7 @@ input[type="submit"]:hover {
         width: 100%;
     }
 
-    #schedule_table td > input[type="checkbox"] {
+    input[type="checkbox"] {
         width: 16px;
         height: 16px;
     }
@@ -721,7 +740,10 @@ input[type="submit"]:hover {
         width: 50%;
     }
 
-    #form_class > div > input[type="submit"] {
+    #form_class input[type="submit"],
+    #form_slots input[type="submit"],
+    #form_events input[type="submit"],
+    #students_container {
         width: 100%;
     }
 }
