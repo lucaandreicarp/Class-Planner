@@ -666,6 +666,15 @@ input[type="checkbox"] {
 }
 
 /* Slots edit */
+#slots_summary {
+    margin-top: 10px;
+
+    text-align: center;
+    font-size: 0.9rem;
+
+    color: var(--color-muted);
+}
+
 #slots_container td {
     width: 50%;
 }
@@ -679,6 +688,7 @@ input[type="checkbox"] {
     display: flex;
     justify-content: left;
     align-items: center;
+
     gap: 5px;
 }
 

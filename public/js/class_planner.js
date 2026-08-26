@@ -432,10 +432,70 @@ toggleEventType(); // Refresh at starting page
 // Form event
 const form_slots = document.getElementById("form_slots");
 const slots_container = document.getElementById("slots_container");
+const slots_summary = document.getElementById("slots_summary");
+
 let dates = [];
 let subject = null;
 let end_date = null;
 let event_displayed = false;
+
+function updateSlotsSummary() {     // To update slot summary
+    const numberStudents = form_class.querySelectorAll(
+        '#students_container input'
+    ).length;
+
+    let totalSlots = 0;
+
+    slots_container.querySelectorAll('input[type="number"]').forEach(input => {
+        totalSlots += Number(input.value) || 0;
+    });
+
+    const difference = numberStudents - totalSlots;
+
+    if (difference > 0) {
+        slots_summary.textContent =
+            `Mancano ${difference} posti per tutti gli studenti.`;
+    } else if (difference === 0) {
+        slots_summary.textContent =
+            `Hai inserito abbastanza posti per tutti gli studenti.`;
+    } else {
+        slots_summary.textContent =
+            `Hai inserito ${Math.abs(difference)} posti in più del necessario.`;
+    }
+}
+
+slots_container.addEventListener("input", updateSlotsSummary);      // Update summary when the user modifies an input
+
+function formatDate(dateString) {   // To convert format date
+    const date = new Date(dateString + "T00:00:00");
+
+    const days = [
+        "Domenica",
+        "Lunedì",
+        "Martedì",
+        "Mercoledì",
+        "Giovedì",
+        "Venerdì",
+        "Sabato"
+    ];
+
+    const months = [
+        "Gen",
+        "Feb",
+        "Mar",
+        "Apr",
+        "Mag",
+        "Giu",
+        "Lug",
+        "Ago",
+        "Set",
+        "Ott",
+        "Nov",
+        "Dic"
+    ];
+
+    return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+}
 
 form_events.addEventListener("submit", (e) => {
     const start_date = document.getElementById("start_date").value;
@@ -495,7 +555,7 @@ form_events.addEventListener("submit", (e) => {
         const tdDate = document.createElement("td");
         const dateText = document.createElement("span");
 
-        dateText.textContent = date;
+        dateText.textContent = formatDate(date);
 
         tdDate.appendChild(dateText);
 
@@ -514,6 +574,8 @@ form_events.addEventListener("submit", (e) => {
 
         slots_container.appendChild(tr);
     });
+
+    updateSlotsSummary();       // Initialize the summary
 
     form_events.style.display = "none";
     openModal(form_slots);
@@ -551,7 +613,7 @@ document.getElementById("add_slot").addEventListener("click", () => {
     const tdDate = document.createElement("td");
     const dateText = document.createElement("span");
 
-    dateText.textContent = newDate;
+    dateText.textContent = formatDate(newDate);
 
     tdDate.appendChild(dateText);
 
@@ -583,4 +645,6 @@ document.getElementById("remove_slot").addEventListener("click", () => {
 
     // Update end_date
     end_date = dates[dates.length - 1];
+
+    updateSlotsSummary();   // Update summary when an input gets removed
 });

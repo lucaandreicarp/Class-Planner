@@ -505,28 +505,30 @@
             <input type="hidden" name="subject" id="slots_subject">
             
             <div class="modal-header">
-                <h2>Crea interrogazioni</h2>
+                <h2>Inserisci posti</h2>
                 <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
 
             <div>
                 <table id="slots_container"></table>
 
+                <div id="slots_summary"></div>
+
                 <div class="form_buttons">
                     <button type="button" id="add_slot">
                         <i data-lucide="plus"></i>
-                        <span>Aggiungi slot</span>
+                        <span>Aggiungi data</span>
                     </button>
                     <button type="button" id="remove_slot">
                         <i data-lucide="trash-2"></i>
-                        <span>Rimuovi slot</span>
+                        <span>Rimuovi data</span>
                     </button>
                 </div>
             </div>
             
             <div id="automatic_assignment_container">
                 <input type="checkbox" name="automatic_assignment" id="automatic_assignment">
-                <label for="automatic_assignment">Assegnazione automatica</label>
+                <label for="automatic_assignment">Assegnazione automatica studenti</label>
             </div>
 
             <div class="submit_container">
