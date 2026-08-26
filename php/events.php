@@ -16,12 +16,14 @@
 
             // Inserting values in db
             $inserted = 0;      // Inserted events
+            $updated = 0;       // Updated events
+            $skipped = 0;       // Skipped events
 
             foreach ($capacity as $date => $cap) {
                 $stmt = $conn->prepare(
                     "INSERT INTO slot (date, capacity, idclass, idsubject) 
                     VALUES (?, ?, ?, ?)
-                    ON DUPLICATE KEY UPDATE idslot = idslot"    // If duplicate, nothing changes
+                    ON DUPLICATE KEY UPDATE capacity = VALUES(capacity)"    // If duplicate with different capacity, update capacity
                 );
                 $stmt->bind_param("siii", $date, $cap, $id_class, $id_subject);
 
@@ -29,32 +31,36 @@
                     dbError($stmt->error, "Non è stato possibile inserire una interrogazione.");
                 }
 
-                if($conn -> affected_rows > 0){     // If something changed (could be all duplicates)
+                if ($stmt->affected_rows === 1) {   // Insert
                     $inserted++;
+                } elseif ($stmt->affected_rows === 2) {     // Update
+                    $updated++;
+                } else {
+                    $skipped++;
                 }
             }
 
-            $skipped = count($capacity) - $inserted;   // Skipped events
+            // Create message
+            $message = "";
+
+            if ($inserted > 0) {
+                $message .= "$inserted interrogazioni inserite. ";
+            }
+
+            if ($updated > 0) {
+                $message .= "$updated interrogazioni aggiornate. ";
+            }
+
+            if ($skipped > 0) {
+                $message .= "$skipped interrogazioni erano già presenti.";
+            }
 
             // Output 
-            if ($inserted > 0) {
-                if ($skipped > 0){
-                    echo "<script>
-                    alert(" . json_encode("$inserted interrogazioni inserite. $skipped erano già presenti.") . ");
-                    window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
-                    </script>";
-                } else {
-                    echo "<script>
-                    alert(" . json_encode("$inserted interrogazioni inserite!") . ");
-                    window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
-                    </script>";
-                }
-            } else {
-                echo "<script>
-                alert('Nessuna nuova interrogazione inserita: erano già presenti.');
-                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
-                </script>";
-            }
+            echo "<script>
+            alert(" . json_encode($message) . ");
+            window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+            </script>";
+
         } else {    // Remove event
             $stmt = $conn->prepare(
                 "DELETE FROM slot WHERE idslot=?"
