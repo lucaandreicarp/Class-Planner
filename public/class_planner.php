@@ -131,14 +131,14 @@
     $end_date   = array_key_last($week_dates);
 
     $stmt = $conn->prepare("
-        SELECT s.date, sub.name AS subject, o.idstudent, st.name AS student_name, s.idslot
+        SELECT s.date, sub.name AS subject, o.idstudent, st.name AS student_name, s.idslot, s.capacity
         FROM slot s
         JOIN subject sub ON s.idsubject = sub.idsubject
         LEFT JOIN oral o ON s.idslot = o.idslot
         LEFT JOIN student st ON o.idstudent = st.idstudent
         WHERE s.idclass = ?
         AND s.date BETWEEN ? AND ?
-        ORDER BY s.date, sub.name
+        ORDER BY s.date, s.idslot
     ");
 
     $stmt->bind_param("iss", $id_class, $start_date, $end_date);
@@ -154,6 +154,7 @@
         if(!isset($week_dates[$date]['slots'][$row['subject']])){
             $week_dates[$date]['slots'][$row['subject']] = [
                 'idslot' => $row['idslot'],     // Extracting id slot
+                'capacity' => $row['capacity'],
                 'students' => []
             ];
         }
@@ -323,14 +324,20 @@
                                     <button class="<?= $isInSlot ? 'remove-oral' : 'add-oral' ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="<?= $isInSlot ? 'minus' : 'plus' ?>"></i></button>
                                     <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>"><i data-lucide="x"></i></button>
                                 </div>
-                    
-                                <?php if (count($slot['students']) > 0): ?>
-                                    <ul class="students">
-                                    <?php foreach($slot['students'] as $student): ?>
-                                        <li><?= htmlspecialchars($student['name'], ENT_QUOTES, 'UTF-8') ?></li>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                                </ul>
+                            
+                                <table class="students">
+                                    <?php for ($i = 0; $i < $slot['capacity']; $i++): ?>
+                                        <tr>
+                                            <td>
+                                                <?php 
+                                                    if (array_key_exists($i, $slot['students'])){
+                                                        echo htmlspecialchars($slot['students'][$i]['name'], ENT_QUOTES, 'UTF-8');
+                                                    }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php endfor; ?>
+                                </table>
                             </div>
                         <?php endforeach; ?>
 
