@@ -16,14 +16,13 @@
 
             // Inserting values in db
             $inserted = 0;      // Inserted events
-            $updated = 0;       // Updated events
             $skipped = 0;       // Skipped events
 
             foreach ($capacity as $date => $cap) {
                 $stmt = $conn->prepare(
                     "INSERT INTO slot (date, capacity, idclass, idsubject) 
                     VALUES (?, ?, ?, ?)
-                    ON DUPLICATE KEY UPDATE capacity = VALUES(capacity)"    // If duplicate with different capacity, update capacity
+                    ON DUPLICATE KEY UPDATE idslot = idslot"    // If duplicate nothing changes
                 );
                 $stmt->bind_param("siii", $date, $cap, $id_class, $id_subject);
 
@@ -31,33 +30,16 @@
                     dbError($stmt->error, "Non è stato possibile inserire una interrogazione.");
                 }
 
-                if ($stmt->affected_rows === 1) {   // Insert
+                if ($stmt->affected_rows === 1) {   // Inserted
                     $inserted++;
-                } elseif ($stmt->affected_rows === 2) {     // Update
-                    $updated++;
-                } else {
+                } else {    // Skipped
                     $skipped++;
                 }
             }
 
-            // Create message
-            $message = "";
-
-            if ($inserted > 0) {
-                $message .= "$inserted interrogazioni inserite. ";
-            }
-
-            if ($updated > 0) {
-                $message .= "$updated interrogazioni aggiornate. ";
-            }
-
-            if ($skipped > 0) {
-                $message .= "$skipped interrogazioni erano già presenti.";
-            }
-
             // Output 
             echo "<script>
-            alert(" . json_encode($message) . ");
+            alert(" . json_encode("$inserted interrogazioni inserite. $skipped interrogazioni erano già presenti.") . ");
             window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
             </script>";
 

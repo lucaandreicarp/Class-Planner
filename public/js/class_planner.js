@@ -519,6 +519,7 @@ form_events.addEventListener("submit", (e) => {
     subject = subjects[id_subject];
 
     document.getElementById("slots_subject").value = id_subject;
+    document.getElementById("slots_title").textContent = subject.name;
 
     // Calculate dates between start and end
     dates = [];

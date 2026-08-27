@@ -309,19 +309,34 @@
                             <div class="slot">
                                 <div class="header-event">
                                     <strong><?= htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') ?></strong>
-                                    <?php       // To determine button's text
-                                    $isInSlot = false;
+                                    <?php       
+                                        $isInSlot = false;      // If visual student is in slot
 
-                                    if ($currentStudentId !== null) {
-                                        foreach ($slot['students'] as $student) {
-                                            if ($student['id'] == $currentStudentId) {      // If student's already in slot
-                                                $isInSlot = true;
-                                                break;
+                                        if ($currentStudentId !== null) {
+                                            foreach ($slot['students'] as $student) {
+                                                if ($student['id'] == $currentStudentId) {      // If student's already in slot
+                                                    $isInSlot = true;
+                                                    break;
+                                                }
                                             }
                                         }
-                                    }
+
+                                        $isSlotFull = ($slot['capacity'] <= count($slot['students']));     // If slot is full
+                                        
+                                        // To determine button's text
+                                        if ($isInSlot) {
+                                            $buttonClass = 'remove-oral';
+                                            $icon = 'minus';
+                                        } elseif ($isSlotFull) {
+                                            $buttonClass = 'hidden';    // hide the button
+                                            $icon = 'plus';
+                                        } else {
+                                            $buttonClass = 'add-oral';
+                                            $icon = 'plus';
+                                        }
                                     ?>
-                                    <button class="<?= $isInSlot ? 'remove-oral' : 'add-oral' ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="<?= $isInSlot ? 'minus' : 'plus' ?>"></i></button>
+
+                                    <button class="<?= $buttonClass ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="<?= $icon ?>"></i></button>
                                     <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>"><i data-lucide="x"></i></button>
                                 </div>
                             
@@ -512,7 +527,7 @@
             <input type="hidden" name="subject" id="slots_subject">
             
             <div class="modal-header">
-                <h2>Inserisci posti</h2>
+                <h2 id="slots_title"></h2>
                 <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
 
