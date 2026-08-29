@@ -207,19 +207,19 @@ input[type="submit"]:hover {
     background-color: var(--color-primary-hover);
 }
 
-#form_cancellation input[type="submit"] {
-    background-color: #DC2626;
+.delete {
+    background-color: #DC2626 !important;
 }
 
-#form_cancellation input[type="submit"]:hover {
-    background-color: #B91C1C;
+.delete:hover {
+    background-color: #B91C1C !important;
 }
 
 /* Delete buttons */
 
 .add-oral,
 .remove-oral,
-.slot-elimination,
+.slot-modify,
 .event-elimination {
     border-radius: 50%;
     width: 20px;
@@ -234,7 +234,7 @@ input[type="submit"]:hover {
 
 .add-oral svg,
 .remove-oral svg,
-.slot-elimination svg,
+.slot-modify svg,
 .event-elimination svg {
     width: 12px;
     height: 12px;
@@ -243,19 +243,14 @@ input[type="submit"]:hover {
 }
 
 .remove-oral,
-.slot-elimination,
 .event-elimination {
     background-color: #EF4444;
 }
 
 .remove-oral:hover,
-.slot-elimination:hover,
 .event-elimination:hover {
-
     background-color: #DC2626;
 }
-
-
 
 /* =========================
    CALENDAR
@@ -467,16 +462,17 @@ input[type="submit"]:hover {
     height: 100%;
 }
 
-/* Settings and events */
+/* Modals */
 
 #div_settings,
 #form_events, 
 #form_class,
-#form_slots {
+#form_slots,
+#edit_slot {
     position:absolute;
     background-color: white;
 
-    width: min(800px, calc(100vw - 40px));
+    width: min(600px, calc(100vw - 40px));
     max-height: calc(100vh - 40px);
 
     overflow-y:auto;
@@ -516,7 +512,8 @@ input[type="submit"]:hover {
 }
 
 #div_settings > div:not(:last-child),
-#form_events > div {
+#form_events > div,
+#edit_slot > div:not(:last-child) {
     margin-bottom: 25px;
 }
 
@@ -692,6 +689,38 @@ input[type="checkbox"] {
     gap: 5px;
 }
 
+/* Edit slot */
+#form_edit_slot {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+}
+
+#form_edit_slot input {
+    text-align: center;
+}
+
+#form_edit_slot > * {
+    margin: 0;
+}
+
+#div_edit_capacity {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+#div_edit_capacity input {
+    width: 50%;
+}
+
 /* =========================
    MOBILE
 ========================= */
@@ -753,7 +782,9 @@ input[type="checkbox"] {
     #form_class input[type="submit"],
     #form_slots input[type="submit"],
     #form_events input[type="submit"],
-    #students_container {
+    #students_container,
+    #form_edit_slot > input[type="submit"],
+    #div_edit_capacity {
         width: 100%;
     }
 }

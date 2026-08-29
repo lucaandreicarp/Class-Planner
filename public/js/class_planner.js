@@ -42,7 +42,7 @@ if (currentStudentId){
         btn.style.display = "inline-block";
     });
     
-    document.querySelectorAll(".slot-elimination").forEach(btn => {
+    document.querySelectorAll(".slot-modify").forEach(btn => {
         btn.style.display = "none";
     });
     
@@ -63,7 +63,7 @@ if (currentStudentId){
         btn.style.display = "none";
     });
     
-    document.querySelectorAll(".slot-elimination").forEach(btn => {
+    document.querySelectorAll(".slot-modify").forEach(btn => {
         btn.style.display = "inline-block";
     });
     
@@ -102,31 +102,9 @@ document.querySelectorAll(".add-oral, .remove-oral").forEach(btn => {
     });
 });
 
-// Slot elimination
+// Event elimination
 const idClass = document.body.dataset.idclass;
 
-document.querySelectorAll(".slot-elimination").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const slotId = btn.getAttribute("data-slotid");
-
-        if (!confirm("Sei sicuro di voler eliminare questa interrogazione?")) {
-            return;
-        }
-
-        fetch("../php/events.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `idslot=${slotId}&type=oral&idclass=${idClass}`
-        })
-        .then(res => res.text())
-        .then(msg => {
-            alert(msg);
-            location.reload(); 
-        });
-    });
-});
-
-// Event elimination
 document.querySelectorAll(".event-elimination").forEach(btn => {
     btn.addEventListener("click", () => {
         const eventId = btn.getAttribute("data-eventid");
@@ -148,7 +126,7 @@ document.querySelectorAll(".event-elimination").forEach(btn => {
     });
 });
 
-// Modal closure
+// Modal 
 const overlay = document.getElementById("overlay");
 let edit_displayed = false; 
 
@@ -158,7 +136,6 @@ function openModal(modal){
     modal.style.display = "block";
 
 }
-
 
 function closeModal(){
 
@@ -191,8 +168,11 @@ function closeModal(){
 
         overlay.style.display = "none";
         container_settings.style.display = "none";
-        form_events.style.display = "none";
+        edit_slot.style.display = "none";
 
+        form_events.style.display = "none";
+        form_events.reset();
+        toggleEventType();
     }
 }
 
@@ -470,31 +450,19 @@ function formatDate(dateString) {   // To convert format date
     const date = new Date(dateString + "T00:00:00");
 
     const days = [
-        "Domenica",
-        "Lunedì",
-        "Martedì",
-        "Mercoledì",
-        "Giovedì",
-        "Venerdì",
-        "Sabato"
-    ];
-
-    const months = [
-        "Gen",
-        "Feb",
+        "Dom",
+        "Lun",
         "Mar",
-        "Apr",
-        "Mag",
-        "Giu",
-        "Lug",
-        "Ago",
-        "Set",
-        "Ott",
-        "Nov",
-        "Dic"
+        "Mer",
+        "Gio",
+        "Ven",
+        "Sab"
     ];
 
-    return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+
+    return `${days[date.getDay()]} ${day}/${month}`;
 }
 
 form_events.addEventListener("submit", (e) => {
@@ -548,6 +516,8 @@ form_events.addEventListener("submit", (e) => {
             <td>Posti</td>
         </tr>
     `;
+
+    document.getElementById("automatic_assignment").checked = false;
 
     dates.forEach(date => {
 
@@ -649,3 +619,63 @@ document.getElementById("remove_slot").addEventListener("click", () => {
 
     updateSlotsSummary();   // Update summary when an input gets removed
 });
+
+// Modify slot modal
+const edit_slot = document.getElementById("edit_slot");
+const form_edit_slot = document.getElementById("form_edit_slot");
+
+let capacity = 0;
+let students = 0;
+
+document.querySelectorAll(".slot-modify").forEach(btn => {
+    btn.addEventListener("click", () => {
+
+        const slotId = btn.dataset.slotid;
+        const date = btn.dataset.date;
+        const subject = btn.dataset.subject;
+        capacity = btn.dataset.capacity;
+        students = Number(btn.dataset.students);
+
+        document.getElementById("edit_slots_title").textContent = `${formatDate(date)} · ${subject}`;
+        document.getElementById("slot_id").value = slotId;
+
+        const capacityInput = document.getElementById("edit_capacity");
+
+        capacityInput.value = capacity;
+
+        openModal(edit_slot);
+    });
+});
+
+form_edit_slot.addEventListener("submit", (e) => {
+
+    if (e.submitter.value === "Elimina interrogazione") {
+        return;
+    }
+
+    const newCapacity = Number(document.getElementById("edit_capacity").value);
+
+    if (newCapacity < students) {
+        e.preventDefault();
+
+        const studentsToRemove = students - newCapacity;
+
+        alert(
+            `Hai inserito ${newCapacity} posti, ma ci sono già ${students} studenti assegnati.\n` +
+            `Rimuovi ${studentsToRemove} studenti per poter assegnare questa capacità.`
+        );
+    }
+
+    if (capacity == newCapacity) {
+        e.preventDefault();
+
+        alert("La capacità inserita è già quella attuale.");
+    }
+});
+
+document.querySelector('input[value="Elimina interrogazione"]').addEventListener("click", (e) => {
+    if (!confirm("Sei sicuro di voler eliminare questa interrogazione?")) {
+        e.preventDefault();
+    }
+});
+

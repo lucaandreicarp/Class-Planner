@@ -337,7 +337,16 @@
                                     ?>
 
                                     <button class="<?= $buttonClass ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="<?= $icon ?>"></i></button>
-                                    <button class="slot-elimination" data-slotid="<?= $slot['idslot'] ?>"><i data-lucide="x"></i></button>
+                                    <button
+                                        class="slot-modify"
+                                        data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"
+                                        data-date="<?= htmlspecialchars($date, ENT_QUOTES, 'UTF-8') ?>"
+                                        data-subject="<?= htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') ?>"
+                                        data-capacity="<?= htmlspecialchars($slot['capacity'], ENT_QUOTES, 'UTF-8') ?>"
+                                        data-students="<?= count($slot['students']) ?>"
+                                    >
+                                        <i data-lucide="pencil"></i>
+                                    </button>
                                 </div>
                             
                                 <table class="students">
@@ -381,10 +390,10 @@
             </div>
             <div class="modal_content">
                 <p>Codice classe: <?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?></p>    
-                <button id="edit">Modifica</button>
+                <button id="edit">Modifica classe</button>
                 <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
                     <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
-                    <input type="submit" value="Cancella classe">
+                    <input type="submit" value="Elimina classe" class="delete">
                 </form>            
                 <a href="index.html" id="logout">
                     <i data-lucide="log-out" id="logout-icon"></i>
@@ -396,7 +405,7 @@
             <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">    <!-- Create hidden code -->
         
             <div class="modal-header">
-                <h2>Modifica</h2>
+                <h2>Modifica classe</h2>
                 <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
 
@@ -462,7 +471,6 @@
             </div>
         </form>
        <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
-            <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
             <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">    
 
             <div class="modal-header">
@@ -521,7 +529,6 @@
             </div>
         </form>
         <form method="post" action="../php/events.php" id="form_slots" class="hidden">
-            <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">  
             <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
             <input type="hidden" name="type" value="oral">
             <input type="hidden" name="subject" id="slots_subject">
@@ -557,6 +564,27 @@
                 <input type="submit" value="Conferma" class="submit_button">
             </div>
         </form>
+        <div id="edit_slot" class="hidden">
+            <div class="modal-header">
+                <h2 id="edit_slots_title"></h2>
+                <button type="button" class="close-modal"><i data-lucide="x"></i></button>
+            </div>
+            
+            <div>
+                <form method="post" action="../php/events.php" id="form_edit_slot">
+                    <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="type" value="oral">                
+                    <input type="hidden" name="idslot" id="slot_id">
+
+                    <div id="div_edit_capacity">
+                        <input type="number" name="capacity" min="1" id="edit_capacity" required>
+                        <input type="submit" name="action" value="Modifica posti">
+                    </div>
+
+                    <input type="submit" name="action" value="Elimina interrogazione" class="delete">
+                </form>
+            </div>
+        </div>
     </section>
 
     <script>
