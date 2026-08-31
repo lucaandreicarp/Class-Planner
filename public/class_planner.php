@@ -196,6 +196,8 @@
                     'idevent' => $row['idevent'],
                     'name' => $row['name'],
                     'description' => $row['description'],
+                    'start_date' => $row['start_date'],
+                    'end_date' => $row['end_date']
                 ];
             }
         }
@@ -369,7 +371,15 @@
                             <div class="event">
                                 <div class="header-event">
                                     <strong><?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                    <button class="event-elimination" data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="x"></i></button>
+                                    <button class="event-modify" 
+                                        data-eventid="<?= htmlspecialchars($event['idevent'], ENT_QUOTES, 'UTF-8') ?>"
+                                        data-name="<?= htmlspecialchars($event['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                        data-description="<?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?>"
+                                        data-start_date="<?= htmlspecialchars($event['start_date'], ENT_QUOTES, 'UTF-8') ?>"
+                                        data-end_date="<?= htmlspecialchars($event['end_date'], ENT_QUOTES, 'UTF-8') ?>"
+                                    >
+                                        <i data-lucide="pencil"></i>
+                                    </button>
                                 </div> 
                                 <?php if (!empty($event['description'])): ?>
                                     <p><?= htmlspecialchars($event['description'], ENT_QUOTES, 'UTF-8') ?></p>
@@ -411,7 +421,7 @@
 
             <div>
                 <label for="name">Classe</label>
-                <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?>" required>
+                <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?>" required placeholder="Nome">
             </div>
 
             <div>
@@ -421,7 +431,7 @@
                         foreach ($subjects as $idsubject => $subject){
                             $name = $subject["name"];
                             echo "<tr>";
-                            echo "<td><input type='text' name='subjects[$idsubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required></td>";
+                            echo "<td><input type='text' name='subjects[$idsubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required placeholder='Materia'></td>";
                             for ($i = 1; $i <= 6; $i++){
                                 $checked = in_array($i, $subject['days']) ? "checked" : "";
                                 echo "<td><input type='checkbox' name='schedule[$idsubject][$i]' $checked></td>";
@@ -449,7 +459,7 @@
                 <div id="students_container">
                     <?php 
                         foreach ($students as $id_student => $name){
-                            echo "<input type='text' name='students[$id_student]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required>";
+                            echo "<input type='text' name='students[$id_student]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required placeholder='Nome dello studente'>";
                         }
                     ?>
                 </div>
@@ -504,12 +514,12 @@
                 <div class="other">
                     <div>
                         <label for="event_name">Nome</label>
-                        <input type="text" name="event_name" id="event_name" placeholder="Inserire il nome dell'evento" required>
+                        <input type="text" name="event_name" id="event_name" placeholder="Nome dell'evento" required>
                     </div>
 
                     <div>
                         <label for="description">Descrizione</label>
-                        <textarea name="description" id="description" placeholder="Inserire una descrizione"></textarea>
+                        <textarea name="description" id="description" placeholder="Descrizione dell'evento"></textarea>
                     </div>
                 </div>
 
@@ -564,24 +574,66 @@
                 <input type="submit" value="Conferma" class="submit_button">
             </div>
         </form>
-        <div id="edit_slot" class="hidden">
+        <div id="modal_manage_slot" class="hidden">
             <div class="modal-header">
                 <h2 id="edit_slots_title"></h2>
                 <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
-            
-            <div>
+            <div id="manage_slot_content">
                 <form method="post" action="../php/events.php" id="form_edit_slot">
                     <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="type" value="oral">                
-                    <input type="hidden" name="idslot" id="slot_id">
+                    <input type="hidden" name="idslot" id="edit_slot_id">
+                    
+                    <span id="span_edit_capacity">
+                        <label for="edit_capacity">Posti</label>
+                        <input type="number" name="capacity" min="1" id="edit_capacity" required placeholder="Numero di posti">
+                    </span>
 
-                    <div id="div_edit_capacity">
-                        <input type="number" name="capacity" min="1" id="edit_capacity" required>
-                        <input type="submit" name="action" value="Modifica posti">
-                    </div>
+                    <span>
+                        <input type="submit" name="action" value="Modifica">
+                    </span>
+                </form>
+                <form method="post" action="../php/events.php" id="form_delete_slot">
+                    <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="type" value="oral">                
+                    <input type="hidden" name="idslot" id="remove_slot_id">
 
                     <input type="submit" name="action" value="Elimina interrogazione" class="delete">
+                </form>
+            </div>
+        </div>
+        <div id="modal_manage_event" class="hidden">
+            <div class="modal-header">
+                <h2>Gestione evento</h2>
+                <button type="button" class="close-modal"><i data-lucide="x"></i></button>
+            </div>
+            <div id="manage_event_content">
+                <form method="post" action="../php/events.php" id="form_edit_event">
+                    <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="type" value="other">
+                    <input type="hidden" name="idevent" id="edit_event_id">
+
+                    <label for="edit_name">Nome</label>
+                    <input type="text" name="event_name" id="edit_name" placeholder="Nome dell'evento" required>
+
+                    <label for="edit_description">Descrizione</label>
+                    <input type="text" name="description" id="edit_description" placeholder="Descrizione dell'evento">
+
+                    <label for="edit_start_date">Data inizio</label>
+                    <input type="date" name="start_date" id="edit_start_date" required>
+
+                    <label for="edit_end_date">Data fine</label>
+                    <input type="date" name="end_date" id="edit_end_date" required>
+
+                    <input type="submit" name="action" value="Modifica">
+                </form>
+                <form method="post" action="../php/events.php" id="form_remove_event">
+                    <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="type" value="other">
+                    <input type="hidden" name="idevent" id="remove_event_id">
+
+                    <input type="submit" name="action" value="Elimina evento" class="delete">
                 </form>
             </div>
         </div>

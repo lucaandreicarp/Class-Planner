@@ -49,7 +49,7 @@ document.getElementById('add_student').addEventListener('click', () => {
     const inputStudent = document.createElement('input');
     inputStudent.type = 'text';
     inputStudent.name = 'students[]';
-    inputStudent.placeholder = 'Nome studente';
+    inputStudent.placeholder = 'Nome dello studente';
     inputStudent.required = true;
     containerStudents.appendChild(inputStudent);
 

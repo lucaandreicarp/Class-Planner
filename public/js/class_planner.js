@@ -46,7 +46,7 @@ if (currentStudentId){
         btn.style.display = "none";
     });
     
-    document.querySelectorAll(".event-elimination").forEach(btn => {
+    document.querySelectorAll(".event-modify").forEach(btn => {
         btn.style.display = "none";
     });
 } else {
@@ -67,7 +67,7 @@ if (currentStudentId){
         btn.style.display = "inline-block";
     });
     
-    document.querySelectorAll(".event-elimination").forEach(btn => {
+    document.querySelectorAll(".event-modify").forEach(btn => {
         btn.style.display = "inline-block";
     });
 }
@@ -93,30 +93,6 @@ document.querySelectorAll(".add-oral, .remove-oral").forEach(btn => {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `idslot=${slotId}&idstudent=${currentStudentId}`
-        })
-        .then(res => res.text())
-        .then(msg => {
-            alert(msg);
-            location.reload(); 
-        });
-    });
-});
-
-// Event elimination
-const idClass = document.body.dataset.idclass;
-
-document.querySelectorAll(".event-elimination").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const eventId = btn.getAttribute("data-eventid");
-
-        if (!confirm("Sei sicuro di voler eliminare questo evento?")) {
-            return;
-        }
-
-        fetch("../php/events.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `idevent=${eventId}&type=other&idclass=${idClass}`
         })
         .then(res => res.text())
         .then(msg => {
@@ -168,7 +144,7 @@ function closeModal(){
 
         overlay.style.display = "none";
         container_settings.style.display = "none";
-        edit_slot.style.display = "none";
+        modal_manage_slot.style.display = "none";
 
         form_events.style.display = "none";
         form_events.reset();
@@ -325,7 +301,7 @@ function setupStudentButtons(){
         const inputStudent = document.createElement('input');
         inputStudent.type = 'text';
         inputStudent.name = `students[new_${studentNumber}]`;
-        inputStudent.placeholder = 'Nome studente';
+        inputStudent.placeholder = 'Nome dello studente';
         inputStudent.required = true;
         containerStudents.appendChild(inputStudent);
 
@@ -537,6 +513,7 @@ form_events.addEventListener("submit", (e) => {
         inputCapacity.name = `capacity[${date}]`;
         inputCapacity.min = "1";
         inputCapacity.required = true;
+        inputCapacity.placeholder = "Numero di posti";
 
         tdCapacity.appendChild(inputCapacity);
 
@@ -595,6 +572,7 @@ document.getElementById("add_slot").addEventListener("click", () => {
     inputCapacity.name = `capacity[${newDate}]`;
     inputCapacity.min = "1";
     inputCapacity.required = true;
+    inputCapacity.placeholder = "Numero di posti";
 
     tdCapacity.appendChild(inputCapacity);
 
@@ -621,8 +599,9 @@ document.getElementById("remove_slot").addEventListener("click", () => {
 });
 
 // Modify slot modal
-const edit_slot = document.getElementById("edit_slot");
+const modal_manage_slot = document.getElementById("modal_manage_slot");
 const form_edit_slot = document.getElementById("form_edit_slot");
+const form_delete_slot = document.getElementById("form_delete_slot");
 
 let capacity = 0;
 let students = 0;
@@ -637,21 +616,18 @@ document.querySelectorAll(".slot-modify").forEach(btn => {
         students = Number(btn.dataset.students);
 
         document.getElementById("edit_slots_title").textContent = `${formatDate(date)} · ${subject}`;
-        document.getElementById("slot_id").value = slotId;
+        document.getElementById("edit_slot_id").value = slotId;
+        document.getElementById("remove_slot_id").value = slotId;
 
         const capacityInput = document.getElementById("edit_capacity");
 
         capacityInput.value = capacity;
 
-        openModal(edit_slot);
+        openModal(modal_manage_slot);
     });
 });
 
 form_edit_slot.addEventListener("submit", (e) => {
-
-    if (e.submitter.value === "Elimina interrogazione") {
-        return;
-    }
 
     const newCapacity = Number(document.getElementById("edit_capacity").value);
 
@@ -673,9 +649,10 @@ form_edit_slot.addEventListener("submit", (e) => {
     }
 });
 
-document.querySelector('input[value="Elimina interrogazione"]').addEventListener("click", (e) => {
+form_delete_slot.addEventListener("submit", (e) => {
     if (!confirm("Sei sicuro di voler eliminare questa interrogazione?")) {
         e.preventDefault();
     }
 });
 
+// Modify event modal
