@@ -145,6 +145,7 @@ function closeModal(){
         overlay.style.display = "none";
         container_settings.style.display = "none";
         modal_manage_slot.style.display = "none";
+        modal_manage_event.style.display = "none";
 
         form_events.style.display = "none";
         form_events.reset();
@@ -615,13 +616,11 @@ document.querySelectorAll(".slot-modify").forEach(btn => {
         capacity = btn.dataset.capacity;
         students = Number(btn.dataset.students);
 
-        document.getElementById("edit_slots_title").textContent = `${formatDate(date)} · ${subject}`;
+        document.getElementById("edit_date").value = date;
+        document.getElementById("edit_subject").value = subject;
         document.getElementById("edit_slot_id").value = slotId;
         document.getElementById("remove_slot_id").value = slotId;
-
-        const capacityInput = document.getElementById("edit_capacity");
-
-        capacityInput.value = capacity;
+        document.getElementById("edit_capacity").value = capacity;
 
         openModal(modal_manage_slot);
     });
@@ -656,3 +655,65 @@ form_delete_slot.addEventListener("submit", (e) => {
 });
 
 // Modify event modal
+const modal_manage_event = document.getElementById("modal_manage_event");
+const form_edit_event = document.getElementById("form_edit_event");
+const form_remove_event = document.getElementById("form_remove_event");
+
+let originalEvent = {};
+
+document.querySelectorAll(".event-modify").forEach(btn => {
+    btn.addEventListener("click", () => {
+
+        const eventId = btn.dataset.eventid;
+        const name = btn.dataset.name;
+        const description = btn.dataset.description;
+        const start_date = btn.dataset.start_date;
+        const end_date = btn.dataset.end_date;
+
+        // Fill the inputs
+        document.getElementById("edit_event_id").value = eventId;
+        document.getElementById("remove_event_id").value = eventId;
+        document.getElementById("edit_name").value = name;
+        document.getElementById("edit_description").value = description;
+        document.getElementById("edit_start_date").value = start_date;
+        document.getElementById("edit_end_date").value = end_date;
+
+        // Saving the original values
+        originalEvent = { 
+            name: name, 
+            description: description, 
+            start_date: start_date, 
+            end_date: end_date 
+        };
+
+        openModal(modal_manage_event);
+    });
+});
+
+form_edit_event.addEventListener("submit", (e) => {
+    const name = document.getElementById("edit_name").value; 
+    const description = document.getElementById("edit_description").value; 
+    const start_date = document.getElementById("edit_start_date").value; 
+    const end_date = document.getElementById("edit_end_date").value;
+
+    // Comparing to see if at least 1 value has changed
+    const changed = name !== originalEvent.name || description !== originalEvent.description || start_date !== originalEvent.start_date || end_date !== originalEvent.end_date; 
+    
+    if (!changed) { 
+        e.preventDefault(); 
+        alert("Non hai apportato alcuna modifica."); 
+        return; 
+    }
+
+    if (start_date > end_date) {
+        e.preventDefault();
+        alert("La data di inizio non può essere successiva alla data di fine!");
+        return;
+    }
+});
+
+form_remove_event.addEventListener("submit", (e) => {
+    if (!confirm("Sei sicuro di voler eliminare questa interrogazione?")) {
+        e.preventDefault();
+    }
+});

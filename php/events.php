@@ -66,7 +66,7 @@
             </script>";
 
         } else {    
-            if ($_POST["action"] === "Modifica posti") {      // Update event
+            if ($_POST["action"] === "Modifica") {      // Update event
                 $capacity = $_POST["capacity"];
             
                 $stmt = $conn->prepare(
@@ -128,17 +128,51 @@
             window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
             </script>";
 
-        } else {    // Remove event
-            $stmt = $conn->prepare(
-                "DELETE FROM event WHERE idevent=?"
-            );
-            $stmt->bind_param("i", $idevent);
+        } else {    
+            if ($_POST["action"] === "Modifica") {      // Update event
+                $name = $_POST["event_name"];
+                $description = $_POST["description"];
+                $start_date = $_POST["start_date"];
+                $end_date = $_POST["end_date"];
 
-            if (!$stmt->execute()) {
-                dbError($stmt->error, "Non è stato possibile rimuovere l'evento.");
+                $stmt = $conn->prepare(
+                    "UPDATE event 
+                    SET name = ?, description = ?, start_date = ?, end_date = ? 
+                    WHERE idevent = ?"
+                );
+                
+                $stmt->bind_param(
+                    "ssssi", 
+                    $name, 
+                    $description, 
+                    $start_date, 
+                    $end_date, 
+                    $idevent
+                );
+
+                if (!$stmt->execute()) {
+                    dbError($stmt->error, "Non è stato possibile modificare l'evento.");
+                }
+
+                echo "<script>
+                alert('Evento modificato con successo!');
+                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+                </script>";
+            } else {    // Remove event
+                $stmt = $conn->prepare(
+                    "DELETE FROM event WHERE idevent=?"
+                );
+                $stmt->bind_param("i", $idevent);
+
+                if (!$stmt->execute()) {
+                    dbError($stmt->error, "Non è stato possibile rimuovere l'evento.");
+                }
+
+                echo "<script>
+                alert('Evento rimosso con successo!');
+                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+                </script>";
             }
-
-            echo "Evento rimosso con successo!";
         }
     }
 

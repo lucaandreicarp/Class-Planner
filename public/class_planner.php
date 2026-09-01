@@ -477,7 +477,7 @@
             </div>
 
             <div class="submit_container">
-                <input type="submit" value="Aggiorna" class="submit_button">
+                <input type="submit" value="Aggiorna">
             </div>
         </form>
        <form method="post" action="../php/events.php" id="form_events" class="hidden">    <!-- Events page -->
@@ -535,7 +535,7 @@
             </div>
 
             <div class="submit_container">
-                <input type="submit" value="Continua" class="submit_button">
+                <input type="submit" value="Continua">
             </div>
         </form>
         <form method="post" action="../php/events.php" id="form_slots" class="hidden">
@@ -571,12 +571,12 @@
             </div>
 
             <div class="submit_container">
-                <input type="submit" value="Conferma" class="submit_button">
+                <input type="submit" value="Conferma">
             </div>
         </form>
         <div id="modal_manage_slot" class="hidden">
             <div class="modal-header">
-                <h2 id="edit_slots_title"></h2>
+                <h2>Gestione interrogazione</h2>
                 <button type="button" class="close-modal"><i data-lucide="x"></i></button>
             </div>
             <div id="manage_slot_content">
@@ -585,22 +585,30 @@
                     <input type="hidden" name="type" value="oral">                
                     <input type="hidden" name="idslot" id="edit_slot_id">
                     
-                    <span id="span_edit_capacity">
+                    <div>
+                        <label>Giorno</label>
+                        <input type="date" id="edit_date" disabled>
+                    </div>
+
+                    <div>
+                        <label>Materia</label>
+                        <input type="text" id="edit_subject" disabled>
+                    </div>
+
+                    <div>
                         <label for="edit_capacity">Posti</label>
                         <input type="number" name="capacity" min="1" id="edit_capacity" required placeholder="Numero di posti">
-                    </span>
-
-                    <span>
-                        <input type="submit" name="action" value="Modifica">
-                    </span>
+                    </div>
                 </form>
                 <form method="post" action="../php/events.php" id="form_delete_slot">
                     <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="type" value="oral">                
                     <input type="hidden" name="idslot" id="remove_slot_id">
-
-                    <input type="submit" name="action" value="Elimina interrogazione" class="delete">
                 </form>
+            </div>
+            <div class="modal_actions">
+                <input type="submit" form="form_delete_slot" name="action" value="Elimina interrogazione" class="delete">
+                <input type="submit" form="form_edit_slot" name="action" value="Modifica">
             </div>
         </div>
         <div id="modal_manage_event" class="hidden">
@@ -614,27 +622,35 @@
                     <input type="hidden" name="type" value="other">
                     <input type="hidden" name="idevent" id="edit_event_id">
 
-                    <label for="edit_name">Nome</label>
-                    <input type="text" name="event_name" id="edit_name" placeholder="Nome dell'evento" required>
+                    <div>
+                        <label for="edit_name">Nome</label>
+                        <input type="text" name="event_name" id="edit_name" placeholder="Nome dell'evento" required>
+                    </div>
+                    
+                    <div>
+                        <label for="edit_description">Descrizione</label>
+                        <textarea name="description" id="edit_description" placeholder="Descrizione dell'evento"></textarea>
+                    </div>
 
-                    <label for="edit_description">Descrizione</label>
-                    <input type="text" name="description" id="edit_description" placeholder="Descrizione dell'evento">
+                    <div>
+                        <label for="edit_start_date">Data inizio</label>
+                        <input type="date" name="start_date" id="edit_start_date" required>
+                    </div>
 
-                    <label for="edit_start_date">Data inizio</label>
-                    <input type="date" name="start_date" id="edit_start_date" required>
-
-                    <label for="edit_end_date">Data fine</label>
-                    <input type="date" name="end_date" id="edit_end_date" required>
-
-                    <input type="submit" name="action" value="Modifica">
+                    <div>
+                        <label for="edit_end_date">Data fine</label>
+                        <input type="date" name="end_date" id="edit_end_date" required>
+                    </div>
                 </form>
                 <form method="post" action="../php/events.php" id="form_remove_event">
                     <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="type" value="other">
                     <input type="hidden" name="idevent" id="remove_event_id">
-
-                    <input type="submit" name="action" value="Elimina evento" class="delete">
                 </form>
+            </div>
+            <div class="modal_actions">
+                <input type="submit" form="form_remove_event" name="action" value="Elimina evento" class="delete">
+                <input type="submit" form="form_edit_event" name="action" value="Modifica">
             </div>
         </div>
     </section>
