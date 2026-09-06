@@ -119,6 +119,15 @@ textarea[readonly] {
     -webkit-text-fill-color: #9CA3AF;
 }
 
+input[type="checkbox"]:disabled {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #E5E7EB !important;
+    border: 1px solid #9CA3AF !important;
+    border-radius: 5px;
+    cursor: not-allowed !important;
+}
+
 #div_view, #div_event {
     display: flex;
     align-items: center;

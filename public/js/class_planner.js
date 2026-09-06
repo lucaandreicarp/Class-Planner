@@ -390,6 +390,7 @@ toggleEventType(); // Refresh at starting page
 const form_slots = document.getElementById("form_slots");
 const slots_container = document.getElementById("slots_container");
 const slots_summary = document.getElementById("slots_summary");
+const input_automatic_assignment = document.getElementById("automatic_assignment");
 
 let dates = [];
 let subject = null;
@@ -411,13 +412,16 @@ function updateSlotsSummary() {     // To update slot summary
 
     if (difference > 0) {
         slots_summary.textContent =
-            `Mancano ${difference} posti per tutti gli studenti.`;
+            `Mancano ${difference} posti. Assegnazione automatica bloccata.`;
+            input_automatic_assignment.disabled = true;
     } else if (difference === 0) {
         slots_summary.textContent =
-            `Hai inserito abbastanza posti per tutti gli studenti.`;
+            `Posti sufficienti. Assegnazione automatica sbloccata.`;
+            input_automatic_assignment.disabled = false;
     } else {
         slots_summary.textContent =
-            `Hai inserito ${Math.abs(difference)} posti in più del necessario.`;
+            `${Math.abs(difference)} posti in più. Assegnazione automatica sbloccata.`;
+            input_automatic_assignment.disabled = false;
     }
 }
 
@@ -494,7 +498,7 @@ form_events.addEventListener("submit", (e) => {
         </tr>
     `;
 
-    document.getElementById("automatic_assignment").checked = false;
+    input_automatic_assignment.checked = false;
 
     dates.forEach(date => {
 

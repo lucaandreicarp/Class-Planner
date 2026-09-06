@@ -566,7 +566,7 @@
             </div>
             
             <div id="automatic_assignment_container">
-                <input type="checkbox" name="automatic_assignment" id="automatic_assignment">
+                <input type="checkbox" name="automatic_assignment" id="automatic_assignment" disabled>
                 <label for="automatic_assignment">Assegnazione automatica studenti</label>
             </div>
 
