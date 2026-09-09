@@ -215,14 +215,14 @@ input[type="submit"]:hover {
     background-color: var(--color-primary-hover);
 }
 
-.remove {
+.delete {
     background-color: transparent !important;
     color: var(--color-danger) !important;
     border: 1px solid #FCA5A5 !important;
     font-weight: normal !important;
 }
 
-.remove:hover {
+.delete:hover {
     background-color: var(--color-danger-hover-bg) !important;
     color: var(--color-danger-hover-text) !important;
     border-color: var(--color-danger) !important;
@@ -661,7 +661,8 @@ input[type="checkbox"] {
 }
 
 #schedule_table td > div,
-#students_container > div {
+#students_container > div,
+#slots_container td > div {
     position: relative;
     display: flex;
     align-items: center;
@@ -699,6 +700,15 @@ input[type="checkbox"] {
     color: var(--color-danger-hover-text);
 }
 
+#slots_container td > div {
+    justify-content: center;
+    gap: 8px;
+}
+
+#slots_container .remove {
+    position: static;
+    margin-right: -38px;    /* 30px width + 10px gap*/
+}
 /* Students edit */
 
 #students_container {

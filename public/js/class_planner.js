@@ -490,10 +490,12 @@ function updateSlotsSummary() {     // To update slot summary
         slots_summary.textContent =
             `Posti sufficienti. Assegnazione automatica sbloccata.`;
             input_automatic_assignment.disabled = false;
+            input_automatic_assignment.checked = false;
     } else {
         slots_summary.textContent =
             `${Math.abs(difference)} posti in più. Assegnazione automatica sbloccata.`;
             input_automatic_assignment.disabled = false;
+            input_automatic_assignment.checked = false;
     }
 }
 
@@ -516,6 +518,28 @@ function formatDate(dateString) {   // To convert format date
     const month = String(date.getMonth() + 1).padStart(2, "0");
 
     return `${days[date.getDay()]} ${day}/${month}`;
+}
+
+// Remove date
+function removeDate(button) {
+    const dateText = button.parentElement.querySelector('span');
+    const tr = dateText.closest('tr');
+    const table = tr.closest('table');
+
+    if (table.querySelectorAll('tr').length > 2) {  // Keeps header and first row
+        tr.remove();
+        
+        // Remove date from array
+        const index = dates.indexOf(dateText.dataset.date);
+        dates.splice(index, 1);
+
+        // Update end date
+        end_date = dates[dates.length - 1];     
+
+        updateSlotsSummary();
+    } else {
+        alert("Devi mantenere almeno una data!");
+    }
 }
 
 form_events.addEventListener("submit", (e) => {
@@ -575,14 +599,37 @@ form_events.addEventListener("submit", (e) => {
     dates.forEach(date => {
 
         const tr = document.createElement("tr");
-
+        
+        // Td date
         const tdDate = document.createElement("td");
+        const divDate = document.createElement("div");
+        
+        // Input text
         const dateText = document.createElement("span");
-
         dateText.textContent = formatDate(date);
+        dateText.dataset.date = date;
 
-        tdDate.appendChild(dateText);
+        // Button
+        const buttonDelete = document.createElement('button');  
+        buttonDelete.type = 'button';
+        buttonDelete.className = 'remove';
 
+        buttonDelete.addEventListener('click', function() {
+            removeDate(this);
+        });
+
+        // Icon
+        const iconDelete = document.createElement('i');     
+        iconDelete.setAttribute('data-lucide', 'trash-2');
+
+        buttonDelete.appendChild(iconDelete);
+
+        divDate.appendChild(dateText);
+        divDate.appendChild(buttonDelete);
+
+        tdDate.appendChild(divDate);
+
+        // Td capacity
         const tdCapacity = document.createElement("td");
         const inputCapacity = document.createElement("input");
 
@@ -605,6 +652,9 @@ form_events.addEventListener("submit", (e) => {
     form_events.style.display = "none";
     openModal(form_slots);
     event_displayed = true;
+
+    // Rendering icons
+    lucide.createIcons();
 });
 
 // Add slot
@@ -635,13 +685,36 @@ document.getElementById("add_slot").addEventListener("click", () => {
     // Creating new row
     const tr = document.createElement("tr");
 
+    // Td date
     const tdDate = document.createElement("td");
+    const divDate = document.createElement("div");
+
+    // Input text
     const dateText = document.createElement("span");
-
     dateText.textContent = formatDate(newDate);
+    dateText.dataset.date = newDate;
 
-    tdDate.appendChild(dateText);
+    // Button
+    const buttonDelete = document.createElement('button');  
+    buttonDelete.type = 'button';
+    buttonDelete.className = 'remove';
 
+    buttonDelete.addEventListener('click', function() {
+        removeDate(this);
+    });
+
+    // Icon
+    const iconDelete = document.createElement('i');     
+    iconDelete.setAttribute('data-lucide', 'trash-2');
+
+    buttonDelete.appendChild(iconDelete);
+
+    divDate.appendChild(dateText);
+    divDate.appendChild(buttonDelete);
+
+    tdDate.appendChild(divDate);
+
+    // Td capacity
     const tdCapacity = document.createElement("td");
     const inputCapacity = document.createElement("input");
 
@@ -657,22 +730,9 @@ document.getElementById("add_slot").addEventListener("click", () => {
     tr.appendChild(tdCapacity);
 
     slots_container.appendChild(tr);
-});
 
-// Remove slot
-document.getElementById("remove_slot").addEventListener("click", () => {
-
-    if (dates.length === 1) {       // Don't remove the last slot
-        return;
-    }
-
-    dates.pop();
-    slots_container.lastElementChild.remove();
-
-    // Update end_date
-    end_date = dates[dates.length - 1];
-
-    updateSlotsSummary();   // Update summary when an input gets removed
+    // Rendering icons
+    lucide.createIcons();
 });
 
 // Modify slot modal

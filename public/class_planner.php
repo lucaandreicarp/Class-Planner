@@ -403,7 +403,7 @@
                 <button id="edit">Modifica classe</button>
                 <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
                     <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
-                    <input type="submit" value="Elimina classe" class="remove">
+                    <input type="submit" value="Elimina classe" class="delete">
                 </form>            
                 <a href="index.html" id="logout">
                     <i data-lucide="log-out" id="logout-icon"></i>
@@ -557,10 +557,6 @@
                         <i data-lucide="plus"></i>
                         <span>Aggiungi data</span>
                     </button>
-                    <button type="button" id="remove_slot">
-                        <i data-lucide="trash-2"></i>
-                        <span>Rimuovi data</span>
-                    </button>
                 </div>
             </div>
             
@@ -606,7 +602,7 @@
                 </form>
             </div>
             <div class="modal_actions">
-                <input type="submit" form="form_delete_slot" name="action" value="Elimina interrogazione" class="remove">
+                <input type="submit" form="form_delete_slot" name="action" value="Elimina interrogazione" class="delete">
                 <input type="submit" form="form_edit_slot" name="action" value="Modifica">
             </div>
         </div>
@@ -648,7 +644,7 @@
                 </form>
             </div>
             <div class="modal_actions">
-                <input type="submit" form="form_remove_event" name="action" value="Elimina evento" class="remove">
+                <input type="submit" form="form_remove_event" name="action" value="Elimina evento" class="delete">
                 <input type="submit" form="form_edit_event" name="action" value="Modifica">
             </div>
         </div>
