@@ -45,7 +45,7 @@ header h1 {
 }
 
 #settings svg {
-    stroke-width: 2.5;
+    stroke-width: 2;
 }
 
 #settings:hover{
@@ -124,7 +124,7 @@ input[type="checkbox"]:disabled {
     appearance: none;
     background-color: #E5E7EB !important;
     border: 1px solid #9CA3AF !important;
-    border-radius: 5px;
+    border-radius: 3px;
     cursor: not-allowed !important;
 }
 
@@ -139,21 +139,7 @@ input[type="checkbox"]:disabled {
     width: 15px;
     height: 15px;
 
-    stroke-width: 2.5;
-}
-
-#view {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-
-    padding: 8px 20px 8px 15px;
-
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-
-    cursor: pointer;
+    stroke-width: 2;
 }
 
 /* =========================
@@ -203,7 +189,7 @@ input[type="submit"]:hover {
     width: 15px;
     height: 15px;
 
-    stroke-width: 2.5;
+    stroke-width: 2;
 }
 
 .form_buttons button:hover{
@@ -229,12 +215,17 @@ input[type="submit"]:hover {
     background-color: var(--color-primary-hover);
 }
 
-.delete {
-    background-color: #DC2626 !important;
+.remove {
+    background-color: transparent !important;
+    color: var(--color-danger) !important;
+    border: 1px solid #FCA5A5 !important;
+    font-weight: normal !important;
 }
 
-.delete:hover {
-    background-color: #B91C1C !important;
+.remove:hover {
+    background-color: var(--color-danger-hover-bg) !important;
+    color: var(--color-danger-hover-text) !important;
+    border-color: var(--color-danger) !important;
 }
 
 /* Delete buttons */
@@ -261,7 +252,7 @@ input[type="submit"]:hover {
     width: 12px;
     height: 12px;
 
-    stroke-width: 2.5;
+    stroke-width: 2;
 }
 
 .remove-oral {
@@ -269,7 +260,7 @@ input[type="submit"]:hover {
 }
 
 .remove-oral:hover {
-    background-color: #DC2626;
+    background-color: var(--color-danger);
 }
 
 /* =========================
@@ -344,7 +335,7 @@ input[type="submit"]:hover {
     width: 15px;
     height: 15px;
 
-    stroke-width: 2.5;
+    stroke-width: 2;
 }
 
 #date-range {
@@ -598,7 +589,7 @@ input[type="submit"]:hover {
 
 .close-modal {
     background: transparent;
-    color: #EF4444;
+    color: var(--color-muted);
 
     padding: 0px;
 
@@ -613,13 +604,12 @@ input[type="submit"]:hover {
 }
 
 .close-modal svg {
-    stroke-width: 2.5;
+    stroke-width: 2;
 }
 
 .close-modal:hover {
-
-    background: #FEE2E2;
-    color: #DC2626;
+    background-color: var(--color-danger-hover-bg);
+    color: var(--color-danger-hover-text);
 }
 
 /* Schedule table */
@@ -642,11 +632,11 @@ input[type="submit"]:hover {
 }
 
 #schedule_table td:first-child {
-    width: 25%;
+    width: 30%;
 }
 
 #schedule_table td:not(:first-child) {
-    width: calc(75% / 6);
+    width: calc(70% / 6);
 }
 
 #schedule_table tr:first-child,
@@ -656,8 +646,8 @@ input[type="submit"]:hover {
 }
 
 input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 
 #form_class > div > label {
@@ -668,6 +658,45 @@ input[type="checkbox"] {
 #form_class > div,
 #form_slots > div {
     margin-bottom: 40px;
+}
+
+#schedule_table td > div,
+#students_container > div {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.remove {
+    position: absolute;
+    right: 7px;
+    
+    background-color: white;
+    color: var(--color-muted);
+    border: none;
+
+    padding: 0;
+    margin: 0;
+
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+}
+
+.remove svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+}
+
+.remove:hover {
+    background-color: var(--color-danger-hover-bg);
+    color: var(--color-danger-hover-text);
 }
 
 /* Students edit */
@@ -767,18 +796,6 @@ input[type="checkbox"] {
         width: 100%;
     }
 
-    input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-    }
-
-    .form_buttons {
-        display: flex;
-        gap: 10px;
-        width: 100%;
-    }
-
-    .form_buttons button,
     .modal_actions input {
         flex: 1;
     }
@@ -787,6 +804,8 @@ input[type="checkbox"] {
     #form_slots input[type="submit"],
     #form_events input[type="submit"],
     #students_container,
+    #students_container input[type="text"],
+    .form_buttons button,
     .modal_actions {
         width: 100%;
     }

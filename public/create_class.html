@@ -21,7 +21,12 @@
             <table id="schedule_table">
                 <tr><td>Materie</td><td>Lun</td><td>Mar</td><td>Mer</td><td>Gio</td><td>Ven</td><td>Sab</td></tr>
                 <tr>
-                    <td><input type="text" name="subjects[subject1]" placeholder="Materia" required></td>
+                    <td>
+                        <div>
+                            <input type="text" name="subjects[subject1]" placeholder="Materia" required>
+                            <button type="button" class="remove" onclick="removeSubject(this)"><i data-lucide="trash-2"></i></button>
+                        </div>
+                    </td>
                     <td><input type="checkbox" name="schedule[subject1][1]"></td>
                     <td><input type="checkbox" name="schedule[subject1][2]"></td>
                     <td><input type="checkbox" name="schedule[subject1][3]"></td>
@@ -30,31 +35,26 @@
                     <td><input type="checkbox" name="schedule[subject1][6]"></td>
                 </tr>
             </table>
-            <div class="mobile_buttons">
+            <div class="form_buttons">
                 <button type="button" id="add_subject">
                     <i data-lucide="plus"></i>
                     <span>Aggiungi materia</span>
-                </button>
-                <button type="button" id="remove_subject">
-                    <i data-lucide="trash-2"></i>
-                    <span>Rimuovi materia</span>
                 </button>
             </div>
         </div>
 
         <div>
-            <b id="students_label"></b>
+            <div id="students_label"></div>
             <div id="students_container">
-                <input type="text" name="students[]" placeholder="Nome dello studente" required>
+                <div>
+                    <input type="text" name="students[]" placeholder="Nome dello studente" required>
+                    <button type="button" class="remove" onclick="removeStudent(this)"><i data-lucide="trash-2"></i></button>
+                </div>
             </div>
-            <div class="mobile_buttons">
+            <div class="form_buttons">
                 <button type="button" id="add_student">
                     <i data-lucide="plus"></i>
                     <span>Aggiungi studente</span>
-                </button>
-                <button type="button" id="remove_student">
-                    <i data-lucide="trash-2"></i>
-                    <span>Rimuovi studente</span>
                 </button>
             </div>
         </div>

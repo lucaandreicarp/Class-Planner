@@ -9,6 +9,10 @@
     --color-primary-light: #EFF6FF;
 
     --color-muted: #6B7280;
+
+    --color-danger: #dc2626;
+    --color-danger-hover-bg: #fef2f2;
+    --color-danger-hover-text: #b91c1c;
 }
 
 body {

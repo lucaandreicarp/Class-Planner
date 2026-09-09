@@ -403,7 +403,7 @@
                 <button id="edit">Modifica classe</button>
                 <form method="post" action="../php/delete_class.php" id="form_cancellation" onsubmit="return confirm('Sei sicuro di voler eliminare questa classe? Questa operazione è irreversibile.');">
                     <input type="hidden" name="code" value="<?php echo htmlspecialchars($code, ENT_QUOTES, 'UTF-8'); ?>">
-                    <input type="submit" value="Elimina classe" class="delete">
+                    <input type="submit" value="Elimina classe" class="remove">
                 </form>            
                 <a href="index.html" id="logout">
                     <i data-lucide="log-out" id="logout-icon"></i>
@@ -431,7 +431,12 @@
                         foreach ($subjects as $idsubject => $subject){
                             $name = $subject["name"];
                             echo "<tr>";
-                            echo "<td><input type='text' name='subjects[$idsubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required placeholder='Materia'></td>";
+                            echo "<td>
+                                    <div>
+                                        <input type='text' name='subjects[$idsubject]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required placeholder='Materia'>
+                                        <button type='button' class='remove' onclick='removeSubject(this)'><i data-lucide='trash-2'></i></button>
+                                    </div>
+                                </td>";
                             for ($i = 1; $i <= 6; $i++){
                                 $checked = in_array($i, $subject['days']) ? "checked" : "";
                                 echo "<td><input type='checkbox' name='schedule[$idsubject][$i]' $checked></td>";
@@ -446,11 +451,6 @@
                         <i data-lucide="plus"></i>
                         <span>Aggiungi materia</span>
                     </button>
-
-                    <button type="button" id="remove_subject">
-                        <i data-lucide="trash-2"></i>
-                        <span>Rimuovi materia</span>
-                    </button>
                 </div>
             </div>
 
@@ -459,7 +459,10 @@
                 <div id="students_container">
                     <?php 
                         foreach ($students as $id_student => $name){
-                            echo "<input type='text' name='students[$id_student]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required placeholder='Nome dello studente'>";
+                            echo "<div>
+                                    <input type='text' name='students[$id_student]' value='" . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "' required placeholder='Nome dello studente'>
+                                    <button type='button' class='remove' onclick='removeStudent(this)'><i data-lucide='trash-2'></i></button>
+                                </div>";
                         }
                     ?>
                 </div>
@@ -468,10 +471,6 @@
                     <button type="button" id="add_student">
                         <i data-lucide="plus"></i>
                         <span>Aggiungi studente</span>
-                    </button>
-                    <button type="button" id="remove_student">
-                        <i data-lucide="trash-2"></i>
-                        <span>Rimuovi studente</span>
                     </button>
                 </div>
             </div>
@@ -607,7 +606,7 @@
                 </form>
             </div>
             <div class="modal_actions">
-                <input type="submit" form="form_delete_slot" name="action" value="Elimina interrogazione" class="delete">
+                <input type="submit" form="form_delete_slot" name="action" value="Elimina interrogazione" class="remove">
                 <input type="submit" form="form_edit_slot" name="action" value="Modifica">
             </div>
         </div>
@@ -649,7 +648,7 @@
                 </form>
             </div>
             <div class="modal_actions">
-                <input type="submit" form="form_remove_event" name="action" value="Elimina evento" class="delete">
+                <input type="submit" form="form_remove_event" name="action" value="Elimina evento" class="remove">
                 <input type="submit" form="form_edit_event" name="action" value="Modifica">
             </div>
         </div>

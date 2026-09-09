@@ -80,9 +80,48 @@ tr:first-child {
 
 /* Table text inputs */
 
-td > input[type="text"]{
+td > div > input[type="text"]{
     width: 100%;
     box-sizing: border-box;
+}
+
+td > div,
+#students_container > div {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.remove {
+    position: absolute;
+    right: 9px;
+    
+    background-color: white;
+    color: var(--color-muted);
+    border: none;
+
+    padding: 0;
+    margin: 0;
+
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+}
+
+.remove svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+}
+
+.remove:hover {
+    background-color: var(--color-danger-hover-bg);
+    color: var(--color-danger-hover-text);
 }
 
 /* Checkbox */
@@ -97,11 +136,15 @@ input[type="checkbox"] {
 /* Student container */
 
 #students_container {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
 
     margin-top: 10px;
     gap: 5px;
+}
+
+#students_label {
+    font-weight: bold;
 }
 
 /* Section title */
@@ -182,11 +225,6 @@ form > div {
 
 @media (max-width: 768px) {
 
-    #name {
-        margin-top: 10px;
-        width: 100%;
-    }
-
     table {
         width: 100%;
     }
@@ -201,15 +239,12 @@ form > div {
         box-sizing: border-box;
     }
 
-    .mobile_buttons {
-        display: flex;
-        gap: 10px;
+    .form_buttons button {
         width: 100%;
     }
 
-    .mobile_buttons button {
-        flex: 1;
-        width: 50%;
+    #students_container {
+        width: 100%;
     }
 
     input[type="submit"] {
