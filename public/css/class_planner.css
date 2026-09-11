@@ -723,7 +723,7 @@ input[type="checkbox"] {
     font-weight: bold;
 }
 
-/* Slots edit */
+/* Slots modal */
 
 #slots_summary {
     margin-top: 10px;
@@ -745,10 +745,61 @@ input[type="checkbox"] {
 
 #automatic_assignment_container {
     display: flex;
-    justify-content: left;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+}
 
+.automatic_assignment_header {
+    display: flex;
+    align-items: center;
     gap: 5px;
+}
+
+.info_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 20px;
+    height: 20px;
+    padding: 0;
+
+    background: transparent;
+    color: var(--color-primary);
+
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+.info_button svg {
+    stroke-width: 2;
+}
+
+.info_button:hover {
+    background-color: var(--color-primary-light);
+}
+
+.info_panel {
+    display: none;
+
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 8px;
+    padding: 11px 12px;
+
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-primary);
+    border-radius: 0 7px 7px 0;
+
+    font-size: 13px;
+    line-height: 1.4;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.info_panel.active {
+    display: block;
 }
 
 /* Edit slot */
@@ -781,6 +832,10 @@ input[type="checkbox"] {
 
     #app-layout {
         grid-template-columns: 25vw 1fr;
+    }
+
+    aside {
+        padding: 10px;
     }
 
     #div_view, 

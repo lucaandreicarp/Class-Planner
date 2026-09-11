@@ -561,8 +561,17 @@
             </div>
             
             <div id="automatic_assignment_container">
-                <input type="checkbox" name="automatic_assignment" id="automatic_assignment" disabled>
-                <label for="automatic_assignment">Assegnazione automatica studenti</label>
+                <div class="automatic_assignment_header">
+                    <input type="checkbox" name="automatic_assignment" id="automatic_assignment" disabled>
+                    <label for="automatic_assignment">Assegnazione automatica studenti</label>
+                    
+                    <button type="button" id="automatic_assignment_info"class="info_button"><i data-lucide="circle-help"></i></button>
+                </div>
+
+                <div id="automatic_assignment_panel" class="info_panel">
+                    Cerca di distribuire in modo equilibrato le interrogazioni tra gli studenti della classe,
+                    considerando le interrogazioni già svolte e quelle future già programmate.
+                </div>
             </div>
 
             <div class="submit_container">

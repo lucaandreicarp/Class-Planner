@@ -463,6 +463,8 @@ const form_slots = document.getElementById("form_slots");
 const slots_container = document.getElementById("slots_container");
 const slots_summary = document.getElementById("slots_summary");
 const input_automatic_assignment = document.getElementById("automatic_assignment");
+const infoButton = document.getElementById("automatic_assignment_info");
+const infoPanel = document.getElementById("automatic_assignment_panel");
 
 let dates = [];
 let subject = null;
@@ -542,6 +544,19 @@ function removeDate(button) {
     }
 }
 
+// Popup
+infoButton.addEventListener("click", (event) => {
+    event.stopPropagation();       // Prevent the document click handler from closing the panel
+    infoPanel.classList.toggle("active");
+});
+
+document.addEventListener("click", (event) => {
+    if (!infoPanel.contains(event.target)) {    // Close the panel only when clicking outside it
+        infoPanel.classList.remove("active");
+    }
+});
+
+// Submit
 form_events.addEventListener("submit", (e) => {
     const start_date = document.getElementById("start_date").value;
     end_date = document.getElementById("end_date").value;
