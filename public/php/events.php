@@ -1,5 +1,5 @@
 <?php
-    require_once "../config/database.php";
+    require_once dirname(__DIR__, 2) . '/config/database.php';
 
     $id_class = $_POST["idclass"];
     $type = $_POST["type"];

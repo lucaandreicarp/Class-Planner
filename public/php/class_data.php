@@ -1,5 +1,5 @@
 <?php
-    require_once "../config/database.php";
+    require_once dirname(__DIR__, 2) . '/config/database.php';
 
     $name_form = $_POST["name"];
     $subjects_form = $_POST["subjects"];
