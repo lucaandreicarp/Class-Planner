@@ -194,10 +194,10 @@
 
                 $conn->commit();
 
-                $message = "$inserted interrogazioni inserite. ";
+                $message = "$inserted " . ($inserted === 1 ? "interrogazione inserita." : "interrogazioni inserite.");
                 
                 if ($skipped > 0) {
-                    $message .= "$skipped interrogazioni erano già presenti.";
+                    $message .= " $skipped " . ($skipped === 1 ? "interrogazione era già presente." : "interrogazioni erano già presenti.");
                 }
 
                 if (isset($_POST["automatic_assignment"])) {

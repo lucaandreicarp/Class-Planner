@@ -670,7 +670,7 @@ input[type="checkbox"] {
 
 .remove {
     position: absolute;
-    right: 7px;
+    right: 8px;
     
     background-color: white;
     color: var(--color-muted);
@@ -698,6 +698,10 @@ input[type="checkbox"] {
 .remove:hover {
     background-color: var(--color-danger-hover-bg);
     color: var(--color-danger-hover-text);
+}
+
+#form_class input[type="text"]:not(#name) {
+    padding-right: 38px;
 }
 
 #slots_container td > div {
@@ -863,6 +867,14 @@ input[type="checkbox"] {
 
     .modal_actions input {
         flex: 1;
+    }
+
+    .remove {
+        right: 5px;
+    }
+
+    #form_class input[type="text"]:not(#name) {
+        padding-right: 35px;
     }
 
     #form_class input[type="submit"],

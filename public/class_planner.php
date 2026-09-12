@@ -661,6 +661,9 @@
 
     <script>
         const subjects = <?= json_encode($subjects, JSON_UNESCAPED_UNICODE) ?>;
+
+        // Save the class code
+        localStorage.setItem("classPlannerCode", <?= json_encode($code) ?>);
     </script>
 
     <script src="js/class_planner.js"></script>

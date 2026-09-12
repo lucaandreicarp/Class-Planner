@@ -399,6 +399,11 @@ setupStudentButtons();
 const form_class = document.getElementById('form_class');
 
 form_class.addEventListener('submit', (e) => {
+    if (!formHasChanged()) {
+        e.preventDefault();
+        alert("Non hai apportato alcuna modifica.");
+    }
+    
     const rows = table.querySelectorAll('tr:not(:first-child)');
     let error = false;
 
@@ -485,19 +490,21 @@ function updateSlotsSummary() {     // To update slot summary
     const difference = numberStudents - totalSlots;
 
     if (difference > 0) {
-        slots_summary.textContent =
-            `Mancano ${difference} posti. Assegnazione automatica bloccata.`;
-            input_automatic_assignment.disabled = true;
+        slots_summary.textContent = `${difference === 1 ? "Manca" : "Mancano"} ${difference} ${difference === 1 ? "posto" : "posti"}. Assegnazione automatica bloccata.`;
+            
+        input_automatic_assignment.disabled = true;
     } else if (difference === 0) {
-        slots_summary.textContent =
-            `Posti sufficienti. Assegnazione automatica sbloccata.`;
-            input_automatic_assignment.disabled = false;
-            input_automatic_assignment.checked = false;
+        slots_summary.textContent = `Posti sufficienti. Assegnazione automatica sbloccata.`;
+        
+        input_automatic_assignment.disabled = false;
+        input_automatic_assignment.checked = false;
     } else {
-        slots_summary.textContent =
-            `${Math.abs(difference)} posti in più. Assegnazione automatica sbloccata.`;
-            input_automatic_assignment.disabled = false;
-            input_automatic_assignment.checked = false;
+        const extra = Math.abs(difference);
+
+        slots_summary.textContent = `${extra} ${extra === 1 ? "posto" : "posti"} in più. Assegnazione automatica sbloccata.`;
+        
+        input_automatic_assignment.disabled = false;
+        input_automatic_assignment.checked = false;
     }
 }
 
@@ -787,15 +794,15 @@ form_edit_slot.addEventListener("submit", (e) => {
         const studentsToRemove = students - newCapacity;
 
         alert(
-            `Hai inserito ${newCapacity} posti, ma ci sono già ${students} studenti assegnati.\n` +
-            `Rimuovi ${studentsToRemove} studenti per poter assegnare questa capacità.`
+            `Hai inserito ${newCapacity} ${newCapacity === 1 ? "posto" : "posti"}, ma ${students === 1 ? "c'è già" : "ci sono già"} ${students} ${students === 1 ? "studente assegnato" : "studenti assegnati"}.\n` +
+            `Rimuovi ${studentsToRemove} ${studentsToRemove === 1 ? "studente" : "studenti"} per poter assegnare questa capacità.`
         );
     }
 
     if (capacity == newCapacity) {
         e.preventDefault();
 
-        alert("La capacità inserita è già quella attuale.");
+        alert("Non hai apportato alcuna modifica.");
     }
 });
 

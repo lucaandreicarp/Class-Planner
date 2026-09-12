@@ -85,6 +85,10 @@ td > div > input[type="text"]{
     box-sizing: border-box;
 }
 
+input[type="text"]:not(#name) {
+    padding-right: 40px;
+}
+
 td > div,
 #students_container > div {
     position: relative;
@@ -94,7 +98,7 @@ td > div,
 
 .remove {
     position: absolute;
-    right: 9px;
+    right: 10px;
     
     background-color: white;
     color: var(--color-muted);
@@ -237,6 +241,15 @@ form > div {
     input[type="text"] {
         width: 100%;
         box-sizing: border-box;
+        padding: 8px;
+    }
+
+    input[type="text"]:not(#name) {
+        padding-right: 35px;
+    }
+
+    .remove {
+        right: 5px;
     }
 
     .form_buttons button {

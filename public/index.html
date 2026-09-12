@@ -11,7 +11,7 @@
     <h1>CLASS PLANNER</h1>
 
     <form method="get" action="class_planner.php">
-        <input type="text" name="code" placeholder="Codice della classe" required>
+        <input type="text" id="class_code" name="code" placeholder="Codice della classe" required>
         <input type="submit" value="Entra">
     </form>
 
@@ -21,5 +21,12 @@
         Crea classe
     </button>
 
+    <script>
+        const savedCode = localStorage.getItem("classPlannerCode");
+
+        if (savedCode) {
+            document.getElementById("class_code").value = savedCode;
+        }
+    </script>
 </body>
 </html>
