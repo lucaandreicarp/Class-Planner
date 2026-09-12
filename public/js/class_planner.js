@@ -89,7 +89,7 @@ document.querySelectorAll(".add-oral, .remove-oral").forEach(btn => {
     btn.addEventListener("click", () => {
         const slotId = btn.getAttribute("data-slotid");
 
-        fetch("../php/oral.php", {
+        fetch("php/oral.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `idslot=${slotId}&idstudent=${currentStudentId}`
