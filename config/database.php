@@ -1,6 +1,13 @@
 <?php
 
-    $conn = new mysqli("localhost", "root", "", "class_planner");
+    $config = require __DIR__ . '/database.local.php';
+
+    $conn = new mysqli(
+        $config['host'],
+        $config['user'],
+        $config['password'],
+        $config['database']
+    );
 
     function dbError($technicalError, $userMessage = "Si è verificato un errore. Riprova più tardi.") {
         error_log($technicalError);
@@ -17,4 +24,5 @@
         dbError($conn->error, "Impossibile connettersi al servizio. Riprova più tardi.");
     }
 
+    $conn->set_charset("utf8mb4");
 ?>
