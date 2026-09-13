@@ -49,14 +49,6 @@ input[type="text"] {
     font-size: 15px;
 }
 
-
-/* Class name */
-
-#name {
-    width: 250px;
-}
-
-
 /* Subject table */
 
 table {
@@ -256,12 +248,6 @@ form > div {
 
     td:not(:first-child) {
         width: calc(60% / 6);
-    }
-
-    #class_name {
-        display: flex;
-        align-items: center;
-        gap: 10px;
     }
 
     input[type="checkbox"] {
