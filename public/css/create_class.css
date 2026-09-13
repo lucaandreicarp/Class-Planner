@@ -64,6 +64,9 @@ table {
     border-collapse: collapse;
 }
 
+.theader_mobile {
+    display: none;
+}
 
 td {
     border: 1px solid var(--color-border);
@@ -73,7 +76,8 @@ td {
 
 /* Table header */
 
-tr:first-child {
+.theader_desktop, 
+.theader_mobile {
     background-color: var(--color-primary-light);
     font-weight: bold;
 }
@@ -231,6 +235,23 @@ form > div {
 
     table {
         width: 100%;
+        table-layout: fixed;
+    }
+
+    .theader_mobile {
+        display: table-row;
+    }
+
+    .theader_desktop {
+        display: none;
+    }
+
+    td:first-child {
+        width: 40%;
+    }
+
+    td:not(:first-child) {
+        width: calc(60% / 6);
     }
 
     input[type="checkbox"] {
