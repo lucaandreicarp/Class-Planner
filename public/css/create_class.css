@@ -258,8 +258,10 @@ form > div {
         width: calc(60% / 6);
     }
 
-    #form_class > div:first-child {
-        max-width: 100%;
+    #class_name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     input[type="checkbox"] {
