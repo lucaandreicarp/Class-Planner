@@ -258,6 +258,10 @@ form > div {
         width: calc(60% / 6);
     }
 
+    #form_class > div:first-child {
+        max-width: 100%;
+    }
+
     input[type="checkbox"] {
         width: 16px;
         height: 16px;
