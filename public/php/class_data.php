@@ -213,7 +213,7 @@
         
         echo "<script>
         alert(" . json_encode("La classe $name_form è stata aggiornata!") . ");
-        window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+        window.location.href=" . json_encode("../class_planner.php?code=" . urlencode($code)) . ";
         </script>";
     } else {
         // Insert Class in DB
@@ -302,7 +302,7 @@
     if ($isNewClass) {
         echo "<script>
         alert(" . json_encode("La classe $name_form è stata creata! Il codice della classe è: $code") . ");
-        window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+        window.location.href=" . json_encode("../class_planner.php?code=" . urlencode($code)) . ";
         </script>";
     }
 

@@ -211,7 +211,7 @@
             // Output 
             echo "<script>
             alert(" . json_encode("$message") . ");
-            window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+            window.location.href=" . json_encode("../class_planner.php?code=" . urlencode($code)) . ";
             </script>";
 
         } else {    
@@ -229,7 +229,7 @@
 
                 echo "<script>
                 alert(" . json_encode("Interrogazione modificata con successo!") . ");
-                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+                window.location.href=" . json_encode("../class_planner.php?code=" . urlencode($code)) . ";
                 </script>";
             } else {    // Remove event
                 $stmt = $conn->prepare(
@@ -243,7 +243,7 @@
 
                 echo "<script>
                 alert(" . json_encode("Interrogazione rimossa con successo!") . ");
-                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+                window.location.href=" . json_encode("../class_planner.php?code=" . urlencode($code)) . ";
                 </script>";
             }
         }
@@ -274,7 +274,7 @@
 
             echo "<script>
             alert('Evento inserito con successo!');
-            window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+            window.location.href=" . json_encode("../class_planner.php?code=" . urlencode($code)) . ";
             </script>";
 
         } else {    
@@ -305,7 +305,7 @@
 
                 echo "<script>
                 alert('Evento modificato con successo!');
-                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+                window.location.href=" . json_encode("../class_planner.php?code=" . urlencode($code)) . ";
                 </script>";
             } else {    // Remove event
                 $stmt = $conn->prepare(
@@ -319,7 +319,7 @@
 
                 echo "<script>
                 alert('Evento rimosso con successo!');
-                window.location.href=" . json_encode("../public/class_planner.php?code=" . urlencode($code)) . ";
+                window.location.href=" . json_encode("../class_planner.php?code=" . urlencode($code)) . ";
                 </script>";
             }
         }
