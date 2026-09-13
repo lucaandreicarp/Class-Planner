@@ -105,8 +105,8 @@
                                 SELECT 
                                     MAX(CASE WHEN s.date <= ? THEN s.date END) AS last_date,
                                     MIN(CASE WHEN s.date >= ? THEN s.date END) AS next_date
-                                FROM Oral o
-                                JOIN Slot s ON o.idslot = s.idslot
+                                FROM oral o
+                                JOIN slot s ON o.idslot = s.idslot
                                 WHERE o.idstudent = ?
                             ");
 
