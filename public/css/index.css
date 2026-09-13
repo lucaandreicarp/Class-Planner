@@ -86,6 +86,7 @@ button:hover {
     form {
         flex-direction: column;
         width: 80%;
+        padding: 20px;
     }
 
 
