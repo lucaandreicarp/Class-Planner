@@ -246,12 +246,16 @@ form > div {
         display: none;
     }
 
+    td {
+        padding: 6px 3px;
+    }
+
     td:first-child {
-        width: 40%;
+        width: 50%;
     }
 
     td:not(:first-child) {
-        width: calc(60% / 6);
+        width: calc(50% / 6);
     }
 
     input[type="checkbox"] {
