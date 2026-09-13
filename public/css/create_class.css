@@ -7,7 +7,7 @@ body {
     justify-content: center;
     
     height: 100vh;
-    padding: 30px 20px;
+    padding: 30px 20px !important;
 
     box-sizing: border-box;
 }
@@ -243,16 +243,14 @@ form > div {
         display: none;
     }
 
-    td {
-        padding: 6px 3px;
-    }
-
     td:first-child {
         width: 40%;
+        padding: 6px;
     }
 
     td:not(:first-child) {
         width: calc(60% / 6);
+        padding: 6px 3px;
     }
 
     input[type="checkbox"] {
