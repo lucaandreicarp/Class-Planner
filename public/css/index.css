@@ -33,7 +33,6 @@ form {
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 
     width: 350px;
-    max-width: 90%;
 }
 
 /* Code input */
@@ -83,9 +82,14 @@ button:hover {
 /* Mobile */
 @media (max-width: 768px) {
 
+    h1 {
+        font: 32px;
+    }
+
     form {
         flex-direction: column;
         padding: 20px;
+        width: 90%;
     }
 
 

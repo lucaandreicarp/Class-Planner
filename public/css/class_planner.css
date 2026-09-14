@@ -639,10 +639,15 @@ input[type="submit"]:hover {
     width: calc(70% / 6);
 }
 
-#schedule_table tr:first-child,
+.theader_desktop, 
+.theader_mobile,
 #slots_container tr:first-child {
     background-color: var(--color-primary-light);
     font-weight:bold;
+}
+
+.theader_mobile {
+    display: none;
 }
 
 input[type="checkbox"] {
@@ -873,8 +878,31 @@ input[type="checkbox"] {
         right: 5px;
     }
 
+    #form_class {
+        padding: 20px;
+        table-layout: fixed;
+    }
+
     #form_class input[type="text"]:not(#name) {
         padding-right: 35px;
+    }
+
+    .theader_mobile {
+        display: table-row;
+    }
+
+    .theader_desktop {
+        display: none;
+    }
+
+    #schedule_table td:first-child {
+        width: 40%;
+        padding: 6px;
+    }
+
+    #schedule_table td:not(:first-child) {
+        width: calc(60% / 6);
+        padding: 6px 3px;
     }
 
     #form_class input[type="submit"],

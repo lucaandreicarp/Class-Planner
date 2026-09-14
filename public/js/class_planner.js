@@ -311,7 +311,7 @@ function removeSubject(button) {
     const tr = button.closest('tr');
     const table = tr.closest('table');
 
-    if (table.querySelectorAll('tr').length > 2) {  // Keeps header and first row
+    if (table.querySelectorAll('tr').length > 3) {  // Keeps header and first row
         tr.remove();
     } else {
         alert("Devi mantenere almeno una materia!");

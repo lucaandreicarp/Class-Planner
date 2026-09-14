@@ -426,7 +426,8 @@
 
             <div>
                 <table id="schedule_table">
-                    <tr><td>Materie</td><td>Lun</td><td>Mar</td><td>Mer</td><td>Gio</td><td>Ven</td><td>Sab</td></tr>
+                    <tr class="theader_desktop"><td>Materie</td><td>Lun</td><td>Mar</td><td>Mer</td><td>Gio</td><td>Ven</td><td>Sab</td></tr>
+                    <tr class="theader_mobile"><td>Materie</td><td>L</td><td>M</td><td>M</td><td>G</td><td>V</td><td>S</td></tr>
                     <?php 
                         foreach ($subjects as $idsubject => $subject){
                             $name = $subject["name"];
