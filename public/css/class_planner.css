@@ -846,6 +846,9 @@ input[type="checkbox"] {
     #app-layout {
         display: flex;
         flex-direction: column;
+
+        top: 90px;
+        gap: 10px;
     }
 
     aside {
