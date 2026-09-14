@@ -843,8 +843,22 @@ input[type="checkbox"] {
         grid-template-columns: 25vw 1fr;
     }
 
+    #app-layout {
+        display: flex;
+        flex-direction: column;
+    }
+
     aside {
-        padding: 10px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        height: 80px;
+        width: 100%;
+    }
+
+    #calendar {
+        width: 100%;
     }
 
     #div_view, 
@@ -881,6 +895,11 @@ input[type="checkbox"] {
     #form_class {
         padding: 20px;
         table-layout: fixed;
+    }
+
+    .modal-header {
+        top: -20px;
+        margin: -20px -20px 0px -20px;
     }
 
     #form_class input[type="text"]:not(#name) {
