@@ -861,6 +861,10 @@ input[type="checkbox"] {
         width: 100%;
     }
 
+    #calendar-content {
+        gap: 0;
+    }
+
     #div_view, 
     #view,
     #div_event,
