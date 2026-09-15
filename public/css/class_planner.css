@@ -512,6 +512,7 @@ input[type="submit"]:hover {
 
 #div_settings .modal_content > *,
 #form_events .modal_content > *,
+#form_events .other > *:not(:last-child),
 #form_edit_slot > *:not(:last-child),
 #form_edit_event > *:not(:last-child) {
     margin-bottom: 10px;
