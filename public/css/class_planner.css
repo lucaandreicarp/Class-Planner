@@ -716,7 +716,7 @@ input[type="checkbox"] {
 
 #slots_container .remove {
     position: static;
-    margin-right: -38px;    /* 30px width + 10px gap*/
+    margin-right: -38px;    /* 30px width + 8px gap*/
 }
 /* Students edit */
 
@@ -899,14 +899,22 @@ input[type="checkbox"] {
         right: 5px;
     }
 
+    #slots_container td > div {
+        gap: 5px;
+    }
+
+    #slots_container .remove {
+        margin-right: -35px;    /* 30px width + 5px gap*/
+    }
+
     #form_class {
         padding: 20px;
         table-layout: fixed;
     }
 
-    .modal-header {
+    #form_class .modal-header {
         top: -20px;
-        margin: -20px -20px 0px -20px;
+        margin: -20px -20px 40px -20px;
     }
 
     #form_class input[type="text"]:not(#name) {

@@ -612,7 +612,7 @@
                 </form>
             </div>
             <div class="modal_actions">
-                <input type="submit" form="form_delete_slot" name="action" value="Elimina interrogazione" class="delete">
+                <input type="submit" form="form_delete_slot" name="action" value="Elimina" class="delete">
                 <input type="submit" form="form_edit_slot" name="action" value="Modifica">
             </div>
         </div>
@@ -654,7 +654,7 @@
                 </form>
             </div>
             <div class="modal_actions">
-                <input type="submit" form="form_remove_event" name="action" value="Elimina evento" class="delete">
+                <input type="submit" form="form_remove_event" name="action" value="Elimina" class="delete">
                 <input type="submit" form="form_edit_event" name="action" value="Modifica">
             </div>
         </div>
