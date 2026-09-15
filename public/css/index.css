@@ -15,11 +15,10 @@ body {
 /* Title */
 
 .logo {
-    width: 400px;
-    max-width: 90%;
+    width: 350px;
     height: auto;
 
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 /* Form */
@@ -85,8 +84,8 @@ button:hover {
 /* Mobile */
 @media (max-width: 768px) {
 
-    h1 {
-        font: 32px;
+    .logo {
+        width: 80%;
     }
 
     form {
