@@ -871,7 +871,7 @@ form_edit_event.addEventListener("submit", (e) => {
 });
 
 form_remove_event.addEventListener("submit", (e) => {
-    if (!confirm("Sei sicuro di voler eliminare questa interrogazione?")) {
+    if (!confirm("Sei sicuro di voler eliminare questo evento?")) {
         e.preventDefault();
     }
 });
