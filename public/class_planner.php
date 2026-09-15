@@ -215,6 +215,7 @@
     <title><?php echo htmlspecialchars($class_name, ENT_QUOTES, 'UTF-8'); ?> | Class Planner</title>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/class_planner.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body data-idclass="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
