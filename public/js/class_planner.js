@@ -404,7 +404,7 @@ form_class.addEventListener('submit', (e) => {
         alert("Non hai apportato alcuna modifica.");
     }
     
-    const rows = table.querySelectorAll('tr:not(:first-child)');
+    const rows = table.querySelectorAll('tr:nth-child(n+3)');
     let error = false;
 
     rows.forEach(row => {

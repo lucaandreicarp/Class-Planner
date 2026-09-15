@@ -138,7 +138,7 @@ updateStudentLabel();
 const form = document.getElementById('form_class');
 
 form.addEventListener('submit', (e) => {
-    const rows = table.querySelectorAll('tr:not(:first-child)');
+    const rows = table.querySelectorAll('tr:nth-child(n+3)');
     let error = false;
 
     rows.forEach(row => {
