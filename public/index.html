@@ -22,6 +22,16 @@
     </button>
 
     <script>
+        // Remove code if class gets deleted  
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("deleted") === "1") {
+            localStorage.removeItem("classPlannerCode");
+            history.replaceState(null, "", window.location.pathname);
+
+        }
+
+        // Use code if it already exists
         const savedCode = localStorage.getItem("classPlannerCode");
 
         if (savedCode) {

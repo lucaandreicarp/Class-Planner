@@ -13,7 +13,7 @@
         dbError($stmt->error, "Non è stato possibile eliminare la classe.");
     }
 
-    echo "<script> alert('Classe eliminata correttamente!'); window.location.href='../index.html'; </script>";
+    echo "<script> alert('Classe eliminata correttamente!'); window.location.href='../index.html?deleted=1'; </script>";
 
     // Close DB Connection
     $conn -> close();
