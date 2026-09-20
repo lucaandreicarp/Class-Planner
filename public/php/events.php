@@ -1,7 +1,7 @@
 <?php
     require_once dirname(__DIR__, 2) . '/config/database.php';
 
-    $id_class = $_POST["idclass"];
+    $code = $_POST["code"];
     $type = $_POST["type"];
 
     $idslot = $_POST["idslot"] ?? null;     // Check if slot already created
@@ -9,12 +9,12 @@
 
     // Extracting code
     $stmt = $conn->prepare("
-        SELECT code
+        SELECT idclass
         FROM class
-        WHERE idclass = ?
+        WHERE code = ?
     ");
 
-    $stmt->bind_param("i", $id_class);
+    $stmt->bind_param("s", $code);
 
     if (!$stmt->execute()) {
         dbError($stmt->error, "Non è stato possibile recuperare il codice della classe.");
@@ -22,13 +22,32 @@
 
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    $code = $row["code"]; 
+    $id_class = $row["idclass"]; 
 
     if ($type == "oral"){       // Event: oral
         if ($idslot == null){   // Create event
 
             $id_subject = $_POST["subject"];
             $capacity = $_POST["capacity"];
+
+            $stmt = $conn->prepare(
+                "SELECT idsubject 
+                FROM subject
+                WHERE idsubject = ? AND idclass = ?"
+            );
+
+            $stmt->bind_param("ii", $id_subject, $id_class);
+
+            if (!$stmt->execute()) {
+                dbError($stmt->error, "Non è stato possibile verificare la materia.");
+            }
+
+            if ($stmt->get_result()->num_rows === 0) {
+                dbError(
+                    "Tentativo di utilizzare una materia non appartenente alla classe.",
+                    "La materia selezionata non appartiene alla classe."
+                );
+            }
 
             $conn->begin_transaction();
 
@@ -219,9 +238,9 @@
                 $capacity = $_POST["capacity"];
             
                 $stmt = $conn->prepare(
-                    "UPDATE slot SET capacity = ? WHERE idslot = ?"
+                    "UPDATE slot SET capacity = ? WHERE idslot = ? AND idclass = ?"
                 );
-                $stmt->bind_param("ii", $capacity, $idslot);
+                $stmt->bind_param("iii", $capacity, $idslot, $id_class);
 
                 if (!$stmt->execute()) {
                     dbError($stmt->error, "Non è stato possibile modificare l'interrogazione.");
@@ -233,9 +252,9 @@
                 </script>";
             } else {    // Remove event
                 $stmt = $conn->prepare(
-                    "DELETE FROM slot WHERE idslot=?"
+                    "DELETE FROM slot WHERE idslot=? AND idclass = ?"
                 );
-                $stmt->bind_param("i", $idslot);
+                $stmt->bind_param("ii", $idslot, $id_class);
 
                 if (!$stmt->execute()) {
                     dbError($stmt->error, "Non è stato possibile rimuovere l'interrogazione.");
@@ -287,16 +306,17 @@
                 $stmt = $conn->prepare(
                     "UPDATE event 
                     SET name = ?, description = ?, start_date = ?, end_date = ? 
-                    WHERE idevent = ?"
+                    WHERE idevent = ? AND idclass = ?"
                 );
                 
                 $stmt->bind_param(
-                    "ssssi", 
+                    "ssssii", 
                     $name, 
                     $description, 
                     $start_date, 
                     $end_date, 
-                    $idevent
+                    $idevent,
+                    $id_class
                 );
 
                 if (!$stmt->execute()) {
@@ -309,9 +329,9 @@
                 </script>";
             } else {    // Remove event
                 $stmt = $conn->prepare(
-                    "DELETE FROM event WHERE idevent=?"
+                    "DELETE FROM event WHERE idevent=? AND idclass = ?"
                 );
-                $stmt->bind_param("i", $idevent);
+                $stmt->bind_param("ii", $idevent, $id_class);
 
                 if (!$stmt->execute()) {
                     dbError($stmt->error, "Non è stato possibile rimuovere l'evento.");

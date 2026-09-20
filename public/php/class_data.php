@@ -135,10 +135,14 @@
         // Update and insert of subjects and schedule
         foreach ($subjects_form as $id => $subject_name) {
             if (is_numeric($id)) {      // Update existing subjects
+                if (!in_array((int)$id, array_map('intval', $idsubjects_db), true)) {
+                    dbError("Tentativo di modificare una materia non appartenente alla classe.", "Non è possibile modificare una materia che non appartiene alla classe.");
+                }
+
                 $stmt = $conn->prepare(
-                    "UPDATE subject SET name=? WHERE idsubject=?"
+                    "UPDATE subject SET name=? WHERE idsubject=? AND idclass=?"
                 );
-                $stmt->bind_param("si", $subject_name, $id);
+                $stmt->bind_param("sii", $subject_name, $id, $idclass);
                 if ($stmt->execute()) {
                     $idsubject = $id;
                 } else {
@@ -178,10 +182,10 @@
         foreach ($students_form as $id => $student_name) {
             if (is_numeric($id)) {      // Update existing students
                 $stmt = $conn->prepare(
-                    "UPDATE student SET name=? WHERE idstudent=?"
+                    "UPDATE student SET name=? WHERE idstudent=? AND idclass = ?"
                 );
 
-                $stmt->bind_param("si", $student_name, $id);
+                $stmt->bind_param("sii", $student_name, $id, $idclass);
 
                 if (!$stmt->execute()) {
                     dbError($stmt->error, "Non è stato possibile aggiornare uno studente della classe.");

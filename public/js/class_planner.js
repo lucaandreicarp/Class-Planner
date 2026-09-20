@@ -88,11 +88,12 @@ calendar.addEventListener("scroll", () => {
 document.querySelectorAll(".add-oral, .remove-oral").forEach(btn => {
     btn.addEventListener("click", () => {
         const slotId = btn.getAttribute("data-slotid");
+        const code = btn.getAttribute("data-code");
 
         fetch("php/oral.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `idslot=${slotId}&idstudent=${currentStudentId}`
+            body: `idslot=${slotId}&idstudent=${currentStudentId}&code=${code}`
         })
         .then(res => res.text())
         .then(msg => {

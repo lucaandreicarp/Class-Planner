@@ -43,6 +43,14 @@
         $students[$row_student["idstudent"]] = $row_student["name"];
     }
 
+    if ($currentStudentId !== null &&
+        !array_key_exists($currentStudentId, $students)) {
+        dbError(
+            "Tentativo di visualizzare uno studente non appartenente alla classe.",
+            "Lo studente selezionato non appartiene alla classe."
+        );
+    }
+
     // Extracting subjects (and schedule)
     $stmt = $conn->prepare("
         SELECT s.idsubject, s.name, sc.day_of_week
@@ -339,7 +347,7 @@
                                         }
                                     ?>
 
-                                    <button class="<?= $buttonClass ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="<?= $icon ?>"></i></button>
+                                    <button class="<?= $buttonClass ?>" data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>" data-code="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>"><i data-lucide="<?= $icon ?>"></i></button>
                                     <button
                                         class="slot-modify"
                                         data-slotid="<?= htmlspecialchars($slot['idslot'], ENT_QUOTES, 'UTF-8') ?>"
@@ -482,7 +490,7 @@
             </div>
         </form>
        <form method="post" action="php/events.php" id="form_events" class="hidden">    <!-- Events page -->
-            <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">    
+            <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">    
 
             <div class="modal-header">
                 <h2>Aggiungi evento</h2>
@@ -540,7 +548,7 @@
             </div>
         </form>
         <form method="post" action="php/events.php" id="form_slots" class="hidden">
-            <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">
             <input type="hidden" name="type" value="oral">
             <input type="hidden" name="subject" id="slots_subject">
             
@@ -587,7 +595,7 @@
             </div>
             <div id="manage_slot_content">
                 <form method="post" action="php/events.php" id="form_edit_slot">
-                    <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="type" value="oral">                
                     <input type="hidden" name="idslot" id="edit_slot_id">
                     
@@ -607,7 +615,7 @@
                     </div>
                 </form>
                 <form method="post" action="php/events.php" id="form_delete_slot">
-                    <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="type" value="oral">                
                     <input type="hidden" name="idslot" id="remove_slot_id">
                 </form>
@@ -624,7 +632,7 @@
             </div>
             <div id="manage_event_content">
                 <form method="post" action="php/events.php" id="form_edit_event">
-                    <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="type" value="other">
                     <input type="hidden" name="idevent" id="edit_event_id">
 
@@ -649,7 +657,7 @@
                     </div>
                 </form>
                 <form method="post" action="php/events.php" id="form_remove_event">
-                    <input type="hidden" name="idclass" value="<?= htmlspecialchars($id_class, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="code" value="<?= htmlspecialchars($code, ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="type" value="other">
                     <input type="hidden" name="idevent" id="remove_event_id">
                 </form>
