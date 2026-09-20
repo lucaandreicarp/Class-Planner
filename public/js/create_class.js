@@ -54,7 +54,7 @@ document.getElementById('add_subject').addEventListener('click', () => {
     });
 
     // Add the tr to the table
-    table.appendChild(tr);
+    table.tBodies[0].appendChild(tr);
 
     // Rendering icons
     lucide.createIcons();
