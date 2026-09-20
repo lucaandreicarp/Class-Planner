@@ -22,7 +22,7 @@
         $id_class = $row_class["idclass"];
         $class_name = $row_class["name"];
     } else {
-        dbError("", "Codice classe non trovato!");
+        dbError("Tentativo di accesso con un codice classe inesistente: " . $code, "Classe non trovata!");
     }
 
     // Extracting student

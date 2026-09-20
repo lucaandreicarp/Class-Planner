@@ -21,8 +21,14 @@
         }
 
         $result_idclass = $stmt->get_result();
-        $row_idclass = $result_idclass -> fetch_assoc();
-        $idclass = $row_idclass["idclass"];
+
+        if ($result_idclass->num_rows > 0) {
+            $row_idclass = $result_idclass -> fetch_assoc();
+            $idclass = $row_idclass["idclass"];
+        else {
+            dbError("Tentativo di accesso con un codice classe inesistente: " . $code, "Classe non trovata!");
+
+        }
 
         // Extracting data from database to compare
 

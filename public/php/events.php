@@ -21,8 +21,13 @@
     }
 
     $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $id_class = $row["idclass"]; 
+    
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $id_class = $row["idclass"]; 
+    } else {
+        dbError("Tentativo di accesso con un codice classe inesistente: " . $code, "Classe non trovata!");
+    }
 
     if ($type == "oral"){       // Event: oral
         if ($idslot == null){   // Create event
